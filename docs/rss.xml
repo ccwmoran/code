@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>慕然科技Scratch积木扩展库</title><link>https://ccwmoran.github.io/code</link><description>丰富、实用的各种积木扩展</description><copyright>慕然科技Scratch积木扩展库</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg</url><title>avatar</title><link>https://ccwmoran.github.io/code</link></image><lastBuildDate>Sun, 30 Nov 2025 11:34:56 +0000</lastBuildDate><managingEditor>慕然科技Scratch积木扩展库</managingEditor><ttl>60</ttl><webMaster>慕然科技Scratch积木扩展库</webMaster><item><title>慕然科技的社区弹窗</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-she-qu-dan-chuang.html</link><description>//弹窗样式代码来自Chen-Jin的社区弹窗扩展
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>慕然科技Scratch积木扩展库</title><link>https://ccwmoran.github.io/code</link><description>丰富、实用的各种积木扩展</description><copyright>慕然科技Scratch积木扩展库</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg</url><title>avatar</title><link>https://ccwmoran.github.io/code</link></image><lastBuildDate>Sun, 30 Nov 2025 11:38:11 +0000</lastBuildDate><managingEditor>慕然科技Scratch积木扩展库</managingEditor><ttl>60</ttl><webMaster>慕然科技Scratch积木扩展库</webMaster><item><title>慕然科技的社区弹窗</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-she-qu-dan-chuang.html</link><description>`//弹窗样式代码来自Chen-Jin的社区弹窗扩展
 //弹窗积木和功能等由Morgan制作
 //仅CCW共创世界中可用弹窗（其他未知）
 class CommunityPopupExtension {
@@ -393,7 +393,7 @@ class CommunityPopupExtension {
 }
 
 // 注册扩展
-Scratch.extensions.register(new CommunityPopupExtension());。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-she-qu-dan-chuang.html</guid><pubDate>Sun, 30 Nov 2025 11:27:55 +0000</pubDate></item><item><title>Morgan的工具箱V8</title><link>https://ccwmoran.github.io/code/post/Morgan-de-gong-ju-xiang-V8.html</link><description>//官网https://ccwmoran.github.io
+Scratch.extensions.register(new CommunityPopupExtension());`。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-she-qu-dan-chuang.html</guid><pubDate>Sun, 30 Nov 2025 11:27:55 +0000</pubDate></item><item><title>Morgan的工具箱V8</title><link>https://ccwmoran.github.io/code/post/Morgan-de-gong-ju-xiang-V8.html</link><description>//官网https://ccwmoran.github.io
 class MorganToolboxV8{
 constructor(){this.lastResponse=''}
 getInfo(){
