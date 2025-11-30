@@ -10,7 +10,9 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="//官网https://ccwmoran.github.io
+<meta name="description" content="
+```
+//官网https://ccwmoran.github.io
 class MorganToolboxV8{
 constructor(){this.lastResponse=''}
 getInfo(){
@@ -256,9 +258,13 @@ gcd(e,t){return t===0?e:this.gcd(t,e%t)}
 generateGradient(e){return`linear-gradient(45deg, ${e.COLOR1}, ${e.COLOR2})`}
 checkServiceWorker(){return'navigator' in window&&'serviceWorker' in navigator?!!navigator.serviceWorker.controller:'不支持Service Worker'}}
 
-Scratch.extensions.register(new MorganToolboxV8());。">
+Scratch.extensions.register(new MorganToolboxV8());
+```
+。">
 <meta property="og:title" content="Morgan的工具箱V8">
-<meta property="og:description" content="//官网https://ccwmoran.github.io
+<meta property="og:description" content="
+```
+//官网https://ccwmoran.github.io
 class MorganToolboxV8{
 constructor(){this.lastResponse=''}
 getInfo(){
@@ -504,7 +510,9 @@ gcd(e,t){return t===0?e:this.gcd(t,e%t)}
 generateGradient(e){return`linear-gradient(45deg, ${e.COLOR1}, ${e.COLOR2})`}
 checkServiceWorker(){return'navigator' in window&&'serviceWorker' in navigator?!!navigator.serviceWorker.controller:'不支持Service Worker'}}
 
-Scratch.extensions.register(new MorganToolboxV8());。">
+Scratch.extensions.register(new MorganToolboxV8());
+```
+。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://ccwmoran.github.io/code/post/Morgan-de-gong-ju-xiang-V8.html">
 <meta property="og:image" content="https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg">
@@ -533,7 +541,17 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     body {padding: 8px;}
     .postTitle{font-size:24px;}
 }
-
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
 </style>
 
 
@@ -565,199 +583,254 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><p>//官网<a href="https://ccwmoran.github.io" rel="nofollow">https://ccwmoran.github.io</a><br>
-class MorganToolboxV8{<br>
-constructor(){this.lastResponse=''}<br>
-getInfo(){<br>
-return{<br>
-id:'M8',name:'Morgan的工具箱V8',color1:0x5ca05c,color2:0x5ca05c,<br>
-blocks:[<br>
-{opcode:'getDeviceModel',blockType:Scratch.BlockType.REPORTER,text:'设备型号'},<br>
-{opcode:'getBrowserName',blockType:Scratch.BlockType.REPORTER,text:'浏览器名称'},<br>
-{opcode:'toggleFullscreen',blockType:Scratch.BlockType.COMMAND,text:'进入/退出全屏'},<br>
-{opcode:'isTouchSupported',blockType:Scratch.BlockType.BOOLEAN,text:'是否支持触屏'},<br>
-{opcode:'generateRandomColor',blockType:Scratch.BlockType.REPORTER,text:'生成6位随机颜色值'},<br>
-{opcode:'generateRandomInt',blockType:Scratch.BlockType.REPORTER,text:'生成随机一个 [DIGITS] 位整数',arguments:{DIGITS:{type:Scratch.ArgumentType.NUMBER,defaultValue:3}}},<br>
-{opcode:'isOnline',blockType:Scratch.BlockType.BOOLEAN,text:'设备是否联网'},<br>
-{opcode:'isInEditor',blockType:Scratch.BlockType.BOOLEAN,text:'是否在编辑器内'},<br>
-{opcode:'hasCamera',blockType:Scratch.BlockType.BOOLEAN,text:'是否有摄像头'},<br>
-{opcode:'getCurrentDate',blockType:Scratch.BlockType.REPORTER,text:'获取当前年月日'},<br>
-{opcode:'getCurrentTime',blockType:Scratch.BlockType.REPORTER,text:'获取当前时分秒'},<br>
-{opcode:'getWeekday',blockType:Scratch.BlockType.REPORTER,text:'获取今日星期几'},<br>
-{opcode:'showAlert',blockType:Scratch.BlockType.COMMAND,text:'使用浏览器弹窗（纯文本）[TEXT]',arguments:{TEXT:{type:Scratch.ArgumentType.STRING,defaultValue:'Hello World!'}}},<br>
-{opcode:'showPrompt',blockType:Scratch.BlockType.REPORTER,text:'使用浏览器弹窗（输入框）[QUESTION]',arguments:{QUESTION:{type:Scratch.ArgumentType.STRING,defaultValue:'请输入内容'}}},<br>
-{opcode:'showOptions',blockType:Scratch.BlockType.REPORTER,text:'使用浏览器弹窗（选项选择）[OPTIONS]',arguments:{OPTIONS:{type:Scratch.ArgumentType.STRING,defaultValue:'选项1,选项2,选项3'}}},<br>
-{opcode:'showDatePicker',blockType:Scratch.BlockType.REPORTER,text:'使用浏览器弹窗（日期选择）'},<br>
-{opcode:'showColorPicker',blockType:Scratch.BlockType.REPORTER,text:'使用浏览器弹窗（颜色选择）'},<br>
-{opcode:'getCurrentURL',blockType:Scratch.BlockType.REPORTER,text:'当前页面网址'},<br>
-{opcode:'getCurrentTitle',blockType:Scratch.BlockType.REPORTER,text:'当前页面标题'},<br>
-{opcode:'openInNewTab',blockType:Scratch.BlockType.COMMAND,text:'在新标签页打开 [URL]',arguments:{URL:{type:Scratch.ArgumentType.STRING,defaultValue:'https://scratch.mit.edu'}}},<br>
-{opcode:'setPageTitle',blockType:Scratch.BlockType.COMMAND,text:'修改页面标题为 [TITLE]',arguments:{TITLE:{type:Scratch.ArgumentType.STRING,defaultValue:'新标题'}}},<br>
-{opcode:'refreshPage',blockType:Scratch.BlockType.COMMAND,text:'刷新该页面'},<br>
-{opcode:'copyToClipboard',blockType:Scratch.BlockType.COMMAND,text:'复制 [TEXT] 到剪贴板',arguments:{TEXT:{type:Scratch.ArgumentType.STRING,defaultValue:'要复制的文本'}}},<br>
-{opcode:'base64Operation',blockType:Scratch.BlockType.REPORTER,text:'base64 [OPERATION] [CONTENT]',arguments:{OPERATION:{type:Scratch.ArgumentType.STRING,menu:'base64Menu',defaultValue:'编码'},CONTENT:{type:Scratch.ArgumentType.STRING,defaultValue:'Hello World!'}}},<br>
-{opcode:'getLocationInfo',blockType:Scratch.BlockType.REPORTER,text:'所在国家省份城市'},<br>
-{opcode:'downloadFile',blockType:Scratch.BlockType.COMMAND,text:'下载文件 内容:[CONTENT] 文件名:[FILENAME]',arguments:{CONTENT:{type:Scratch.ArgumentType.STRING,defaultValue:'文件内容'},FILENAME:{type:Scratch.ArgumentType.STRING,defaultValue:'example.txt'}}},<br>
-{opcode:'calculateDaysBetween',blockType:Scratch.BlockType.REPORTER,text:'从 [START] 到 [END] 有几天',arguments:{START:{type:Scratch.ArgumentType.STRING,defaultValue:'2025.1.1'},END:{type:Scratch.ArgumentType.STRING,defaultValue:'2025.12.31'}}},<br>
-{opcode:'closeCurrentPage',blockType:Scratch.BlockType.COMMAND,text:'关闭当前页面'},<br>
-{opcode:'generateRandomEmojis',blockType:Scratch.BlockType.REPORTER,text:'给出 [COUNT] 个随机emoji表情符号',arguments:{COUNT:{type:Scratch.ArgumentType.NUMBER,defaultValue:5}}},<br>
-{opcode:'runHTMLCode',blockType:Scratch.BlockType.COMMAND,text:'运行html代码：[HTML_CODE]',arguments:{HTML_CODE:{type:Scratch.ArgumentType.STRING,defaultValue:'</p><div>Hello World!</div>'}}},<br>
-{opcode:'getBatteryLevel',blockType:Scratch.BlockType.REPORTER,text:'获取电池电量百分比'},<br>
-{opcode:'vibrateDevice',blockType:Scratch.BlockType.COMMAND,text:'振动设备 [DURATION] 毫秒',arguments:{DURATION:{type:Scratch.ArgumentType.NUMBER,defaultValue:200}}},<br>
-{opcode:'shareContent',blockType:Scratch.BlockType.COMMAND,text:'分享内容 [TEXT] [URL]',arguments:{TEXT:{type:Scratch.ArgumentType.STRING,defaultValue:'看看这个!'},URL:{type:Scratch.ArgumentType.STRING,defaultValue:window.location.href}}},<br>
-{opcode:'getScreenResolution',blockType:Scratch.BlockType.REPORTER,text:'获取屏幕分辨率'},<br>
-{opcode:'checkNetworkSpeed',blockType:Scratch.BlockType.REPORTER,text:'检测网络连接速度'},<br>
-{opcode:'getClipboardText',blockType:Scratch.BlockType.REPORTER,text:'获取剪贴板文本'},<br>
-{opcode:'takeScreenshot',blockType:Scratch.BlockType.COMMAND,text:'截取屏幕截图'},<br>
-{opcode:'getSystemTheme',blockType:Scratch.BlockType.REPORTER,text:'获取系统主题模式'},<br>
-{opcode:'getUserLanguage',blockType:Scratch.BlockType.REPORTER,text:'获取系统语言'},<br>
-{opcode:'getCPUInfo',blockType:Scratch.BlockType.REPORTER,text:'获取CPU核心数'},<br>
-{opcode:'isCookieEnabled',blockType:Scratch.BlockType.BOOLEAN,text:'Cookie是否启用'},<br>
-{opcode:'getPageFavicon',blockType:Scratch.BlockType.REPORTER,text:'获取网站图标URL'},<br>
-{opcode:'getMemoryInfo',blockType:Scratch.BlockType.REPORTER,text:'获取内存信息'},<br>
-{opcode:'getUserAgent',blockType:Scratch.BlockType.REPORTER,text:'获取浏览器UserAgent'},<br>
-{opcode:'getViewportSize',blockType:Scratch.BlockType.REPORTER,text:'获取视口大小'},<br>
-{opcode:'isJavaScriptEnabled',blockType:Scratch.BlockType.BOOLEAN,text:'JavaScript是否启用'},<br>
-{opcode:'getPlatformInfo',blockType:Scratch.BlockType.REPORTER,text:'获取平台信息'},<br>
-{opcode:'getConnectionType',blockType:Scratch.BlockType.REPORTER,text:'获取网络连接类型'},<br>
-{opcode:'getPageLoadTime',blockType:Scratch.BlockType.REPORTER,text:'获取页面加载时间'},<br>
-{opcode:'getScrollPosition',blockType:Scratch.BlockType.REPORTER,text:'获取滚动位置'},<br>
-{opcode:'isDoNotTrackEnabled',blockType:Scratch.BlockType.BOOLEAN,text:'是否启用禁止跟踪'},<br>
-{opcode:'getReferrer',blockType:Scratch.BlockType.REPORTER,text:'获取来源页面'},<br>
-{opcode:'getTimezone',blockType:Scratch.BlockType.REPORTER,text:'获取时区信息'},<br>
-{opcode:'getDeviceOrientation',blockType:Scratch.BlockType.REPORTER,text:'获取设备方向'},<br>
-{opcode:'getNetworkLatency',blockType:Scratch.BlockType.REPORTER,text:'检测网络延迟'},<br>
-{opcode:'getStorageUsage',blockType:Scratch.BlockType.REPORTER,text:'获取存储使用情况'},<br>
-{opcode:'isPWAInstalled',blockType:Scratch.BlockType.BOOLEAN,text:'是否为PWA应用'},<br>
-{opcode:'getMediaDevices',blockType:Scratch.BlockType.REPORTER,text:'获取媒体设备列表'},<br>
-{opcode:'createQRCode',blockType:Scratch.BlockType.REPORTER,text:'生成二维码 [TEXT]',arguments:{TEXT:{type:Scratch.ArgumentType.STRING,defaultValue:'https://scratch.mit.edu'}}},<br>
-{opcode:'speakText',blockType:Scratch.BlockType.COMMAND,text:'朗读文本 [TEXT]',arguments:{TEXT:{type:Scratch.ArgumentType.STRING,defaultValue:'Hello World'}}},<br>
-{opcode:'stopSpeaking',blockType:Scratch.BlockType.COMMAND,text:'停止朗读'},<br>
-{opcode:'getGeolocation',blockType:Scratch.BlockType.REPORTER,text:'获取地理位置坐标'},<br>
-{opcode:'getSunriseSunset',blockType:Scratch.BlockType.REPORTER,text:'获取日出日落时间'},<br>
-{opcode:'calculateAge',blockType:Scratch.BlockType.REPORTER,text:'计算年龄 生日:[BIRTHDAY]',arguments:{BIRTHDAY:{type:Scratch.ArgumentType.STRING,defaultValue:'2000.1.1'}}},<br>
-{opcode:'countdownTimer',blockType:Scratch.BlockType.REPORTER,text:'倒计时 [TARGET_TIME]',arguments:{TARGET_TIME:{type:Scratch.ArgumentType.STRING,defaultValue:'2025-12-31 23:59:59'}}},<br>
-{opcode:'getMoonPhase',blockType:Scratch.BlockType.REPORTER,text:'获取今日月相'},<br>
-{opcode:'generatePassword',blockType:Scratch.BlockType.REPORTER,text:'生成密码 长度:[LENGTH]',arguments:{LENGTH:{type:Scratch.ArgumentType.NUMBER,defaultValue:12}}},<br>
-{opcode:'analyzeText',blockType:Scratch.BlockType.REPORTER,text:'分析文本 [TEXT]',arguments:{TEXT:{type:Scratch.ArgumentType.STRING,defaultValue:'Hello World'}}},<br>
-{opcode:'getCurrentSeason',blockType:Scratch.BlockType.REPORTER,text:'获取当前季节'},<br>
-{opcode:'isLeapYear',blockType:Scratch.BlockType.BOOLEAN,text:'[YEAR] 是否为闰年',arguments:{YEAR:{type:Scratch.ArgumentType.NUMBER,defaultValue:2024}}},<br>
-{opcode:'getURLParameters',blockType:Scratch.BlockType.REPORTER,text:'获取URL参数'},<br>
-{opcode:'setLocalStorage',blockType:Scratch.BlockType.COMMAND,text:'本地存储 [KEY] [VALUE]',arguments:{KEY:{type:Scratch.ArgumentType.STRING,defaultValue:'key'},VALUE:{type:Scratch.ArgumentType.STRING,defaultValue:'value'}}},<br>
-{opcode:'getLocalStorage',blockType:Scratch.BlockType.REPORTER,text:'读取本地存储 [KEY]',arguments:{KEY:{type:Scratch.ArgumentType.STRING,defaultValue:'key'}}},<br>
-{opcode:'removeLocalStorage',blockType:Scratch.BlockType.COMMAND,text:'删除本地存储 [KEY]',arguments:{KEY:{type:Scratch.ArgumentType.STRING,defaultValue:'key'}}},<br>
-{opcode:'clearLocalStorage',blockType:Scratch.BlockType.COMMAND,text:'清空本地存储'},<br>
-{opcode:'getPerformanceMetrics',blockType:Scratch.BlockType.REPORTER,text:'获取性能指标'},<br>
-{opcode:'detectAdBlocker',blockType:Scratch.BlockType.BOOLEAN,text:'是否启用广告拦截器'},<br>
-{opcode:'getPageVisibility',blockType:Scratch.BlockType.REPORTER,text:'获取页面可见状态'},<br>
-{opcode:'createBlobURL',blockType:Scratch.BlockType.REPORTER,text:'创建Blob URL 内容:[CONTENT] 类型:[TYPE]',arguments:{CONTENT:{type:Scratch.ArgumentType.STRING,defaultValue:'Hello World'},TYPE:{type:Scratch.ArgumentType.STRING,defaultValue:'text/plain'}}},<br>
-{opcode:'revokeBlobURL',blockType:Scratch.BlockType.COMMAND,text:'撤销Blob URL [URL]',arguments:{URL:{type:Scratch.ArgumentType.STRING,defaultValue:'blob:https://example.com'}}},<br>
-{opcode:'getElementCount',blockType:Scratch.BlockType.REPORTER,text:'获取页面元素数量 [SELECTOR]',arguments:{SELECTOR:{type:Scratch.ArgumentType.STRING,defaultValue:'div'}}},<br>
-{opcode:'checkFontSupport',blockType:Scratch.BlockType.REPORTER,text:'检查字体支持 [FONT]',arguments:{FONT:{type:Scratch.ArgumentType.STRING,defaultValue:'Arial'}}},<br>
-{opcode:'getCSSVariable',blockType:Scratch.BlockType.REPORTER,text:'获取CSS变量值 [VAR_NAME]',arguments:{VAR_NAME:{type:Scratch.ArgumentType.STRING,defaultValue:'--main-color'}}},<br>
-{opcode:'setCSSVariable',blockType:Scratch.BlockType.COMMAND,text:'设置CSS变量 [VAR_NAME] [VALUE]',arguments:{VAR_NAME:{type:Scratch.ArgumentType.STRING,defaultValue:'--main-color'},VALUE:{type:Scratch.ArgumentType.STRING,defaultValue:'#5ca05c'}}},<br>
-{opcode:'createObjectURL',blockType:Scratch.BlockType.REPORTER,text:'创建对象URL 文件:[FILE]',arguments:{FILE:{type:Scratch.ArgumentType.STRING,defaultValue:'data:text/plain,Hello'}}},<br>
-{opcode:'measureTextWidth',blockType:Scratch.BlockType.REPORTER,text:'测量文本宽度 [TEXT] 字体:[FONT]',arguments:{TEXT:{type:Scratch.ArgumentType.STRING,defaultValue:'Hello World'},FONT:{type:Scratch.ArgumentType.STRING,defaultValue:'16px Arial'}}},<br>
-{opcode:'getScrollbarWidth',blockType:Scratch.BlockType.REPORTER,text:'获取滚动条宽度'},<br>
-{opcode:'isReduceMotionEnabled',blockType:Scratch.BlockType.BOOLEAN,text:'是否启用减少动画'},<br>
-{opcode:'detectIncognitoMode',blockType:Scratch.BlockType.BOOLEAN,text:'是否处于无痕模式'},<br>
-{opcode:'getDeviceMotion',blockType:Scratch.BlockType.REPORTER,text:'获取设备加速度'},<br>
-{opcode:'createHash',blockType:Scratch.BlockType.REPORTER,text:'生成哈希值 [ALGORITHM] [TEXT]',arguments:{ALGORITHM:{type:Scratch.ArgumentType.STRING,menu:'hashMenu',defaultValue:'MD5'},TEXT:{type:Scratch.ArgumentType.STRING,defaultValue:'Hello World'}}},<br>
-{opcode:'compressText',blockType:Scratch.BlockType.REPORTER,text:'压缩文本 [TEXT]',arguments:{TEXT:{type:Scratch.ArgumentType.STRING,defaultValue:'Hello World'}}},<br>
-{opcode:'decompressText',blockType:Scratch.BlockType.REPORTER,text:'解压文本 [TEXT]',arguments:{TEXT:{type:Scratch.ArgumentType.STRING,defaultValue:'eJzzSM3JyVcIzy/KSVEEABK5A5A='}}},<br>
-{opcode:'detectDarkPattern',blockType:Scratch.BlockType.BOOLEAN,text:'检测深色模式偏好'},<br>
-{opcode:'getAudioContext',blockType:Scratch.BlockType.REPORTER,text:'获取音频上下文状态'},<br>
-{opcode:'calculateTextReadTime',blockType:Scratch.BlockType.REPORTER,text:'计算文本阅读时间 [TEXT]',arguments:{TEXT:{type:Scratch.ArgumentType.STRING,defaultValue:'Hello World'}}},<br>
-{opcode:'generateUUID',blockType:Scratch.BlockType.REPORTER,text:'生成UUID'},<br>
-{opcode:'checkImageExists',blockType:Scratch.BlockType.BOOLEAN,text:'检查图片是否存在 [URL]',arguments:{URL:{type:Scratch.ArgumentType.STRING,defaultValue:'https://example.com/image.jpg'}}},<br>
-{opcode:'getCookieValue',blockType:Scratch.BlockType.REPORTER,text:'获取Cookie值 [NAME]',arguments:{NAME:{type:Scratch.ArgumentType.STRING,defaultValue:'session'}}},<br>
-{opcode:'setCookieValue',blockType:Scratch.BlockType.COMMAND,text:'设置Cookie [NAME] [VALUE] [DAYS]',arguments:{NAME:{type:Scratch.ArgumentType.STRING,defaultValue:'session'},VALUE:{type:Scratch.ArgumentType.STRING,defaultValue:'value'},DAYS:{type:Scratch.ArgumentType.NUMBER,defaultValue:7}}},<br>
-{opcode:'getBatteryStatus',blockType:Scratch.BlockType.REPORTER,text:'获取电池状态详情'},<br>
-{opcode:'detectIdleState',blockType:Scratch.BlockType.REPORTER,text:'检测用户空闲状态'},<br>
-{opcode:'calculateDistance',blockType:Scratch.BlockType.REPORTER,text:'计算两点距离 点1:[POINT1] 点2:[POINT2]',arguments:{POINT1:{type:Scratch.ArgumentType.STRING,defaultValue:'0,0'},POINT2:{type:Scratch.ArgumentType.STRING,defaultValue:'3,4'}}},<br>
-{opcode:'generateLoremIpsum',blockType:Scratch.BlockType.REPORTER,text:'生成Lorem Ipsum文本 [WORDS]词',arguments:{WORDS:{type:Scratch.ArgumentType.NUMBER,defaultValue:50}}},<br>
-{opcode:'checkSSLStatus',blockType:Scratch.BlockType.BOOLEAN,text:'当前页面是否使用HTTPS'},<br>
-{opcode:'getPageLoadSize',blockType:Scratch.BlockType.REPORTER,text:'获取页面加载资源大小'},<br>
-{opcode:'detectPrintSupport',blockType:Scratch.BlockType.BOOLEAN,text:'是否支持打印功能'},<br>
-{opcode:'createDataURL',blockType:Scratch.BlockType.REPORTER,text:'创建Data URL 内容:[CONTENT] 类型:[TYPE]',arguments:{CONTENT:{type:Scratch.ArgumentType.STRING,defaultValue:'Hello'},TYPE:{type:Scratch.ArgumentType.STRING,defaultValue:'text/plain'}}},<br>
-{opcode:'getActiveElement',blockType:Scratch.BlockType.REPORTER,text:'获取当前焦点元素'},<br>
-{opcode:'checkWebGLSupport',blockType:Scratch.BlockType.BOOLEAN,text:'是否支持WebGL'},<br>
-{opcode:'getSelectionText',blockType:Scratch.BlockType.REPORTER,text:'获取选中文本'},<br>
-{opcode:'detectPointerType',blockType:Scratch.BlockType.REPORTER,text:'检测指针设备类型'},<br>
-{opcode:'calculateAspectRatio',blockType:Scratch.BlockType.REPORTER,text:'计算宽高比 宽:[WIDTH] 高:[HEIGHT]',arguments:{WIDTH:{type:Scratch.ArgumentType.NUMBER,defaultValue:16},HEIGHT:{type:Scratch.ArgumentType.NUMBER,defaultValue:9}}},<br>
-{opcode:'generateGradient',blockType:Scratch.BlockType.REPORTER,text:'生成CSS渐变 [COLOR1] [COLOR2]',arguments:{COLOR1:{type:Scratch.ArgumentType.STRING,defaultValue:'#FF0000'},COLOR2:{type:Scratch.ArgumentType.STRING,defaultValue:'#0000FF'}}},<br>
-{opcode:'checkServiceWorker',blockType:Scratch.BlockType.BOOLEAN,text:'是否注册Service Worker'}],<br>
-menus:{<br>
-base64Menu:{items:['编码','解码']},<br>
-hashMenu:{items:['MD5','SHA-1','SHA-256','SHA-512']}<br>
-},<br>
-docsURI:'<a href="https://ccwmoran.github.io'%7D%7D" rel="nofollow">https://ccwmoran.github.io'}}</a><p></p>
-<p>getDeviceModel(){let e=navigator.userAgent;return/iPhone/.test(e)?"iPhone":/iPad/.test(e)?"iPad":/Android/.test(e)?"Android设备":/Windows/.test(e)?"Windows电脑":/Mac/.test(e)?"Mac电脑":/Linux/.test(e)?"Linux电脑":"未知设备"}<br>
-getBrowserName(){let e=navigator.userAgent;return e.indexOf("Chrome")&gt;-1&amp;&amp;e.indexOf("Edge")===-1?"Chrome":e.indexOf("Firefox")&gt;-1?"Firefox":e.indexOf("Safari")&gt;-1&amp;&amp;e.indexOf("Chrome")===-1?"Safari":e.indexOf("Edge")&gt;-1?"Edge":e.indexOf("Opera")&gt;-1?"Opera":e.indexOf("MSIE")&gt;-1||e.indexOf("Trident")&gt;-1?"Internet Explorer":"未知浏览器"}<br>
-toggleFullscreen(){if(!document.fullscreenElement){document.documentElement.requestFullscreen?.()||document.documentElement.mozRequestFullScreen?.()||document.documentElement.webkitRequestFullscreen?.()||document.documentElement.msRequestFullscreen?.()}else{document.exitFullscreen?.()||document.mozCancelFullScreen?.()||document.webkitExitFullscreen?.()||document.msExitFullscreen?.()}}<br>
-isTouchSupported(){return'ontouchstart'in window||navigator.maxTouchPoints&gt;0}<br>
-generateRandomColor(){let e='0123456789ABCDEF',t='#';for(let o=0;o&lt;6;o++)t+=e[Math.floor(Math.random()<em>16)];return t}<br>
-generateRandomInt(e){let t=e.DIGITS,o=Math.pow(10,t-1),n=Math.pow(10,t)-1;return Math.floor(Math.random()</em>(n-o+1))+o}<br>
-isOnline(){return navigator.onLine}<br>
-isInEditor(){return window.location.href.indexOf('scratch.mit.edu')&gt;-1&amp;&amp;window.location.href.indexOf('/projects/')&gt;-1}<br>
-hasCamera(){return new Promise(e=&gt;{navigator.mediaDevices?.enumerateDevices?.().then(t=&gt;{e(t.some(e=&gt;e.kind==='videoinput'))}).catch(()=&gt;e(false))})}<br>
-getCurrentDate(){let e=new Date();return e.getFullYear()+"-"+String(e.getMonth()+1).padStart(2,'0')+"-"+String(e.getDate()).padStart(2,'0')}<br>
-getCurrentTime(){let e=new Date();return String(e.getHours()).padStart(2,'0')+":"+String(e.getMinutes()).padStart(2,'0')+":"+String(e.getSeconds()).padStart(2,'0')}<br>
-getWeekday(){return["星期日","星期一","星期二","星期三","星期四","星期五","星期六"][new Date().getDay()]}<br>
-showAlert(e){alert(e.TEXT)}<br>
-showPrompt(e){return prompt(e.QUESTION)}<br>
-showOptions(e){let t=e.OPTIONS.split(','),o='</p><div><p>请选择一个选项:</p>';t.forEach((e,n)=&gt;{o+=<code class="notranslate">&lt;label style="display:block;margin:5px 0;"&gt;&lt;input type="radio" name="option" value="${e}" ${0===n?'checked':''}&gt;${e}&lt;/label&gt;</code>});o+='</div>';let n=this.showCustomDialog('选择选项',o);return n||t[0]||''}<br>
-showDatePicker(){let e=document.createElement('input');e.type='date',e.showPicker();return e.value||new Date().toISOString().slice(0,10)}<br>
-showColorPicker(){let e=document.createElement('input');e.type='color',e.showPicker();return e.value||'#000000'}<br>
-showCustomDialog(e,t,o=!1){return new Promise(n=&gt;{let c=document.createElement('div');c.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;z-index:10000';let r=document.createElement('div');r.style.cssText='background:white;border-radius:8px;padding:0;min-width:300px;max-width:90%;box-shadow:0 4px 20px rgba(0,0,0,0.3)';let i=document.createElement('div');i.style.cssText='background:#5ca05c;color:white;padding:10px 15px;border-radius:8px 8px 0 0;font-weight:bold';i.textContent=e;let a=document.createElement('div');a.innerHTML=t;let l=document.createElement('div');l.style.cssText='display:flex;justify-content:flex-end;padding:10px 15px;border-top:1px solid #eee';let s=document.createElement('button');s.textContent='取消',s.style.cssText='margin-right:10px;padding:5px 15px;background:#f0f0f0;border:1px solid #ccc;border-radius:4px;cursor:pointer';let d=document.createElement('button');d.textContent='确定',d.style.cssText='padding:5px 15px;background:#5ca05c;color:white;border:none;border-radius:4px;cursor:pointer';l.appendChild(s),l.appendChild(d),r.appendChild(i),r.appendChild(a),r.appendChild(l),c.appendChild(r),document.body.appendChild(c);let u=t=&gt;{document.body.removeChild(c),n(t)};s.onclick=()=&gt;u(null),d.onclick=()=&gt;{let e=o?a.querySelector('input')?.value:a.querySelector('input[name="option"]:checked')?.value;u(e)},c.onclick=e=&gt;{e.target===c&amp;&amp;u(null)}})}<br>
-getCurrentURL(){return window.location.href}<br>
-getCurrentTitle(){return document.title}<br>
-openInNewTab(e){window.open(e.URL,'_blank')}<br>
-setPageTitle(e){document.title=e.TITLE}<br>
-refreshPage(){window.location.reload()}<br>
-copyToClipboard(e){let t=document.createElement('textarea');t.value=e.TEXT,document.body.appendChild(t),t.select();try{document.execCommand('copy')}catch(e){}document.body.removeChild(t)}<br>
-base64Operation(e){let t=e.OPERATION,o=e.CONTENT;try{return'编码'===t?btoa(unescape(encodeURIComponent(o))):decodeURIComponent(escape(atob(o)))}catch(e){return'编码'===t?'编码失败':'解码失败'}}<br>
-getLocationInfo(){return new Promise(e=&gt;{fetch('<a href="https://ipapi.co/json/').then(t=%3Et.json()).then(t=%3E%7Be(t.country_name&amp;&amp;t.region&amp;&amp;t.city?%60$%7Bt.country_name%7D-$%7Bt.region%7D-$%7Bt.city%7D%60:'%E4%BD%8D%E7%BD%AE%E4%BF%A1%E6%81%AF%E4%B8%8D%E5%8F%AF%E7%94%A8')%7D).catch(()=%3Ee('%E4%BD%8D%E7%BD%AE%E6%9C%8D%E5%8A%A1%E6%9A%82%E6%97%B6%E4%B8%8D%E5%8F%AF%E7%94%A8'))%7D)%7D" rel="nofollow">https://ipapi.co/json/').then(t=&gt;t.json()).then(t=&gt;{e(t.country_name&amp;&amp;t.region&amp;&amp;t.city?`${t.country_name}-${t.region}-${t.city}`:'位置信息不可用')}).catch(()=&gt;e('位置服务暂时不可用'))})}</a><br>
-downloadFile(e){let t=e.CONTENT,o=e.FILENAME,n=new Blob([t],{type:'text/plain;charset=utf-8'}),c=URL.createObjectURL(n),r=document.createElement('a');r.href=c,r.download=o,document.body.appendChild(r),r.click(),document.body.removeChild(r),URL.revokeObjectURL(c)}<br>
-calculateDaysBetween(e){let t=e.START,o=e.END,n=new Date(t.replace(/./g,'/')),c=new Date(o.replace(/./g,'/'));if(isNaN(n)||isNaN(c))return'日期格式错误';let r=Math.abs(c-n),i=Math.ceil(r/(1e3<em>60</em>60<em>24));return i}<br>
-closeCurrentPage(){window.close()}<br>
-generateRandomEmojis(e){let t=e.COUNT,o=['😀','😂','🥰','😎','🤩','😍','🤗','🙂','😊','😇','🥳','😜','🤪','😋','😛','👏','👍','❤️','🔥','⭐','🌈','🎉','🎁','🎂','🎈','💯','✨','🌟','💫','💥','💖','💕','💞','💓','💗','🔥','🌟','💫','⭐','🌈','🌞','🌻','🌸','🌺','🍀','🎵','🎶','🎨','🏆','🎮','🎯','⚽','🏀','🎾','🏐','🎱'],n='';for(let e=0;e&lt;t;e++)n+=o[Math.floor(Math.random()<em>o.length)];return n}<br>
-runHTMLCode(e){try{let t=document.createElement('div');t.innerHTML=e.HTML_CODE,document.body.appendChild(t)}catch(e){}}<br>
-getBatteryLevel(){return new Promise(e=&gt;{if(navigator.getBattery){navigator.getBattery().then(t=&gt;{e(Math.round(t.level</em>100)+'%')}).catch(()=&gt;e('未知'))}else{e('不支持电池API')}})}<br>
-vibrateDevice(e){if(navigator.vibrate){navigator.vibrate(e.DURATION)}}<br>
-shareContent(e){if(navigator.share){navigator.share({title:document.title,text:e.TEXT,url:e.URL}).catch(()=&gt;{})}}<br>
-getScreenResolution(){return screen.width+'×'+screen.height}<br>
-checkNetworkSpeed(){return new Promise(e=&gt;{let t=performance.getEntriesByType('navigation');if(t.length&gt;0){let o=t[0];if(o.domainLookupEnd&amp;&amp;o.connectEnd&amp;&amp;o.responseEnd&amp;&amp;o.requestStart){let n=o.domainLookupEnd-o.domainLookupStart,c=o.connectEnd-o.connectStart,r=o.responseEnd-o.requestStart;e(<code class="notranslate">DNS:${n.toFixed(2)}ms 连接:${c.toFixed(2)}ms 响应:${r.toFixed(2)}ms</code>)}else{e('无法获取网络速度详情')}}else{e('网络信息不可用')}})}<br>
-getClipboardText(){return new Promise(e=&gt;{navigator.clipboard?.readText?.().then(t=&gt;e(t)).catch(()=&gt;e('无法读取剪贴板'))})}<br>
-takeScreenshot(){html2canvas(document.body).then(e=&gt;{let t=e.toDataURL('image/png'),o=document.createElement('a');o.href=t,o.download='screenshot.png',o.click()})}<br>
-getSystemTheme(){return window.matchMedia&amp;&amp;window.matchMedia('(prefers-color-scheme: dark)').matches?'深色模式':'浅色模式'}<br>
-getUserLanguage(){return navigator.language||navigator.userLanguage||'未知'}<br>
-getCPUInfo(){return navigator.hardwareConcurrency?navigator.hardwareConcurrency+'核心':'未知'}<br>
-isCookieEnabled(){return navigator.cookieEnabled}<br>
-getPageFavicon(){let e=document.querySelector('link[rel</em>="icon"]');return e?e.href:'无图标'}<br>
-getMemoryInfo(){return navigator.deviceMemory?navigator.deviceMemory+'GB':'未知'}<br>
-getUserAgent(){return navigator.userAgent}<br>
-getViewportSize(){return window.innerWidth+'×'+window.innerHeight}<br>
-isJavaScriptEnabled(){return true}<br>
-getPlatformInfo(){return navigator.platform||'未知平台'}<br>
-getConnectionType(){let e=navigator.connection;return e?e.effectiveType||'未知':'未知'}<br>
-getPageLoadTime(){let e=performance.timing;return e.loadEventEnd-e.navigationStart+'ms'}<br>
-getScrollPosition(){return window.pageYOffset+'px'}<br>
-isDoNotTrackEnabled(){return navigator.doNotTrack===1||navigator.doNotTrack==='1'||navigator.msDoNotTrack==='1'||window.doNotTrack==='1'}<br>
-getReferrer(){return document.referrer||'无来源页面'}<br>
-getTimezone(){return Intl.DateTimeFormat().resolvedOptions().timeZone}<br>
-getDeviceOrientation(){return new Promise(e=&gt;{if(window.DeviceOrientationEvent){window.addEventListener('deviceorientation',t=&gt;{e(<code class="notranslate">Alpha:${t.alpha?.toFixed(2)} Beta:${t.beta?.toFixed(2)} Gamma:${t.gamma?.toFixed(2)}</code>)},{once:!0})}else{e('不支持设备方向检测')}})}<br>
-getNetworkLatency(){return new Promise(e=&gt;{let t=performance.now();fetch('<a href="https://www.google.com/favicon.ico?t='+Date.now(),%7Bmode:'no-cors',cache:'no-cache'%7D).then(()=%3E%7Be((performance.now()-t).toFixed(2)+'ms')%7D).catch(()=%3Ee('%E6%A3%80%E6%B5%8B%E5%A4%B1%E8%B4%A5'))%7D)%7D" rel="nofollow">https://www.google.com/favicon.ico?t='+Date.now(),{mode:'no-cors',cache:'no-cache'}).then(()=&gt;{e((performance.now()-t).toFixed(2)+'ms')}).catch(()=&gt;e('检测失败'))})}</a><br>
-getStorageUsage(){return new Promise(e=&gt;{if(navigator.storage&amp;&amp;navigator.storage.estimate){navigator.storage.estimate().then(t=&gt;{let o=(t.usage/1024/1024).toFixed(2),n=(t.quota/1024/1024).toFixed(2);e(<code class="notranslate">已用:${o}MB 总额:${n}MB</code>)}).catch(()=&gt;e('存储信息不可用'))}else{e('不支持存储API')}})}<br>
-isPWAInstalled(){return window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone||document.referrer.includes('android-app://')}<br>
-getMediaDevices(){return new Promise(e=&gt;{navigator.mediaDevices?.enumerateDevices?.().then(t=&gt;{let o=t.map(t=&gt;<code class="notranslate">${t.kind}:${t.label||'未知'}</code>).join('; ');e(o||'无媒体设备')}).catch(()=&gt;e('无法获取设备列表'))})}<br>
-createQRCode(e){return<code class="notranslate">https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data=${encodeURIComponent(e.TEXT)}</code>}<br>
-speakText(e){if('speechSynthesis'in window){let t=new SpeechSynthesisUtterance(e.TEXT);speechSynthesis.speak(t)}}<br>
-stopSpeaking(){speechSynthesis.cancel()}<br>
-getGeolocation(){return new Promise(e=&gt;{if('geolocation'in navigator){navigator.geolocation.getCurrentPosition(t=&gt;{e(<code class="notranslate">纬度:${t.coords.latitude.toFixed(6)} 经度:${t.coords.longitude.toFixed(6)}</code>)},()=&gt;e('位置获取失败'))}else{e('不支持地理位置')}})}<br>
-getSunriseSunset(){return new Promise(e=&gt;{fetch('<a href="https://api.sunrise-sunset.org/json?lat=36.7201600&amp;lng=-4.4203400&amp;formatted=0').then(t=%3Et.json()).then(t=%3E%7Bt.results?e(%60%E6%97%A5%E5%87%BA:$%7Bt.results.sunrise%7D" rel="nofollow">https://api.sunrise-sunset.org/json?lat=36.7201600&amp;lng=-4.4203400&amp;formatted=0').then(t=&gt;t.json()).then(t=&gt;{t.results?e(`日出:${t.results.sunrise}</a> 日落:${t.results.sunset}<code class="notranslate">):e('数据获取失败')}).catch(()=&gt;e('服务不可用'))})} calculateAge(e){let t=new Date(e.BIRTHDAY.replace(/\./g,'/')),o=new Date(),n=o.getFullYear()-t.getFullYear(),c=o.getMonth()-t.getMonth();return c&lt;0||0===c&amp;&amp;o.getDate()&lt;t.getDate()?n-1:n} countdownTimer(e){let t=new Date(e.TARGET_TIME),o=new Date(),n=t-o;return n&lt;=0?'时间已到':</code>${Math.floor(n/(1e3<em>60</em>60<em>24))}天${Math.floor(n%(1e3</em>60<em>60</em>24)/(1e3<em>60</em>60))}小时${Math.floor(n%(1e3<em>60</em>60)/(1e3<em>60))}分钟<code class="notranslate">} getMoonPhase(){let e=new Date(),t=e.getDate(),o=e.getMonth()+1,n=e.getFullYear(),c=(n%100+Math.floor((n%100)/4))%7;return['新月','娥眉月','上弦月','盈凸月','满月','亏凸月','下弦月','残月'][Math.floor(t%8)]} generatePassword(e){let t=e.LENGTH,o='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&amp;*',n='';for(let e=0;e&lt;t;e++)n+=o[Math.floor(Math.random()*o.length)];return n} analyzeText(e){let t=e.TEXT,o=t.length,n=t.split(/\s+/).length,c=t.split(/[.!?]+/).length-1;return</code>字符数:${o} 单词数:${n} 句子数:${c}<code class="notranslate">} getCurrentSeason(){let e=new Date(),t=e.getMonth();return t&gt;=2&amp;&amp;t&lt;=4?'春季':t&gt;=5&amp;&amp;t&lt;=7?'夏季':t&gt;=8&amp;&amp;t&lt;=10?'秋季':'冬季'} isLeapYear(e){let t=e.YEAR;return t%4==0&amp;&amp;t%100!=0||t%400==0} getURLParameters(){let e=new URLSearchParams(window.location.search),t=[];for(let o of e.entries())t.push(</code>${o[0]}=${o[1]}<code class="notranslate">);return t.join(', ')} setLocalStorage(e){localStorage.setItem(e.KEY,e.VALUE)} getLocalStorage(e){return localStorage.getItem(e.KEY)||''} removeLocalStorage(e){localStorage.removeItem(e.KEY)} clearLocalStorage(){localStorage.clear()} getPerformanceMetrics(){let e=performance.getEntriesByType('navigation')[0];if(e){let t=e.domContentLoadedEventEnd-e.navigationStart,o=e.loadEventEnd-e.navigationStart;return</code>DOM加载:${t}ms 完全加载:${o}ms<code class="notranslate">}return'性能数据不可用'} detectAdBlocker(){return new Promise(e=&gt;{fetch('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',{method:'HEAD',mode:'no-cors'}).then(()=&gt;e(false)).catch(()=&gt;e(true))})} getPageVisibility(){return document.hidden?'页面隐藏':'页面可见'} createBlobURL(e){let t=new Blob([e.CONTENT],{type:e.TYPE});return URL.createObjectURL(t)} revokeBlobURL(e){URL.revokeObjectURL(e.URL)} getElementCount(e){return document.querySelectorAll(e.SELECTOR).length} checkFontSupport(e){let t=document.createElement('span');t.style.fontFamily=e.FONT,t.style.position='absolute',t.style.left='-9999px',t.innerHTML='mmmmmmmmmmmmmmmm';document.body.appendChild(t);let o=t.offsetWidth;document.body.removeChild(t);let n=document.createElement('span');n.style.fontFamily='monospace',n.style.position='absolute',n.style.left='-9999px',n.innerHTML='mmmmmmmmmmmmmmmm';document.body.appendChild(n);let c=n.offsetWidth;return document.body.removeChild(n),o!==c} getCSSVariable(e){return getComputedStyle(document.documentElement).getPropertyValue(e.VAR_NAME).trim()} setCSSVariable(e){document.documentElement.style.setProperty(e.VAR_NAME,e.VALUE)} createObjectURL(e){let t=new Blob([e.FILE],{type:'text/plain'});return URL.createObjectURL(t)} measureTextWidth(e){let t=document.createElement('canvas'),o=t.getContext('2d');return o.font=e.FONT,Math.ceil(o.measureText(e.TEXT).width)} getScrollbarWidth(){let e=document.createElement('div');e.style.overflow='scroll',e.style.width='50px',e.style.height='50px',e.style.visibility='hidden',e.style.position='absolute',e.style.top='-9999px';document.body.appendChild(e);let t=e.offsetWidth-e.clientWidth;return document.body.removeChild(e),t} isReduceMotionEnabled(){return window.matchMedia('(prefers-reduced-motion: reduce)').matches} detectIncognitoMode(){return new Promise(e=&gt;{let t=!1;'storage'in navigator&amp;&amp;navigator.storage.estimate?navigator.storage.estimate().then(o=&gt;{t=o.quota&lt;12e9}).catch(()=&gt;t=!1):t=!1,e(t)})} getDeviceMotion(){return new Promise(e=&gt;{if(window.DeviceMotionEvent){window.addEventListener('devicemotion',t=&gt;{e(</code>X:${t.acceleration?.x?.toFixed(2)} Y:${t.acceleration?.y?.toFixed(2)} Z:${t.acceleration?.z?.toFixed(2)}<code class="notranslate">)},{once:!0})}else{e('不支持设备运动检测')}})} createHash(e){let t=e.ALGORITHM,o=e.TEXT,n=0;for(let e=0;e&lt;o.length;e++)n=((n&lt;&lt;5)-n)+o.charCodeAt(e),n&amp;=n;return'MD5'===t?(n&gt;&gt;&gt;0).toString(16):'SHA-1'===t?(n+2147483648).toString(16):'SHA-256'===t?(n*2654435761&gt;&gt;&gt;0).toString(16):(n^123456789).toString(16)} compressText(e){try{return btoa(encodeURIComponent(e.TEXT).replace(/%([0-9A-F]{2})/g,(e,t)=&gt;String.fromCharCode('0x'+t)))}catch(e){return'压缩失败'}} decompressText(e){try{return decodeURIComponent(atob(e.TEXT).split('').map(e=&gt;'%'+('00'+e.charCodeAt(0).toString(16)).slice(-2)).join(''))}catch(e){return'解压失败'}} detectDarkPattern(){return window.matchMedia&amp;&amp;window.matchMedia('(prefers-color-scheme: dark)').matches?'深色模式':'浅色模式'} getAudioContext(){return'undefined'!=typeof AudioContext?'音频上下文可用':'音频上下文不可用'} calculateTextReadTime(e){let t=e.TEXT.length;return Math.ceil(t/200)+'分钟'} generateUUID(){return'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,e=&gt;{let t=16*Math.random()|0;return('x'===e?t:3&amp;t|8).toString(16)})} checkImageExists(e){return new Promise(t=&gt;{let o=new Image;o.onload=()=&gt;t(!0),o.onerror=()=&gt;t(!1),o.src=e.URL})} getCookieValue(e){let t=</code>; ${document.cookie}<code class="notranslate">,o=t.split(</code>; ${e.NAME}=<code class="notranslate">);return 2===o.length?o.pop().split(';').shift():''} setCookieValue(e){let t=e.NAME,o=e.VALUE,n=e.DAYS,c=new Date;c.setTime(c.getTime()+24*n*60*60*1e3);let r='expires='+c.toUTCString();document.cookie=t+'='+o+';'+r+';path=/'} getBatteryStatus(){return new Promise(e=&gt;{if(navigator.getBattery){navigator.getBattery().then(t=&gt;{e(</code>电量:${Math.round(t.level</em>100)}% 充电中:${t.charging?'是':'否'} 充电时间:${t.chargingTime?Math.round(t.chargingTime/60)+'分钟':'未知'} 放电时间:${t.dischargingTime?Math.round(t.dischargingTime/60)+'分钟':'未知'}<code class="notranslate">)}).catch(()=&gt;e('电池状态未知'))}else{e('不支持电池API')}})} detectIdleState(){return new Promise(e=&gt;{if('requestIdleCallback'in window){let t=performance.now();window.requestIdleCallback(()=&gt;{e(</code>空闲时间:${Math.round(performance.now()-t)}ms<code class="notranslate">)})}else{e('不支持空闲检测')}})} calculateDistance(e){let t=e.POINT1.split(',').map(Number),o=e.POINT2.split(',').map(Number);if(t.length!==2||o.length!==2||t.some(isNaN)||o.some(isNaN))return'坐标格式错误';let n=t[0]-o[0],c=t[1]-o[1];return Math.sqrt(n*n+c*c).toFixed(2)} generateLoremIpsum(e){let t=e.WORDS,o=['lorem','ipsum','dolor','sit','amet','consectetur','adipiscing','elit','sed','do','eiusmod','tempor','incididunt','ut','labore','et','dolore','magna','aliqua','enim','minim','veniam','quis','nostrud','exercitation','ullamco','laboris','nisi','aliquip','ex','ea','commodo','consequat','duis','aute','irure','in','reprehenderit','voluptate','velit','esse','cillum','eu','fugiat','nulla','pariatur','excepteur','sint','occaecat','cupidatat','non','proident','sunt','culpa','qui','officia','deserunt','mollit','anim','id','est','laborum'],n='';for(let e=0;e&lt;t;e++)n+=(e&gt;0?' ':'')+o[Math.floor(Math.random()*o.length)];return n+'.'} checkSSLStatus(){return window.location.protocol==='https:'} getPageLoadSize(){let e=performance.getEntriesByType('resource').reduce((e,t)=&gt;e+t.transferSize||0,0);return(e/1024).toFixed(2)+'KB'} detectPrintSupport(){return!!window.matchMedia&amp;&amp;!!window.matchMedia('print')} createDataURL(e){return</code>data:${e.TYPE},${encodeURIComponent(e.CONTENT)}<code class="notranslate">} getActiveElement(){let e=document.activeElement;return e?e.tagName+ (e.id?'#'+e.id:'')+ (e.className?'.'+e.className.split(' ')[0]:''):'无焦点元素'} checkWebGLSupport(){let e=document.createElement('canvas');return!!(e.getContext('webgl')||e.getContext('experimental-webgl'))} getSelectionText(){let e=window.getSelection();return e?e.toString():'无选中文本'} detectPointerType(){return window.matchMedia&amp;&amp;window.matchMedia('(pointer:coarse)').matches?'触摸设备':window.matchMedia&amp;&amp;window.matchMedia('(pointer:fine)').matches?'鼠标设备':'未知指针设备'} calculateAspectRatio(e){let t=e.WIDTH,o=e.HEIGHT;if(t&lt;=0||o&lt;=0)return'无效尺寸';let n=this.gcd(t,o);return</code>${t/n}:${o/n}<code class="notranslate">} gcd(e,t){return t===0?e:this.gcd(t,e%t)} generateGradient(e){return</code>linear-gradient(45deg, ${e.COLOR1}, ${e.COLOR2})`}<br>
-checkServiceWorker(){return'navigator' in window&amp;&amp;'serviceWorker' in navigator?!!navigator.serviceWorker.controller:'不支持Service Worker'}}<p></p>
-<p>Scratch.extensions.register(new MorganToolboxV8());</p></div>
+<div class="markdown-body" id="postBody"><pre class="notranslate"><code class="notranslate">//官网https://ccwmoran.github.io
+class MorganToolboxV8{
+constructor(){this.lastResponse=''}
+getInfo(){
+return{
+id:'M8',name:'Morgan的工具箱V8',color1:0x5ca05c,color2:0x5ca05c,
+blocks:[
+{opcode:'getDeviceModel',blockType:Scratch.BlockType.REPORTER,text:'设备型号'},
+{opcode:'getBrowserName',blockType:Scratch.BlockType.REPORTER,text:'浏览器名称'},
+{opcode:'toggleFullscreen',blockType:Scratch.BlockType.COMMAND,text:'进入/退出全屏'},
+{opcode:'isTouchSupported',blockType:Scratch.BlockType.BOOLEAN,text:'是否支持触屏'},
+{opcode:'generateRandomColor',blockType:Scratch.BlockType.REPORTER,text:'生成6位随机颜色值'},
+{opcode:'generateRandomInt',blockType:Scratch.BlockType.REPORTER,text:'生成随机一个 [DIGITS] 位整数',arguments:{DIGITS:{type:Scratch.ArgumentType.NUMBER,defaultValue:3}}},
+{opcode:'isOnline',blockType:Scratch.BlockType.BOOLEAN,text:'设备是否联网'},
+{opcode:'isInEditor',blockType:Scratch.BlockType.BOOLEAN,text:'是否在编辑器内'},
+{opcode:'hasCamera',blockType:Scratch.BlockType.BOOLEAN,text:'是否有摄像头'},
+{opcode:'getCurrentDate',blockType:Scratch.BlockType.REPORTER,text:'获取当前年月日'},
+{opcode:'getCurrentTime',blockType:Scratch.BlockType.REPORTER,text:'获取当前时分秒'},
+{opcode:'getWeekday',blockType:Scratch.BlockType.REPORTER,text:'获取今日星期几'},
+{opcode:'showAlert',blockType:Scratch.BlockType.COMMAND,text:'使用浏览器弹窗（纯文本）[TEXT]',arguments:{TEXT:{type:Scratch.ArgumentType.STRING,defaultValue:'Hello World!'}}},
+{opcode:'showPrompt',blockType:Scratch.BlockType.REPORTER,text:'使用浏览器弹窗（输入框）[QUESTION]',arguments:{QUESTION:{type:Scratch.ArgumentType.STRING,defaultValue:'请输入内容'}}},
+{opcode:'showOptions',blockType:Scratch.BlockType.REPORTER,text:'使用浏览器弹窗（选项选择）[OPTIONS]',arguments:{OPTIONS:{type:Scratch.ArgumentType.STRING,defaultValue:'选项1,选项2,选项3'}}},
+{opcode:'showDatePicker',blockType:Scratch.BlockType.REPORTER,text:'使用浏览器弹窗（日期选择）'},
+{opcode:'showColorPicker',blockType:Scratch.BlockType.REPORTER,text:'使用浏览器弹窗（颜色选择）'},
+{opcode:'getCurrentURL',blockType:Scratch.BlockType.REPORTER,text:'当前页面网址'},
+{opcode:'getCurrentTitle',blockType:Scratch.BlockType.REPORTER,text:'当前页面标题'},
+{opcode:'openInNewTab',blockType:Scratch.BlockType.COMMAND,text:'在新标签页打开 [URL]',arguments:{URL:{type:Scratch.ArgumentType.STRING,defaultValue:'https://scratch.mit.edu'}}},
+{opcode:'setPageTitle',blockType:Scratch.BlockType.COMMAND,text:'修改页面标题为 [TITLE]',arguments:{TITLE:{type:Scratch.ArgumentType.STRING,defaultValue:'新标题'}}},
+{opcode:'refreshPage',blockType:Scratch.BlockType.COMMAND,text:'刷新该页面'},
+{opcode:'copyToClipboard',blockType:Scratch.BlockType.COMMAND,text:'复制 [TEXT] 到剪贴板',arguments:{TEXT:{type:Scratch.ArgumentType.STRING,defaultValue:'要复制的文本'}}},
+{opcode:'base64Operation',blockType:Scratch.BlockType.REPORTER,text:'base64 [OPERATION] [CONTENT]',arguments:{OPERATION:{type:Scratch.ArgumentType.STRING,menu:'base64Menu',defaultValue:'编码'},CONTENT:{type:Scratch.ArgumentType.STRING,defaultValue:'Hello World!'}}},
+{opcode:'getLocationInfo',blockType:Scratch.BlockType.REPORTER,text:'所在国家省份城市'},
+{opcode:'downloadFile',blockType:Scratch.BlockType.COMMAND,text:'下载文件 内容:[CONTENT] 文件名:[FILENAME]',arguments:{CONTENT:{type:Scratch.ArgumentType.STRING,defaultValue:'文件内容'},FILENAME:{type:Scratch.ArgumentType.STRING,defaultValue:'example.txt'}}},
+{opcode:'calculateDaysBetween',blockType:Scratch.BlockType.REPORTER,text:'从 [START] 到 [END] 有几天',arguments:{START:{type:Scratch.ArgumentType.STRING,defaultValue:'2025.1.1'},END:{type:Scratch.ArgumentType.STRING,defaultValue:'2025.12.31'}}},
+{opcode:'closeCurrentPage',blockType:Scratch.BlockType.COMMAND,text:'关闭当前页面'},
+{opcode:'generateRandomEmojis',blockType:Scratch.BlockType.REPORTER,text:'给出 [COUNT] 个随机emoji表情符号',arguments:{COUNT:{type:Scratch.ArgumentType.NUMBER,defaultValue:5}}},
+{opcode:'runHTMLCode',blockType:Scratch.BlockType.COMMAND,text:'运行html代码：[HTML_CODE]',arguments:{HTML_CODE:{type:Scratch.ArgumentType.STRING,defaultValue:'&lt;div&gt;Hello World!&lt;/div&gt;'}}},
+{opcode:'getBatteryLevel',blockType:Scratch.BlockType.REPORTER,text:'获取电池电量百分比'},
+{opcode:'vibrateDevice',blockType:Scratch.BlockType.COMMAND,text:'振动设备 [DURATION] 毫秒',arguments:{DURATION:{type:Scratch.ArgumentType.NUMBER,defaultValue:200}}},
+{opcode:'shareContent',blockType:Scratch.BlockType.COMMAND,text:'分享内容 [TEXT] [URL]',arguments:{TEXT:{type:Scratch.ArgumentType.STRING,defaultValue:'看看这个!'},URL:{type:Scratch.ArgumentType.STRING,defaultValue:window.location.href}}},
+{opcode:'getScreenResolution',blockType:Scratch.BlockType.REPORTER,text:'获取屏幕分辨率'},
+{opcode:'checkNetworkSpeed',blockType:Scratch.BlockType.REPORTER,text:'检测网络连接速度'},
+{opcode:'getClipboardText',blockType:Scratch.BlockType.REPORTER,text:'获取剪贴板文本'},
+{opcode:'takeScreenshot',blockType:Scratch.BlockType.COMMAND,text:'截取屏幕截图'},
+{opcode:'getSystemTheme',blockType:Scratch.BlockType.REPORTER,text:'获取系统主题模式'},
+{opcode:'getUserLanguage',blockType:Scratch.BlockType.REPORTER,text:'获取系统语言'},
+{opcode:'getCPUInfo',blockType:Scratch.BlockType.REPORTER,text:'获取CPU核心数'},
+{opcode:'isCookieEnabled',blockType:Scratch.BlockType.BOOLEAN,text:'Cookie是否启用'},
+{opcode:'getPageFavicon',blockType:Scratch.BlockType.REPORTER,text:'获取网站图标URL'},
+{opcode:'getMemoryInfo',blockType:Scratch.BlockType.REPORTER,text:'获取内存信息'},
+{opcode:'getUserAgent',blockType:Scratch.BlockType.REPORTER,text:'获取浏览器UserAgent'},
+{opcode:'getViewportSize',blockType:Scratch.BlockType.REPORTER,text:'获取视口大小'},
+{opcode:'isJavaScriptEnabled',blockType:Scratch.BlockType.BOOLEAN,text:'JavaScript是否启用'},
+{opcode:'getPlatformInfo',blockType:Scratch.BlockType.REPORTER,text:'获取平台信息'},
+{opcode:'getConnectionType',blockType:Scratch.BlockType.REPORTER,text:'获取网络连接类型'},
+{opcode:'getPageLoadTime',blockType:Scratch.BlockType.REPORTER,text:'获取页面加载时间'},
+{opcode:'getScrollPosition',blockType:Scratch.BlockType.REPORTER,text:'获取滚动位置'},
+{opcode:'isDoNotTrackEnabled',blockType:Scratch.BlockType.BOOLEAN,text:'是否启用禁止跟踪'},
+{opcode:'getReferrer',blockType:Scratch.BlockType.REPORTER,text:'获取来源页面'},
+{opcode:'getTimezone',blockType:Scratch.BlockType.REPORTER,text:'获取时区信息'},
+{opcode:'getDeviceOrientation',blockType:Scratch.BlockType.REPORTER,text:'获取设备方向'},
+{opcode:'getNetworkLatency',blockType:Scratch.BlockType.REPORTER,text:'检测网络延迟'},
+{opcode:'getStorageUsage',blockType:Scratch.BlockType.REPORTER,text:'获取存储使用情况'},
+{opcode:'isPWAInstalled',blockType:Scratch.BlockType.BOOLEAN,text:'是否为PWA应用'},
+{opcode:'getMediaDevices',blockType:Scratch.BlockType.REPORTER,text:'获取媒体设备列表'},
+{opcode:'createQRCode',blockType:Scratch.BlockType.REPORTER,text:'生成二维码 [TEXT]',arguments:{TEXT:{type:Scratch.ArgumentType.STRING,defaultValue:'https://scratch.mit.edu'}}},
+{opcode:'speakText',blockType:Scratch.BlockType.COMMAND,text:'朗读文本 [TEXT]',arguments:{TEXT:{type:Scratch.ArgumentType.STRING,defaultValue:'Hello World'}}},
+{opcode:'stopSpeaking',blockType:Scratch.BlockType.COMMAND,text:'停止朗读'},
+{opcode:'getGeolocation',blockType:Scratch.BlockType.REPORTER,text:'获取地理位置坐标'},
+{opcode:'getSunriseSunset',blockType:Scratch.BlockType.REPORTER,text:'获取日出日落时间'},
+{opcode:'calculateAge',blockType:Scratch.BlockType.REPORTER,text:'计算年龄 生日:[BIRTHDAY]',arguments:{BIRTHDAY:{type:Scratch.ArgumentType.STRING,defaultValue:'2000.1.1'}}},
+{opcode:'countdownTimer',blockType:Scratch.BlockType.REPORTER,text:'倒计时 [TARGET_TIME]',arguments:{TARGET_TIME:{type:Scratch.ArgumentType.STRING,defaultValue:'2025-12-31 23:59:59'}}},
+{opcode:'getMoonPhase',blockType:Scratch.BlockType.REPORTER,text:'获取今日月相'},
+{opcode:'generatePassword',blockType:Scratch.BlockType.REPORTER,text:'生成密码 长度:[LENGTH]',arguments:{LENGTH:{type:Scratch.ArgumentType.NUMBER,defaultValue:12}}},
+{opcode:'analyzeText',blockType:Scratch.BlockType.REPORTER,text:'分析文本 [TEXT]',arguments:{TEXT:{type:Scratch.ArgumentType.STRING,defaultValue:'Hello World'}}},
+{opcode:'getCurrentSeason',blockType:Scratch.BlockType.REPORTER,text:'获取当前季节'},
+{opcode:'isLeapYear',blockType:Scratch.BlockType.BOOLEAN,text:'[YEAR] 是否为闰年',arguments:{YEAR:{type:Scratch.ArgumentType.NUMBER,defaultValue:2024}}},
+{opcode:'getURLParameters',blockType:Scratch.BlockType.REPORTER,text:'获取URL参数'},
+{opcode:'setLocalStorage',blockType:Scratch.BlockType.COMMAND,text:'本地存储 [KEY] [VALUE]',arguments:{KEY:{type:Scratch.ArgumentType.STRING,defaultValue:'key'},VALUE:{type:Scratch.ArgumentType.STRING,defaultValue:'value'}}},
+{opcode:'getLocalStorage',blockType:Scratch.BlockType.REPORTER,text:'读取本地存储 [KEY]',arguments:{KEY:{type:Scratch.ArgumentType.STRING,defaultValue:'key'}}},
+{opcode:'removeLocalStorage',blockType:Scratch.BlockType.COMMAND,text:'删除本地存储 [KEY]',arguments:{KEY:{type:Scratch.ArgumentType.STRING,defaultValue:'key'}}},
+{opcode:'clearLocalStorage',blockType:Scratch.BlockType.COMMAND,text:'清空本地存储'},
+{opcode:'getPerformanceMetrics',blockType:Scratch.BlockType.REPORTER,text:'获取性能指标'},
+{opcode:'detectAdBlocker',blockType:Scratch.BlockType.BOOLEAN,text:'是否启用广告拦截器'},
+{opcode:'getPageVisibility',blockType:Scratch.BlockType.REPORTER,text:'获取页面可见状态'},
+{opcode:'createBlobURL',blockType:Scratch.BlockType.REPORTER,text:'创建Blob URL 内容:[CONTENT] 类型:[TYPE]',arguments:{CONTENT:{type:Scratch.ArgumentType.STRING,defaultValue:'Hello World'},TYPE:{type:Scratch.ArgumentType.STRING,defaultValue:'text/plain'}}},
+{opcode:'revokeBlobURL',blockType:Scratch.BlockType.COMMAND,text:'撤销Blob URL [URL]',arguments:{URL:{type:Scratch.ArgumentType.STRING,defaultValue:'blob:https://example.com'}}},
+{opcode:'getElementCount',blockType:Scratch.BlockType.REPORTER,text:'获取页面元素数量 [SELECTOR]',arguments:{SELECTOR:{type:Scratch.ArgumentType.STRING,defaultValue:'div'}}},
+{opcode:'checkFontSupport',blockType:Scratch.BlockType.REPORTER,text:'检查字体支持 [FONT]',arguments:{FONT:{type:Scratch.ArgumentType.STRING,defaultValue:'Arial'}}},
+{opcode:'getCSSVariable',blockType:Scratch.BlockType.REPORTER,text:'获取CSS变量值 [VAR_NAME]',arguments:{VAR_NAME:{type:Scratch.ArgumentType.STRING,defaultValue:'--main-color'}}},
+{opcode:'setCSSVariable',blockType:Scratch.BlockType.COMMAND,text:'设置CSS变量 [VAR_NAME] [VALUE]',arguments:{VAR_NAME:{type:Scratch.ArgumentType.STRING,defaultValue:'--main-color'},VALUE:{type:Scratch.ArgumentType.STRING,defaultValue:'#5ca05c'}}},
+{opcode:'createObjectURL',blockType:Scratch.BlockType.REPORTER,text:'创建对象URL 文件:[FILE]',arguments:{FILE:{type:Scratch.ArgumentType.STRING,defaultValue:'data:text/plain,Hello'}}},
+{opcode:'measureTextWidth',blockType:Scratch.BlockType.REPORTER,text:'测量文本宽度 [TEXT] 字体:[FONT]',arguments:{TEXT:{type:Scratch.ArgumentType.STRING,defaultValue:'Hello World'},FONT:{type:Scratch.ArgumentType.STRING,defaultValue:'16px Arial'}}},
+{opcode:'getScrollbarWidth',blockType:Scratch.BlockType.REPORTER,text:'获取滚动条宽度'},
+{opcode:'isReduceMotionEnabled',blockType:Scratch.BlockType.BOOLEAN,text:'是否启用减少动画'},
+{opcode:'detectIncognitoMode',blockType:Scratch.BlockType.BOOLEAN,text:'是否处于无痕模式'},
+{opcode:'getDeviceMotion',blockType:Scratch.BlockType.REPORTER,text:'获取设备加速度'},
+{opcode:'createHash',blockType:Scratch.BlockType.REPORTER,text:'生成哈希值 [ALGORITHM] [TEXT]',arguments:{ALGORITHM:{type:Scratch.ArgumentType.STRING,menu:'hashMenu',defaultValue:'MD5'},TEXT:{type:Scratch.ArgumentType.STRING,defaultValue:'Hello World'}}},
+{opcode:'compressText',blockType:Scratch.BlockType.REPORTER,text:'压缩文本 [TEXT]',arguments:{TEXT:{type:Scratch.ArgumentType.STRING,defaultValue:'Hello World'}}},
+{opcode:'decompressText',blockType:Scratch.BlockType.REPORTER,text:'解压文本 [TEXT]',arguments:{TEXT:{type:Scratch.ArgumentType.STRING,defaultValue:'eJzzSM3JyVcIzy/KSVEEABK5A5A='}}},
+{opcode:'detectDarkPattern',blockType:Scratch.BlockType.BOOLEAN,text:'检测深色模式偏好'},
+{opcode:'getAudioContext',blockType:Scratch.BlockType.REPORTER,text:'获取音频上下文状态'},
+{opcode:'calculateTextReadTime',blockType:Scratch.BlockType.REPORTER,text:'计算文本阅读时间 [TEXT]',arguments:{TEXT:{type:Scratch.ArgumentType.STRING,defaultValue:'Hello World'}}},
+{opcode:'generateUUID',blockType:Scratch.BlockType.REPORTER,text:'生成UUID'},
+{opcode:'checkImageExists',blockType:Scratch.BlockType.BOOLEAN,text:'检查图片是否存在 [URL]',arguments:{URL:{type:Scratch.ArgumentType.STRING,defaultValue:'https://example.com/image.jpg'}}},
+{opcode:'getCookieValue',blockType:Scratch.BlockType.REPORTER,text:'获取Cookie值 [NAME]',arguments:{NAME:{type:Scratch.ArgumentType.STRING,defaultValue:'session'}}},
+{opcode:'setCookieValue',blockType:Scratch.BlockType.COMMAND,text:'设置Cookie [NAME] [VALUE] [DAYS]',arguments:{NAME:{type:Scratch.ArgumentType.STRING,defaultValue:'session'},VALUE:{type:Scratch.ArgumentType.STRING,defaultValue:'value'},DAYS:{type:Scratch.ArgumentType.NUMBER,defaultValue:7}}},
+{opcode:'getBatteryStatus',blockType:Scratch.BlockType.REPORTER,text:'获取电池状态详情'},
+{opcode:'detectIdleState',blockType:Scratch.BlockType.REPORTER,text:'检测用户空闲状态'},
+{opcode:'calculateDistance',blockType:Scratch.BlockType.REPORTER,text:'计算两点距离 点1:[POINT1] 点2:[POINT2]',arguments:{POINT1:{type:Scratch.ArgumentType.STRING,defaultValue:'0,0'},POINT2:{type:Scratch.ArgumentType.STRING,defaultValue:'3,4'}}},
+{opcode:'generateLoremIpsum',blockType:Scratch.BlockType.REPORTER,text:'生成Lorem Ipsum文本 [WORDS]词',arguments:{WORDS:{type:Scratch.ArgumentType.NUMBER,defaultValue:50}}},
+{opcode:'checkSSLStatus',blockType:Scratch.BlockType.BOOLEAN,text:'当前页面是否使用HTTPS'},
+{opcode:'getPageLoadSize',blockType:Scratch.BlockType.REPORTER,text:'获取页面加载资源大小'},
+{opcode:'detectPrintSupport',blockType:Scratch.BlockType.BOOLEAN,text:'是否支持打印功能'},
+{opcode:'createDataURL',blockType:Scratch.BlockType.REPORTER,text:'创建Data URL 内容:[CONTENT] 类型:[TYPE]',arguments:{CONTENT:{type:Scratch.ArgumentType.STRING,defaultValue:'Hello'},TYPE:{type:Scratch.ArgumentType.STRING,defaultValue:'text/plain'}}},
+{opcode:'getActiveElement',blockType:Scratch.BlockType.REPORTER,text:'获取当前焦点元素'},
+{opcode:'checkWebGLSupport',blockType:Scratch.BlockType.BOOLEAN,text:'是否支持WebGL'},
+{opcode:'getSelectionText',blockType:Scratch.BlockType.REPORTER,text:'获取选中文本'},
+{opcode:'detectPointerType',blockType:Scratch.BlockType.REPORTER,text:'检测指针设备类型'},
+{opcode:'calculateAspectRatio',blockType:Scratch.BlockType.REPORTER,text:'计算宽高比 宽:[WIDTH] 高:[HEIGHT]',arguments:{WIDTH:{type:Scratch.ArgumentType.NUMBER,defaultValue:16},HEIGHT:{type:Scratch.ArgumentType.NUMBER,defaultValue:9}}},
+{opcode:'generateGradient',blockType:Scratch.BlockType.REPORTER,text:'生成CSS渐变 [COLOR1] [COLOR2]',arguments:{COLOR1:{type:Scratch.ArgumentType.STRING,defaultValue:'#FF0000'},COLOR2:{type:Scratch.ArgumentType.STRING,defaultValue:'#0000FF'}}},
+{opcode:'checkServiceWorker',blockType:Scratch.BlockType.BOOLEAN,text:'是否注册Service Worker'}],
+menus:{
+base64Menu:{items:['编码','解码']},
+hashMenu:{items:['MD5','SHA-1','SHA-256','SHA-512']}
+},
+docsURI:'https://ccwmoran.github.io'}}
+
+getDeviceModel(){let e=navigator.userAgent;return/iPhone/.test(e)?"iPhone":/iPad/.test(e)?"iPad":/Android/.test(e)?"Android设备":/Windows/.test(e)?"Windows电脑":/Mac/.test(e)?"Mac电脑":/Linux/.test(e)?"Linux电脑":"未知设备"}
+getBrowserName(){let e=navigator.userAgent;return e.indexOf("Chrome")&gt;-1&amp;&amp;e.indexOf("Edge")===-1?"Chrome":e.indexOf("Firefox")&gt;-1?"Firefox":e.indexOf("Safari")&gt;-1&amp;&amp;e.indexOf("Chrome")===-1?"Safari":e.indexOf("Edge")&gt;-1?"Edge":e.indexOf("Opera")&gt;-1?"Opera":e.indexOf("MSIE")&gt;-1||e.indexOf("Trident")&gt;-1?"Internet Explorer":"未知浏览器"}
+toggleFullscreen(){if(!document.fullscreenElement){document.documentElement.requestFullscreen?.()||document.documentElement.mozRequestFullScreen?.()||document.documentElement.webkitRequestFullscreen?.()||document.documentElement.msRequestFullscreen?.()}else{document.exitFullscreen?.()||document.mozCancelFullScreen?.()||document.webkitExitFullscreen?.()||document.msExitFullscreen?.()}}
+isTouchSupported(){return'ontouchstart'in window||navigator.maxTouchPoints&gt;0}
+generateRandomColor(){let e='0123456789ABCDEF',t='#';for(let o=0;o&lt;6;o++)t+=e[Math.floor(Math.random()*16)];return t}
+generateRandomInt(e){let t=e.DIGITS,o=Math.pow(10,t-1),n=Math.pow(10,t)-1;return Math.floor(Math.random()*(n-o+1))+o}
+isOnline(){return navigator.onLine}
+isInEditor(){return window.location.href.indexOf('scratch.mit.edu')&gt;-1&amp;&amp;window.location.href.indexOf('/projects/')&gt;-1}
+hasCamera(){return new Promise(e=&gt;{navigator.mediaDevices?.enumerateDevices?.().then(t=&gt;{e(t.some(e=&gt;e.kind==='videoinput'))}).catch(()=&gt;e(false))})}
+getCurrentDate(){let e=new Date();return e.getFullYear()+"-"+String(e.getMonth()+1).padStart(2,'0')+"-"+String(e.getDate()).padStart(2,'0')}
+getCurrentTime(){let e=new Date();return String(e.getHours()).padStart(2,'0')+":"+String(e.getMinutes()).padStart(2,'0')+":"+String(e.getSeconds()).padStart(2,'0')}
+getWeekday(){return["星期日","星期一","星期二","星期三","星期四","星期五","星期六"][new Date().getDay()]}
+showAlert(e){alert(e.TEXT)}
+showPrompt(e){return prompt(e.QUESTION)}
+showOptions(e){let t=e.OPTIONS.split(','),o='&lt;div style="font-family:Arial,sans-serif;padding:10px;"&gt;&lt;p style="margin-top:0;"&gt;请选择一个选项:&lt;/p&gt;';t.forEach((e,n)=&gt;{o+=`&lt;label style="display:block;margin:5px 0;"&gt;&lt;input type="radio" name="option" value="${e}" ${0===n?'checked':''}&gt;${e}&lt;/label&gt;`});o+='&lt;/div&gt;';let n=this.showCustomDialog('选择选项',o);return n||t[0]||''}
+showDatePicker(){let e=document.createElement('input');e.type='date',e.showPicker();return e.value||new Date().toISOString().slice(0,10)}
+showColorPicker(){let e=document.createElement('input');e.type='color',e.showPicker();return e.value||'#000000'}
+showCustomDialog(e,t,o=!1){return new Promise(n=&gt;{let c=document.createElement('div');c.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;z-index:10000';let r=document.createElement('div');r.style.cssText='background:white;border-radius:8px;padding:0;min-width:300px;max-width:90%;box-shadow:0 4px 20px rgba(0,0,0,0.3)';let i=document.createElement('div');i.style.cssText='background:#5ca05c;color:white;padding:10px 15px;border-radius:8px 8px 0 0;font-weight:bold';i.textContent=e;let a=document.createElement('div');a.innerHTML=t;let l=document.createElement('div');l.style.cssText='display:flex;justify-content:flex-end;padding:10px 15px;border-top:1px solid #eee';let s=document.createElement('button');s.textContent='取消',s.style.cssText='margin-right:10px;padding:5px 15px;background:#f0f0f0;border:1px solid #ccc;border-radius:4px;cursor:pointer';let d=document.createElement('button');d.textContent='确定',d.style.cssText='padding:5px 15px;background:#5ca05c;color:white;border:none;border-radius:4px;cursor:pointer';l.appendChild(s),l.appendChild(d),r.appendChild(i),r.appendChild(a),r.appendChild(l),c.appendChild(r),document.body.appendChild(c);let u=t=&gt;{document.body.removeChild(c),n(t)};s.onclick=()=&gt;u(null),d.onclick=()=&gt;{let e=o?a.querySelector('input')?.value:a.querySelector('input[name="option"]:checked')?.value;u(e)},c.onclick=e=&gt;{e.target===c&amp;&amp;u(null)}})}
+getCurrentURL(){return window.location.href}
+getCurrentTitle(){return document.title}
+openInNewTab(e){window.open(e.URL,'_blank')}
+setPageTitle(e){document.title=e.TITLE}
+refreshPage(){window.location.reload()}
+copyToClipboard(e){let t=document.createElement('textarea');t.value=e.TEXT,document.body.appendChild(t),t.select();try{document.execCommand('copy')}catch(e){}document.body.removeChild(t)}
+base64Operation(e){let t=e.OPERATION,o=e.CONTENT;try{return'编码'===t?btoa(unescape(encodeURIComponent(o))):decodeURIComponent(escape(atob(o)))}catch(e){return'编码'===t?'编码失败':'解码失败'}}
+getLocationInfo(){return new Promise(e=&gt;{fetch('https://ipapi.co/json/').then(t=&gt;t.json()).then(t=&gt;{e(t.country_name&amp;&amp;t.region&amp;&amp;t.city?`${t.country_name}-${t.region}-${t.city}`:'位置信息不可用')}).catch(()=&gt;e('位置服务暂时不可用'))})}
+downloadFile(e){let t=e.CONTENT,o=e.FILENAME,n=new Blob([t],{type:'text/plain;charset=utf-8'}),c=URL.createObjectURL(n),r=document.createElement('a');r.href=c,r.download=o,document.body.appendChild(r),r.click(),document.body.removeChild(r),URL.revokeObjectURL(c)}
+calculateDaysBetween(e){let t=e.START,o=e.END,n=new Date(t.replace(/\./g,'/')),c=new Date(o.replace(/\./g,'/'));if(isNaN(n)||isNaN(c))return'日期格式错误';let r=Math.abs(c-n),i=Math.ceil(r/(1e3*60*60*24));return i}
+closeCurrentPage(){window.close()}
+generateRandomEmojis(e){let t=e.COUNT,o=['😀','😂','🥰','😎','🤩','😍','🤗','🙂','😊','😇','🥳','😜','🤪','😋','😛','👏','👍','❤️','🔥','⭐','🌈','🎉','🎁','🎂','🎈','💯','✨','🌟','💫','💥','💖','💕','💞','💓','💗','🔥','🌟','💫','⭐','🌈','🌞','🌻','🌸','🌺','🍀','🎵','🎶','🎨','🏆','🎮','🎯','⚽','🏀','🎾','🏐','🎱'],n='';for(let e=0;e&lt;t;e++)n+=o[Math.floor(Math.random()*o.length)];return n}
+runHTMLCode(e){try{let t=document.createElement('div');t.innerHTML=e.HTML_CODE,document.body.appendChild(t)}catch(e){}}
+getBatteryLevel(){return new Promise(e=&gt;{if(navigator.getBattery){navigator.getBattery().then(t=&gt;{e(Math.round(t.level*100)+'%')}).catch(()=&gt;e('未知'))}else{e('不支持电池API')}})}
+vibrateDevice(e){if(navigator.vibrate){navigator.vibrate(e.DURATION)}}
+shareContent(e){if(navigator.share){navigator.share({title:document.title,text:e.TEXT,url:e.URL}).catch(()=&gt;{})}}
+getScreenResolution(){return screen.width+'×'+screen.height}
+checkNetworkSpeed(){return new Promise(e=&gt;{let t=performance.getEntriesByType('navigation');if(t.length&gt;0){let o=t[0];if(o.domainLookupEnd&amp;&amp;o.connectEnd&amp;&amp;o.responseEnd&amp;&amp;o.requestStart){let n=o.domainLookupEnd-o.domainLookupStart,c=o.connectEnd-o.connectStart,r=o.responseEnd-o.requestStart;e(`DNS:${n.toFixed(2)}ms 连接:${c.toFixed(2)}ms 响应:${r.toFixed(2)}ms`)}else{e('无法获取网络速度详情')}}else{e('网络信息不可用')}})}
+getClipboardText(){return new Promise(e=&gt;{navigator.clipboard?.readText?.().then(t=&gt;e(t)).catch(()=&gt;e('无法读取剪贴板'))})}
+takeScreenshot(){html2canvas(document.body).then(e=&gt;{let t=e.toDataURL('image/png'),o=document.createElement('a');o.href=t,o.download='screenshot.png',o.click()})}
+getSystemTheme(){return window.matchMedia&amp;&amp;window.matchMedia('(prefers-color-scheme: dark)').matches?'深色模式':'浅色模式'}
+getUserLanguage(){return navigator.language||navigator.userLanguage||'未知'}
+getCPUInfo(){return navigator.hardwareConcurrency?navigator.hardwareConcurrency+'核心':'未知'}
+isCookieEnabled(){return navigator.cookieEnabled}
+getPageFavicon(){let e=document.querySelector('link[rel*="icon"]');return e?e.href:'无图标'}
+getMemoryInfo(){return navigator.deviceMemory?navigator.deviceMemory+'GB':'未知'}
+getUserAgent(){return navigator.userAgent}
+getViewportSize(){return window.innerWidth+'×'+window.innerHeight}
+isJavaScriptEnabled(){return true}
+getPlatformInfo(){return navigator.platform||'未知平台'}
+getConnectionType(){let e=navigator.connection;return e?e.effectiveType||'未知':'未知'}
+getPageLoadTime(){let e=performance.timing;return e.loadEventEnd-e.navigationStart+'ms'}
+getScrollPosition(){return window.pageYOffset+'px'}
+isDoNotTrackEnabled(){return navigator.doNotTrack===1||navigator.doNotTrack==='1'||navigator.msDoNotTrack==='1'||window.doNotTrack==='1'}
+getReferrer(){return document.referrer||'无来源页面'}
+getTimezone(){return Intl.DateTimeFormat().resolvedOptions().timeZone}
+getDeviceOrientation(){return new Promise(e=&gt;{if(window.DeviceOrientationEvent){window.addEventListener('deviceorientation',t=&gt;{e(`Alpha:${t.alpha?.toFixed(2)} Beta:${t.beta?.toFixed(2)} Gamma:${t.gamma?.toFixed(2)}`)},{once:!0})}else{e('不支持设备方向检测')}})}
+getNetworkLatency(){return new Promise(e=&gt;{let t=performance.now();fetch('https://www.google.com/favicon.ico?t='+Date.now(),{mode:'no-cors',cache:'no-cache'}).then(()=&gt;{e((performance.now()-t).toFixed(2)+'ms')}).catch(()=&gt;e('检测失败'))})}
+getStorageUsage(){return new Promise(e=&gt;{if(navigator.storage&amp;&amp;navigator.storage.estimate){navigator.storage.estimate().then(t=&gt;{let o=(t.usage/1024/1024).toFixed(2),n=(t.quota/1024/1024).toFixed(2);e(`已用:${o}MB 总额:${n}MB`)}).catch(()=&gt;e('存储信息不可用'))}else{e('不支持存储API')}})}
+isPWAInstalled(){return window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone||document.referrer.includes('android-app://')}
+getMediaDevices(){return new Promise(e=&gt;{navigator.mediaDevices?.enumerateDevices?.().then(t=&gt;{let o=t.map(t=&gt;`${t.kind}:${t.label||'未知'}`).join('; ');e(o||'无媒体设备')}).catch(()=&gt;e('无法获取设备列表'))})}
+createQRCode(e){return`https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data=${encodeURIComponent(e.TEXT)}`}
+speakText(e){if('speechSynthesis'in window){let t=new SpeechSynthesisUtterance(e.TEXT);speechSynthesis.speak(t)}}
+stopSpeaking(){speechSynthesis.cancel()}
+getGeolocation(){return new Promise(e=&gt;{if('geolocation'in navigator){navigator.geolocation.getCurrentPosition(t=&gt;{e(`纬度:${t.coords.latitude.toFixed(6)} 经度:${t.coords.longitude.toFixed(6)}`)},()=&gt;e('位置获取失败'))}else{e('不支持地理位置')}})}
+getSunriseSunset(){return new Promise(e=&gt;{fetch('https://api.sunrise-sunset.org/json?lat=36.7201600&amp;lng=-4.4203400&amp;formatted=0').then(t=&gt;t.json()).then(t=&gt;{t.results?e(`日出:${t.results.sunrise} 日落:${t.results.sunset}`):e('数据获取失败')}).catch(()=&gt;e('服务不可用'))})}
+calculateAge(e){let t=new Date(e.BIRTHDAY.replace(/\./g,'/')),o=new Date(),n=o.getFullYear()-t.getFullYear(),c=o.getMonth()-t.getMonth();return c&lt;0||0===c&amp;&amp;o.getDate()&lt;t.getDate()?n-1:n}
+countdownTimer(e){let t=new Date(e.TARGET_TIME),o=new Date(),n=t-o;return n&lt;=0?'时间已到':`${Math.floor(n/(1e3*60*60*24))}天${Math.floor(n%(1e3*60*60*24)/(1e3*60*60))}小时${Math.floor(n%(1e3*60*60)/(1e3*60))}分钟`}
+getMoonPhase(){let e=new Date(),t=e.getDate(),o=e.getMonth()+1,n=e.getFullYear(),c=(n%100+Math.floor((n%100)/4))%7;return['新月','娥眉月','上弦月','盈凸月','满月','亏凸月','下弦月','残月'][Math.floor(t%8)]}
+generatePassword(e){let t=e.LENGTH,o='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&amp;*',n='';for(let e=0;e&lt;t;e++)n+=o[Math.floor(Math.random()*o.length)];return n}
+analyzeText(e){let t=e.TEXT,o=t.length,n=t.split(/\s+/).length,c=t.split(/[.!?]+/).length-1;return`字符数:${o} 单词数:${n} 句子数:${c}`}
+getCurrentSeason(){let e=new Date(),t=e.getMonth();return t&gt;=2&amp;&amp;t&lt;=4?'春季':t&gt;=5&amp;&amp;t&lt;=7?'夏季':t&gt;=8&amp;&amp;t&lt;=10?'秋季':'冬季'}
+isLeapYear(e){let t=e.YEAR;return t%4==0&amp;&amp;t%100!=0||t%400==0}
+getURLParameters(){let e=new URLSearchParams(window.location.search),t=[];for(let o of e.entries())t.push(`${o[0]}=${o[1]}`);return t.join(', ')}
+setLocalStorage(e){localStorage.setItem(e.KEY,e.VALUE)}
+getLocalStorage(e){return localStorage.getItem(e.KEY)||''}
+removeLocalStorage(e){localStorage.removeItem(e.KEY)}
+clearLocalStorage(){localStorage.clear()}
+getPerformanceMetrics(){let e=performance.getEntriesByType('navigation')[0];if(e){let t=e.domContentLoadedEventEnd-e.navigationStart,o=e.loadEventEnd-e.navigationStart;return`DOM加载:${t}ms 完全加载:${o}ms`}return'性能数据不可用'}
+detectAdBlocker(){return new Promise(e=&gt;{fetch('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',{method:'HEAD',mode:'no-cors'}).then(()=&gt;e(false)).catch(()=&gt;e(true))})}
+getPageVisibility(){return document.hidden?'页面隐藏':'页面可见'}
+createBlobURL(e){let t=new Blob([e.CONTENT],{type:e.TYPE});return URL.createObjectURL(t)}
+revokeBlobURL(e){URL.revokeObjectURL(e.URL)}
+getElementCount(e){return document.querySelectorAll(e.SELECTOR).length}
+checkFontSupport(e){let t=document.createElement('span');t.style.fontFamily=e.FONT,t.style.position='absolute',t.style.left='-9999px',t.innerHTML='mmmmmmmmmmmmmmmm';document.body.appendChild(t);let o=t.offsetWidth;document.body.removeChild(t);let n=document.createElement('span');n.style.fontFamily='monospace',n.style.position='absolute',n.style.left='-9999px',n.innerHTML='mmmmmmmmmmmmmmmm';document.body.appendChild(n);let c=n.offsetWidth;return document.body.removeChild(n),o!==c}
+getCSSVariable(e){return getComputedStyle(document.documentElement).getPropertyValue(e.VAR_NAME).trim()}
+setCSSVariable(e){document.documentElement.style.setProperty(e.VAR_NAME,e.VALUE)}
+createObjectURL(e){let t=new Blob([e.FILE],{type:'text/plain'});return URL.createObjectURL(t)}
+measureTextWidth(e){let t=document.createElement('canvas'),o=t.getContext('2d');return o.font=e.FONT,Math.ceil(o.measureText(e.TEXT).width)}
+getScrollbarWidth(){let e=document.createElement('div');e.style.overflow='scroll',e.style.width='50px',e.style.height='50px',e.style.visibility='hidden',e.style.position='absolute',e.style.top='-9999px';document.body.appendChild(e);let t=e.offsetWidth-e.clientWidth;return document.body.removeChild(e),t}
+isReduceMotionEnabled(){return window.matchMedia('(prefers-reduced-motion: reduce)').matches}
+detectIncognitoMode(){return new Promise(e=&gt;{let t=!1;'storage'in navigator&amp;&amp;navigator.storage.estimate?navigator.storage.estimate().then(o=&gt;{t=o.quota&lt;12e9}).catch(()=&gt;t=!1):t=!1,e(t)})}
+getDeviceMotion(){return new Promise(e=&gt;{if(window.DeviceMotionEvent){window.addEventListener('devicemotion',t=&gt;{e(`X:${t.acceleration?.x?.toFixed(2)} Y:${t.acceleration?.y?.toFixed(2)} Z:${t.acceleration?.z?.toFixed(2)}`)},{once:!0})}else{e('不支持设备运动检测')}})}
+createHash(e){let t=e.ALGORITHM,o=e.TEXT,n=0;for(let e=0;e&lt;o.length;e++)n=((n&lt;&lt;5)-n)+o.charCodeAt(e),n&amp;=n;return'MD5'===t?(n&gt;&gt;&gt;0).toString(16):'SHA-1'===t?(n+2147483648).toString(16):'SHA-256'===t?(n*2654435761&gt;&gt;&gt;0).toString(16):(n^123456789).toString(16)}
+compressText(e){try{return btoa(encodeURIComponent(e.TEXT).replace(/%([0-9A-F]{2})/g,(e,t)=&gt;String.fromCharCode('0x'+t)))}catch(e){return'压缩失败'}}
+decompressText(e){try{return decodeURIComponent(atob(e.TEXT).split('').map(e=&gt;'%'+('00'+e.charCodeAt(0).toString(16)).slice(-2)).join(''))}catch(e){return'解压失败'}}
+detectDarkPattern(){return window.matchMedia&amp;&amp;window.matchMedia('(prefers-color-scheme: dark)').matches?'深色模式':'浅色模式'}
+getAudioContext(){return'undefined'!=typeof AudioContext?'音频上下文可用':'音频上下文不可用'}
+calculateTextReadTime(e){let t=e.TEXT.length;return Math.ceil(t/200)+'分钟'}
+generateUUID(){return'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,e=&gt;{let t=16*Math.random()|0;return('x'===e?t:3&amp;t|8).toString(16)})}
+checkImageExists(e){return new Promise(t=&gt;{let o=new Image;o.onload=()=&gt;t(!0),o.onerror=()=&gt;t(!1),o.src=e.URL})}
+getCookieValue(e){let t=`; ${document.cookie}`,o=t.split(`; ${e.NAME}=`);return 2===o.length?o.pop().split(';').shift():''}
+setCookieValue(e){let t=e.NAME,o=e.VALUE,n=e.DAYS,c=new Date;c.setTime(c.getTime()+24*n*60*60*1e3);let r='expires='+c.toUTCString();document.cookie=t+'='+o+';'+r+';path=/'}
+getBatteryStatus(){return new Promise(e=&gt;{if(navigator.getBattery){navigator.getBattery().then(t=&gt;{e(`电量:${Math.round(t.level*100)}% 充电中:${t.charging?'是':'否'} 充电时间:${t.chargingTime?Math.round(t.chargingTime/60)+'分钟':'未知'} 放电时间:${t.dischargingTime?Math.round(t.dischargingTime/60)+'分钟':'未知'}`)}).catch(()=&gt;e('电池状态未知'))}else{e('不支持电池API')}})}
+detectIdleState(){return new Promise(e=&gt;{if('requestIdleCallback'in window){let t=performance.now();window.requestIdleCallback(()=&gt;{e(`空闲时间:${Math.round(performance.now()-t)}ms`)})}else{e('不支持空闲检测')}})}
+calculateDistance(e){let t=e.POINT1.split(',').map(Number),o=e.POINT2.split(',').map(Number);if(t.length!==2||o.length!==2||t.some(isNaN)||o.some(isNaN))return'坐标格式错误';let n=t[0]-o[0],c=t[1]-o[1];return Math.sqrt(n*n+c*c).toFixed(2)}
+generateLoremIpsum(e){let t=e.WORDS,o=['lorem','ipsum','dolor','sit','amet','consectetur','adipiscing','elit','sed','do','eiusmod','tempor','incididunt','ut','labore','et','dolore','magna','aliqua','enim','minim','veniam','quis','nostrud','exercitation','ullamco','laboris','nisi','aliquip','ex','ea','commodo','consequat','duis','aute','irure','in','reprehenderit','voluptate','velit','esse','cillum','eu','fugiat','nulla','pariatur','excepteur','sint','occaecat','cupidatat','non','proident','sunt','culpa','qui','officia','deserunt','mollit','anim','id','est','laborum'],n='';for(let e=0;e&lt;t;e++)n+=(e&gt;0?' ':'')+o[Math.floor(Math.random()*o.length)];return n+'.'}
+checkSSLStatus(){return window.location.protocol==='https:'}
+getPageLoadSize(){let e=performance.getEntriesByType('resource').reduce((e,t)=&gt;e+t.transferSize||0,0);return(e/1024).toFixed(2)+'KB'}
+detectPrintSupport(){return!!window.matchMedia&amp;&amp;!!window.matchMedia('print')}
+createDataURL(e){return`data:${e.TYPE},${encodeURIComponent(e.CONTENT)}`}
+getActiveElement(){let e=document.activeElement;return e?e.tagName+ (e.id?'#'+e.id:'')+ (e.className?'.'+e.className.split(' ')[0]:''):'无焦点元素'}
+checkWebGLSupport(){let e=document.createElement('canvas');return!!(e.getContext('webgl')||e.getContext('experimental-webgl'))}
+getSelectionText(){let e=window.getSelection();return e?e.toString():'无选中文本'}
+detectPointerType(){return window.matchMedia&amp;&amp;window.matchMedia('(pointer:coarse)').matches?'触摸设备':window.matchMedia&amp;&amp;window.matchMedia('(pointer:fine)').matches?'鼠标设备':'未知指针设备'}
+calculateAspectRatio(e){let t=e.WIDTH,o=e.HEIGHT;if(t&lt;=0||o&lt;=0)return'无效尺寸';let n=this.gcd(t,o);return`${t/n}:${o/n}`}
+gcd(e,t){return t===0?e:this.gcd(t,e%t)}
+generateGradient(e){return`linear-gradient(45deg, ${e.COLOR1}, ${e.COLOR2})`}
+checkServiceWorker(){return'navigator' in window&amp;&amp;'serviceWorker' in navigator?!!navigator.serviceWorker.controller:'不支持Service Worker'}}
+
+Scratch.extensions.register(new MorganToolboxV8());
+</code></pre></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
@@ -782,7 +855,7 @@ if(""!=""){
 </script></div>
 </body>
 <script>
-var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
 var utterancesLoad=0;
 
 let themeSettings={
@@ -855,7 +928,70 @@ function iFrameLoading(){
     }
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
 
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
 
 </script>
 

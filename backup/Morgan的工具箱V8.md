@@ -1,3 +1,5 @@
+
+```
 //官网https://ccwmoran.github.io
 class MorganToolboxV8{
 constructor(){this.lastResponse=''}
@@ -245,3 +247,4 @@ generateGradient(e){return`linear-gradient(45deg, ${e.COLOR1}, ${e.COLOR2})`}
 checkServiceWorker(){return'navigator' in window&&'serviceWorker' in navigator?!!navigator.serviceWorker.controller:'不支持Service Worker'}}
 
 Scratch.extensions.register(new MorganToolboxV8());
+```
