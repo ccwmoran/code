@@ -1,5 +1,223 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>慕然科技Scratch积木扩展库</title><link>https://ccwmoran.github.io/code</link><description>丰富、实用的各种积木扩展</description><copyright>慕然科技Scratch积木扩展库</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg</url><title>avatar</title><link>https://ccwmoran.github.io/code</link></image><lastBuildDate>Sun, 30 Nov 2025 13:33:05 +0000</lastBuildDate><managingEditor>慕然科技Scratch积木扩展库</managingEditor><ttl>60</ttl><webMaster>慕然科技Scratch积木扩展库</webMaster><item><title>慕然科技的豆包AI对话</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-dou-bao-AI-dui-hua.html</link><description>```
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>慕然科技Scratch积木扩展库</title><link>https://ccwmoran.github.io/code</link><description>丰富、实用的各种积木扩展</description><copyright>慕然科技Scratch积木扩展库</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg</url><title>avatar</title><link>https://ccwmoran.github.io/code</link></image><lastBuildDate>Sun, 30 Nov 2025 13:34:10 +0000</lastBuildDate><managingEditor>慕然科技Scratch积木扩展库</managingEditor><ttl>60</ttl><webMaster>慕然科技Scratch积木扩展库</webMaster><item><title>慕然科技的腾讯混元大模型对话</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-teng-xun-hun-yuan-da-mo-xing-dui-hua.html</link><description>```
+(function(Scratch) {
+    'use strict';
+    
+    class TencentHunyuanExtension {
+        constructor() {
+            this.apiKey = '';
+            this.currentModel = 'hunyuan-turbo';
+            this.webSearchEnabled = false;
+            this.deepThinkingEnabled = false;
+            this.lastResponse = '';
+            this.lastThinkingResult = '';
+            this.lastThinkingTime = 0;
+            this.conversationHistory = [];
+            this.isProcessing = false;
+            
+            // 腾讯混元模型映射[citation:2][citation:10]
+            this.modelMap = {
+                '混元Turbo': 'hunyuan-turbo',
+                '混元Pro': 'hunyuan-pro',
+                '混元标准': 'hunyuan-standard'
+            };
+            
+            this.colors = {
+                primary: '#006EFF',
+                secondary: '#0052CC',
+                accent: '#003D99'
+            };
+        }
+        
+        getInfo() {
+            return {
+                id: 'kjcxyb',
+                name: '慕然科技的腾讯元宝对话',
+                color1: this.colors.primary,
+                color2: this.colors.secondary,
+                color3: this.colors.accent,
+                docsURI: 'https://cloud.tencent.com/document/product/1729',
+                blocks: [
+                    {
+                        opcode: 'setApiKey',
+                        blockType: Scratch.BlockType.COMMAND,
+                        text: '设置API密钥 [KEY]',
+                        arguments: {
+                            KEY: {
+                                type: Scratch.ArgumentType.STRING,
+                                defaultValue: ''
+                            }
+                        }
+                    },
+                    {
+                        opcode: 'setModel',
+                        blockType: Scratch.BlockType.COMMAND,
+                        text: '使用模型 [MODEL]',
+                        arguments: {
+                            MODEL: {
+                                type: Scratch.ArgumentType.STRING,
+                                menu: 'models'
+                            }
+                        }
+                    },
+                    {
+                        opcode: 'setWebSearch',
+                        blockType: Scratch.BlockType.COMMAND,
+                        text: '联网搜索 [ENABLED]',
+                        arguments: {
+                            ENABLED: {
+                                type: Scratch.ArgumentType.STRING,
+                                menu: 'switch'
+                            }
+                        }
+                    },
+                    {
+                        opcode: 'setDeepThinking',
+                        blockType: Scratch.BlockType.COMMAND,
+                        text: '深度思考 [ENABLED]',
+                        arguments: {
+                            ENABLED: {
+                                type: Scratch.ArgumentType.STRING,
+                                menu: 'switch'
+                            }
+                        }
+                    },
+                    '---',
+                    {
+                        opcode: 'getThinkingResult',
+                        blockType: Scratch.BlockType.REPORTER,
+                        text: '深度思考结果',
+                        disableMonitor: true
+                    },
+                    {
+                        opcode: 'getThinkingTime',
+                        blockType: Scratch.BlockType.REPORTER,
+                        text: '深度思考用时（秒）',
+                        disableMonitor: true
+                    },
+                    {
+                        opcode: 'getLastOutput',
+                        blockType: Scratch.BlockType.REPORTER,
+                        text: '输出结果',
+                        disableMonitor: true
+                    },
+                    {
+                        opcode: 'getCurrentModel',
+                        blockType: Scratch.BlockType.REPORTER,
+                        text: '当前模型',
+                        disableMonitor: true
+                    },
+                    '---',
+                    {
+                        opcode: 'sendMessage',
+                        blockType: Scratch.BlockType.REPORTER,
+                        text: '发送消息 [MESSAGE]',
+                        arguments: {
+                            MESSAGE: {
+                                type: Scratch.ArgumentType.STRING,
+                                defaultValue: '你好！请介绍一下你自己'
+                            }
+                        }
+                    },
+                    {
+                        opcode: 'resetConversation',
+                        blockType: Scratch.BlockType.COMMAND,
+                        text: '重置对话历史'
+                    }
+                ],
+                menus: {
+                    models: {
+                        acceptReporters: false,
+                        items: [
+                            '混元Turbo',
+                            '混元Pro',
+                            '混元标准'
+                        ]
+                    },
+                    switch: {
+                        acceptReporters: false,
+                        items: ['打开', '关闭']
+                    }
+                }
+            };
+        }
+        
+        setApiKey(args) {
+            const key = args.KEY.trim();
+            if (key) {
+                this.apiKey = key;
+                console.log('API密钥已设置');
+            }
+        }
+        
+        setModel(args) {
+            const modelKey = args.MODEL;
+            this.currentModel = this.modelMap[modelKey] || this.modelMap['混元Turbo'];
+            console.log(`模型已设置为: ${modelKey} (${this.currentModel})`);
+        }
+        
+        setWebSearch(args) {
+            this.webSearchEnabled = (args.ENABLED === '打开');
+            console.log(`联网搜索: ${this.webSearchEnabled ? '开启' : '关闭'}`);
+        }
+        
+        setDeepThinking(args) {
+            this.deepThinkingEnabled = (args.ENABLED === '打开');
+            console.log(`深度思考: ${this.deepThinkingEnabled ? '开启' : '关闭'}`);
+        }
+        
+        getThinkingResult() {
+            if (!this.lastThinkingResult) return '暂无思考结果';
+            return this.lastThinkingResult;
+        }
+        
+        getThinkingTime() {
+            if (this.lastThinkingTime === 0) return '0';
+            return (Math.round(this.lastThinkingTime / 100) / 10).toString();
+        }
+        
+        getLastOutput() {
+            return this.lastResponse || '暂无输出结果';
+        }
+        
+        getCurrentModel() {
+            for (const [displayName, modelId] of Object.entries(this.modelMap)) {
+                if (modelId === this.currentModel) {
+                    return displayName;
+                }
+            }
+            return this.currentModel;
+        }
+        
+        resetConversation() {
+            this.conversationHistory = [];
+            this.lastResponse = '';
+            this.lastThinkingResult = '';
+            this.lastThinkingTime = 0;
+            console.log('对话历史已重置');
+        }
+        
+        sendMessage(args) {
+            if (this.isProcessing) {
+                return Promise.resolve('错误：上一个请求正在处理中，请稍后再试');
+            }
+            
+            if (!this.apiKey) {
+                return Promise.resolve('错误：请先设置API密钥');
+            }
+            
+            const message = args.MESSAGE.trim();
+            if (!message) {
+                return Promise.resolve('错误：消息内容不能为空');
+            }
+            
+            this.isProcessing = true;
+            
+            // 构建对话消息[citation:2][citation:9]
+            const messages = [...this.conversationHistory];
+            
+            // 添加系统提示词
+            let systemMessage = '你是一个有帮助的AI助手。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-teng-xun-hun-yuan-da-mo-xing-dui-hua.html</guid><pubDate>Sun, 30 Nov 2025 13:33:43 +0000</pubDate></item><item><title>慕然科技的豆包AI对话</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-dou-bao-AI-dui-hua.html</link><description>```
 (function(Scratch) {
     'use strict';
     
