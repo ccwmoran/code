@@ -1,5 +1,24 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>慕然科技Scratch积木扩展库</title><link>https://ccwmoran.github.io/code</link><description>丰富、实用的各种积木扩展</description><copyright>慕然科技Scratch积木扩展库</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg</url><title>avatar</title><link>https://ccwmoran.github.io/code</link></image><lastBuildDate>Sun, 30 Nov 2025 12:03:09 +0000</lastBuildDate><managingEditor>慕然科技Scratch积木扩展库</managingEditor><ttl>60</ttl><webMaster>慕然科技Scratch积木扩展库</webMaster><item><title>Morgan的安全保护组件</title><link>https://ccwmoran.github.io/code/post/Morgan-de-an-quan-bao-hu-zu-jian.html</link><description>```
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>慕然科技Scratch积木扩展库</title><link>https://ccwmoran.github.io/code</link><description>丰富、实用的各种积木扩展</description><copyright>慕然科技Scratch积木扩展库</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg</url><title>avatar</title><link>https://ccwmoran.github.io/code</link></image><lastBuildDate>Sun, 30 Nov 2025 12:04:27 +0000</lastBuildDate><managingEditor>慕然科技Scratch积木扩展库</managingEditor><ttl>60</ttl><webMaster>慕然科技Scratch积木扩展库</webMaster><item><title>慕然科技的模拟封号</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-mo-ni-feng-hao.html</link><description>```
+//慕然科技官网ccwmoran.github.io
+class BanSimulatorExtension{
+constructor(){this.modalStyle=null}
+getInfo(){
+return{
+id:'fh',
+name:'慕然科技的模拟封号',
+color:'#00A1D6',
+blocks:[
+{
+opcode:'showBanNotice',
+blockType:Scratch.BlockType.COMMAND,
+text:'显示封号提示 主题色 [COLOR] 标题 [TITLE] 原因 [REASON] 封禁天数 [DAYS] 详情 [DETAILS] 申诉流程 [APPEAL_PROCESS] 申诉链接 [APPEAL_URL] 显示关闭按钮 [SHOW_CLOSE]',
+arguments:{
+COLOR:{type:Scratch.ArgumentType.COLOR,defaultValue:'#ff0000'},
+TITLE:{type:Scratch.ArgumentType.STRING,defaultValue:'你被封号了！'},
+REASON:{type:Scratch.ArgumentType.STRING,defaultValue:'违反社区规定'},
+DAYS:{type:Scratch.ArgumentType.NUMBER,defaultValue:7},
+DETAILS:{type:Scratch.ArgumentType.STRING,defaultValue:'您的账号因发布违规内容而被封禁。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-mo-ni-feng-hao.html</guid><pubDate>Sun, 30 Nov 2025 12:03:59 +0000</pubDate></item><item><title>Morgan的安全保护组件</title><link>https://ccwmoran.github.io/code/post/Morgan-de-an-quan-bao-hu-zu-jian.html</link><description>```
 class MorganSecurityV2 {
     constructor() {
         this.crashInitiated = false;
