@@ -10,7 +10,8 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="`//弹窗样式代码来自Chen-Jin的社区弹窗扩展
+<meta name="description" content="```
+//弹窗样式代码来自Chen-Jin的社区弹窗扩展
 //弹窗积木和功能等由Morgan制作
 //仅CCW共创世界中可用弹窗（其他未知）
 class CommunityPopupExtension {
@@ -404,9 +405,12 @@ class CommunityPopupExtension {
 }
 
 // 注册扩展
-Scratch.extensions.register(new CommunityPopupExtension());`。">
+Scratch.extensions.register(new CommunityPopupExtension());
+```
+。">
 <meta property="og:title" content="慕然科技的社区弹窗">
-<meta property="og:description" content="`//弹窗样式代码来自Chen-Jin的社区弹窗扩展
+<meta property="og:description" content="```
+//弹窗样式代码来自Chen-Jin的社区弹窗扩展
 //弹窗积木和功能等由Morgan制作
 //仅CCW共创世界中可用弹窗（其他未知）
 class CommunityPopupExtension {
@@ -800,7 +804,9 @@ class CommunityPopupExtension {
 }
 
 // 注册扩展
-Scratch.extensions.register(new CommunityPopupExtension());`。">
+Scratch.extensions.register(new CommunityPopupExtension());
+```
+。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-she-qu-dan-chuang.html">
 <meta property="og:image" content="https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg">
@@ -871,400 +877,402 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><p>`//弹窗样式代码来自Chen-Jin的社区弹窗扩展<br>
-//弹窗积木和功能等由Morgan制作<br>
-//仅CCW共创世界中可用弹窗（其他未知）<br>
-class CommunityPopupExtension {<br>
-constructor() {<br>
-this.lastResult = null;<br>
-this.inputValue = '';<br>
-}</p>
-<pre class="notranslate"><code class="notranslate">getInfo() {
-    return {
-        id: 'kjcxsqtc',
-        name: '慕然科技的社区弹窗',
-        color: '#5cff6e',
-        docsURI: 'https://ccwmoran.github.io',
-        blocks: [
-            {
-                opcode: 'showTextPopup',
-                blockType: Scratch.BlockType.COMMAND,
-                text: '显示纯文本提示 标题 [TITLE] 内容 [CONTENT] 按钮显示 [BUTTON_TYPE] 积极按钮 [CONFIRM] 消极按钮 [CANCEL]',
-                arguments: {
-                    TITLE: {
-                        type: Scratch.ArgumentType.STRING,
-                        defaultValue: '提示'
-                    },
-                    CONTENT: {
-                        type: Scratch.ArgumentType.STRING,
-                        defaultValue: '这是一个纯文本提示'
-                    },
-                    BUTTON_TYPE: {
-                        type: Scratch.ArgumentType.STRING,
-                        menu: 'buttonType',
-                        defaultValue: 'both'
-                    },
-                    CONFIRM: {
-                        type: Scratch.ArgumentType.STRING,
-                        defaultValue: '确认'
-                    },
-                    CANCEL: {
-                        type: Scratch.ArgumentType.STRING,
-                        defaultValue: '取消'
+<div class="markdown-body" id="postBody"><pre class="notranslate"><code class="notranslate">//弹窗样式代码来自Chen-Jin的社区弹窗扩展
+//弹窗积木和功能等由Morgan制作
+//仅CCW共创世界中可用弹窗（其他未知）
+class CommunityPopupExtension {
+    constructor() {
+        this.lastResult = null;
+        this.inputValue = '';
+    }
+
+    getInfo() {
+        return {
+            id: 'kjcxsqtc',
+            name: '慕然科技的社区弹窗',
+            color: '#5cff6e',
+            docsURI: 'https://ccwmoran.github.io',
+            blocks: [
+                {
+                    opcode: 'showTextPopup',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '显示纯文本提示 标题 [TITLE] 内容 [CONTENT] 按钮显示 [BUTTON_TYPE] 积极按钮 [CONFIRM] 消极按钮 [CANCEL]',
+                    arguments: {
+                        TITLE: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '提示'
+                        },
+                        CONTENT: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '这是一个纯文本提示'
+                        },
+                        BUTTON_TYPE: {
+                            type: Scratch.ArgumentType.STRING,
+                            menu: 'buttonType',
+                            defaultValue: 'both'
+                        },
+                        CONFIRM: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '确认'
+                        },
+                        CANCEL: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '取消'
+                        }
                     }
+                },
+                {
+                    opcode: 'showInputPopup',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '显示输入框提示 标题 [TITLE] 提示文字 [HINT] 默认值 [DEFAULT] 积极按钮 [CONFIRM] 消极按钮 [CANCEL]',
+                    arguments: {
+                        TITLE: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '输入'
+                        },
+                        HINT: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '请输入内容'
+                        },
+                        DEFAULT: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: ''
+                        },
+                        CONFIRM: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '确定'
+                        },
+                        CANCEL: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '取消'
+                        }
+                    }
+                },
+                {
+                    opcode: 'showHighlightPopup',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '显示文本突出提示 标题 [TITLE] 说明文字 [DESC] 突出文本 [HIGHLIGHT] 积极按钮 [COPY] 消极按钮 [CANCEL]',
+                    arguments: {
+                        TITLE: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '文本突出'
+                        },
+                        DESC: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '以下是需要突出的文本内容'
+                        },
+                        HIGHLIGHT: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '突出显示的文本'
+                        },
+                        COPY: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '复制'
+                        },
+                        CANCEL: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '取消'
+                        }
+                    }
+                },
+                {
+                    opcode: 'getLastResult',
+                    blockType: Scratch.BlockType.REPORTER,
+                    text: '弹窗结果',
+                    disableMonitor: true
+                },
+                {
+                    opcode: 'getInputValue',
+                    blockType: Scratch.BlockType.REPORTER,
+                    text: '输入框内容',
+                    disableMonitor: true
                 }
-            },
-            {
-                opcode: 'showInputPopup',
-                blockType: Scratch.BlockType.COMMAND,
-                text: '显示输入框提示 标题 [TITLE] 提示文字 [HINT] 默认值 [DEFAULT] 积极按钮 [CONFIRM] 消极按钮 [CANCEL]',
-                arguments: {
-                    TITLE: {
-                        type: Scratch.ArgumentType.STRING,
-                        defaultValue: '输入'
-                    },
-                    HINT: {
-                        type: Scratch.ArgumentType.STRING,
-                        defaultValue: '请输入内容'
-                    },
-                    DEFAULT: {
-                        type: Scratch.ArgumentType.STRING,
-                        defaultValue: ''
-                    },
-                    CONFIRM: {
-                        type: Scratch.ArgumentType.STRING,
-                        defaultValue: '确定'
-                    },
-                    CANCEL: {
-                        type: Scratch.ArgumentType.STRING,
-                        defaultValue: '取消'
-                    }
+            ],
+            menus: {
+                buttonType: {
+                    items: [
+                        {
+                            text: '都显示',
+                            value: 'both'
+                        },
+                        {
+                            text: '积极按钮',
+                            value: 'positive'
+                        },
+                        {
+                            text: '消极按钮',
+                            value: 'negative'
+                        }
+                    ]
                 }
-            },
-            {
-                opcode: 'showHighlightPopup',
-                blockType: Scratch.BlockType.COMMAND,
-                text: '显示文本突出提示 标题 [TITLE] 说明文字 [DESC] 突出文本 [HIGHLIGHT] 积极按钮 [COPY] 消极按钮 [CANCEL]',
-                arguments: {
-                    TITLE: {
-                        type: Scratch.ArgumentType.STRING,
-                        defaultValue: '文本突出'
-                    },
-                    DESC: {
-                        type: Scratch.ArgumentType.STRING,
-                        defaultValue: '以下是需要突出的文本内容'
-                    },
-                    HIGHLIGHT: {
-                        type: Scratch.ArgumentType.STRING,
-                        defaultValue: '突出显示的文本'
-                    },
-                    COPY: {
-                        type: Scratch.ArgumentType.STRING,
-                        defaultValue: '复制'
-                    },
-                    CANCEL: {
-                        type: Scratch.ArgumentType.STRING,
-                        defaultValue: '取消'
-                    }
-                }
-            },
-            {
-                opcode: 'getLastResult',
-                blockType: Scratch.BlockType.REPORTER,
-                text: '弹窗结果',
-                disableMonitor: true
-            },
-            {
-                opcode: 'getInputValue',
-                blockType: Scratch.BlockType.REPORTER,
-                text: '输入框内容',
-                disableMonitor: true
-            }
-        ],
-        menus: {
-            buttonType: {
-                items: [
-                    {
-                        text: '都显示',
-                        value: 'both'
-                    },
-                    {
-                        text: '积极按钮',
-                        value: 'positive'
-                    },
-                    {
-                        text: '消极按钮',
-                        value: 'negative'
-                    }
-                ]
-            }
-        }
-    };
-}
-
-// 辅助函数：创建元素
-ce(tag, text = undefined, pn = undefined, className = undefined, type = 't') {
-    var el = document.createElement(tag);
-    if (text) el[type == 'h' ? "innerHTML" : "innerText"] = text;
-    pn?.appendChild(el);
-    if (className) el.className = className;
-    return el;
-}
-
-parseMarkdownLinks(text) {
-    return text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '&lt;a href="$2" target="_blank" style="color: #5cff6e; text-decoration: underline; cursor: pointer;"&gt;$1&lt;/a&gt;');
-}
-
-showTextPopup(args) {
-    return new Promise(resolve =&gt; {
-        const mask = this.ce('div', 0, document.body, "c-mask-container c-modal-mask");
-        mask.style.zIndex = '100002';
-        
-        const main = this.ce('div', 0, document.body, "c-modal-wrap c-modal-has-title c-modal-enter c-modal-enter-active");
-        main.style.zIndex = '100002';
-        
-        const win = this.ce('div', 0, main, "c-modal-container c-modal-dark-container modal-container-S");
-        const title = this.ce('div', args.TITLE, win, "c-modal-title c-modal-dark-title");
-        const close = this.ce('div', '&lt;img src="https://m.ccw.site/creator-college/icons/darkClose.svg" alt="close"&gt;', win, "c-modal-close", "h");
-        
-        const contentBody = this.ce('div', 0, win, "c-modal-body c-modal-dark-body");
-        const content = this.ce('div', this.parseMarkdownLinks(args.CONTENT), contentBody, "c-modal-content", "h");
-        
-        // 安全提示
-        const securityNote = this.ce('div', '此弹窗非官方弹出，请注意辨认 by慕然科技的社区弹窗', content, "security-note");
-        securityNote.style.cssText = `
-            margin-top: 15px;
-            font-size: 10px;
-            color: #888;
-            text-align: center;
-        `;
-
-        const footer = this.ce('div', 0, win, "c-modal-footer");
-
-        // 根据按钮显示类型决定显示哪些按钮
-        let buttonsToShow = [];
-        switch (args.BUTTON_TYPE) {
-            case 'positive':
-                buttonsToShow = [
-                    this.ce('button', args.CONFIRM, footer, "btn-DxL3n btn-xmiddle-1XiJB btn-primary-2CEZZ c-modal-footer-button")
-                ];
-                break;
-            case 'negative':
-                buttonsToShow = [
-                    this.ce('button', args.CANCEL, footer, "btn-DxL3n btn-xmiddle-1XiJB btn-default-2wq9q c-modal-footer-button")
-                ];
-                break;
-            case 'both':
-            default:
-                buttonsToShow = [
-                    this.ce('button', args.CANCEL, footer, "btn-DxL3n btn-xmiddle-1XiJB btn-default-2wq9q c-modal-footer-button"),
-                    this.ce('button', args.CONFIRM, footer, "btn-DxL3n btn-xmiddle-1XiJB btn-primary-2CEZZ c-modal-footer-button")
-                ];
-                break;
-        }
-
-        const showT = setTimeout(() =&gt; main.className = "c-modal-wrap c-modal-has-title c-modal-enter-done", 600);
-        
-        const exit = (re) =&gt; {
-            clearTimeout(showT);
-            mask.remove();
-            main.className = "c-modal-wrap c-modal-has-title c-modal-enter c-modal-exit";
-            setTimeout(() =&gt; main.remove(), 600);
-            resolve(re);
-        };
-
-        close.addEventListener("click", () =&gt; exit('close'));
-        buttonsToShow.forEach((btn, index) =&gt; {
-            if (btn.textContent === args.CONFIRM) {
-                btn.addEventListener("click", e =&gt; {
-                    if (e.isTrusted) exit('confirm');
-                });
-            } else if (btn.textContent === args.CANCEL) {
-                btn.addEventListener("click", e =&gt; {
-                    if (e.isTrusted) exit('cancel');
-                });
-            }
-        });
-    });
-}
-
-showInputPopup(args) {
-    return new Promise(resolve =&gt; {
-        const mask = this.ce('div', 0, document.body, "c-mask-container c-modal-mask");
-        mask.style.zIndex = '100002';
-        
-        const main = this.ce('div', 0, document.body, "c-modal-wrap c-modal-has-title c-modal-enter c-modal-enter-active");
-        main.style.zIndex = '100002';
-        
-        const win = this.ce('div', 0, main, "c-modal-container c-modal-dark-container modal-container-S");
-        const title = this.ce('div', args.TITLE, win, "c-modal-title c-modal-dark-title");
-        const close = this.ce('div', '&lt;img src="https://m.ccw.site/creator-college/icons/darkClose.svg" alt="close"&gt;', win, "c-modal-close", "h");
-        
-        const contentBody = this.ce('div', 0, win, "c-modal-body c-modal-dark-body");
-        const content = this.ce('div', 0, contentBody, "c-modal-content");
-        
-        // 输入框区域
-        const inputSection = this.ce('div', 0, content);
-        inputSection.style.cssText = `
-            margin: 20px 0;
-            text-align: center;
-        `;
-        
-        const inputField = this.ce('input', 0, inputSection);
-        inputField.type = 'text';
-        inputField.placeholder = args.HINT;
-        inputField.value = args.DEFAULT;
-        inputField.style.cssText = `
-            width: 80%;
-            height: 40px;
-            border: 1px solid #444;
-            border-radius: 10px;
-            background: #1A1A1A;
-            color: white;
-            padding: 0 15px;
-            font-size: 14px;
-            outline: none;
-        `;
-
-        // 安全提示
-        const securityNote = this.ce('div', '此弹窗非官方弹出，请注意辨认 by慕然科技的社区弹窗', content, "security-note");
-        securityNote.style.cssText = `
-            margin-top: 15px;
-            font-size: 10px;
-            color: #888;
-            text-align: center;
-        `;
-
-        const footer = this.ce('div', 0, win, "c-modal-footer");
-        const cancelBtn = this.ce('button', args.CANCEL, footer, "btn-DxL3n btn-xmiddle-1XiJB btn-default-2wq9q c-modal-footer-button");
-        const confirmBtn = this.ce('button', args.CONFIRM, footer, "btn-DxL3n btn-xmiddle-1XiJB btn-primary-2CEZZ c-modal-footer-button");
-
-        const showT = setTimeout(() =&gt; main.className = "c-modal-wrap c-modal-has-title c-modal-enter-done", 600);
-        
-        const exit = (re, value = '') =&gt; {
-            clearTimeout(showT);
-            mask.remove();
-            main.className = "c-modal-wrap c-modal-has-title c-modal-enter c-modal-exit";
-            setTimeout(() =&gt; main.remove(), 600);
-            this.lastResult = re;
-            this.inputValue = value;
-            resolve(re);
-        };
-
-        close.addEventListener("click", () =&gt; exit('close'));
-        cancelBtn.addEventListener("click", e =&gt; {
-            if (e.isTrusted) exit('cancel');
-        });
-        confirmBtn.addEventListener("click", e =&gt; {
-            if (e.isTrusted) exit('confirm', inputField.value);
-        });
-        
-        // 回车键确认
-        inputField.onkeypress = (e) =&gt; {
-            if (e.key === 'Enter') {
-                exit('confirm', inputField.value);
             }
         };
-        
-        // 自动聚焦输入框
-        inputField.focus();
-        inputField.select();
-    });
-}
+    }
 
-showHighlightPopup(args) {
-    return new Promise(resolve =&gt; {
-        const mask = this.ce('div', 0, document.body, "c-mask-container c-modal-mask");
-        mask.style.zIndex = '100002';
-        
-        const main = this.ce('div', 0, document.body, "c-modal-wrap c-modal-has-title c-modal-enter c-modal-enter-active");
-        main.style.zIndex = '100002';
-        
-        const win = this.ce('div', 0, main, "c-modal-container c-modal-dark-container modal-container-S");
-        const title = this.ce('div', args.TITLE, win, "c-modal-title c-modal-dark-title");
-        const close = this.ce('div', '&lt;img src="https://m.ccw.site/creator-college/icons/darkClose.svg" alt="close"&gt;', win, "c-modal-close", "h");
-        
-        const contentBody = this.ce('div', 0, win, "c-modal-body c-modal-dark-body");
-        const content = this.ce('div', 0, contentBody, "c-modal-content");
-        
-        // 说明文字
-        const desc = this.ce('div', this.parseMarkdownLinks(args.DESC), content, "", "h");
-        desc.style.cssText = `
-            margin-bottom: 15px;
-            text-align: center;
-            color: #CCCCCC;
-        `;
+    // 辅助函数：创建元素
+    ce(tag, text = undefined, pn = undefined, className = undefined, type = 't') {
+        var el = document.createElement(tag);
+        if (text) el[type == 'h' ? "innerHTML" : "innerText"] = text;
+        pn?.appendChild(el);
+        if (className) el.className = className;
+        return el;
+    }
 
-        // 突出文本展示
-        const highlightText = this.ce('div', args.HIGHLIGHT, content);
-        highlightText.style.cssText = `
-            width: 80%;
-            height: 40px;
-            border: 1px solid #555;
-            border-radius: 10px;
-            background: #64748b;
-            color: #5cff6e;
-            line-height: 40px;
-            margin: 0 auto 20px;
-            font-family: monospace;
-            font-weight: bold;
-            font-size: 14px;
-            text-align: center;
-        `;
+    parseMarkdownLinks(text) {
+        return text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '&lt;a href="$2" target="_blank" style="color: #5cff6e; text-decoration: underline; cursor: pointer;"&gt;$1&lt;/a&gt;');
+    }
 
-        // 安全提示
-        const securityNote = this.ce('div', '此弹窗非官方弹出，请注意辨认 by慕然科技的社区弹窗', content, "security-note");
-        securityNote.style.cssText = `
-            margin-top: 15px;
-            font-size: 10px;
-            color: #888;
-            text-align: center;
-        `;
+    showTextPopup(args) {
+        return new Promise(resolve =&gt; {
+            const mask = this.ce('div', 0, document.body, "c-mask-container c-modal-mask");
+            mask.style.zIndex = '100002';
+            
+            const main = this.ce('div', 0, document.body, "c-modal-wrap c-modal-has-title c-modal-enter c-modal-enter-active");
+            main.style.zIndex = '100002';
+            
+            const win = this.ce('div', 0, main, "c-modal-container c-modal-dark-container modal-container-S");
+            const title = this.ce('div', args.TITLE, win, "c-modal-title c-modal-dark-title");
+            const close = this.ce('div', '&lt;img src="https://m.ccw.site/creator-college/icons/darkClose.svg" alt="close"&gt;', win, "c-modal-close", "h");
+            
+            const contentBody = this.ce('div', 0, win, "c-modal-body c-modal-dark-body");
+            const content = this.ce('div', this.parseMarkdownLinks(args.CONTENT), contentBody, "c-modal-content", "h");
+            
+            // 安全提示
+            const securityNote = this.ce('div', '此弹窗非官方弹出，请注意辨认 by慕然科技的社区弹窗', content, "security-note");
+            securityNote.style.cssText = `
+                margin-top: 15px;
+                font-size: 10px;
+                color: #888;
+                text-align: center;
+            `;
 
-        const footer = this.ce('div', 0, win, "c-modal-footer");
-        const cancelBtn = this.ce('button', args.CANCEL, footer, "btn-DxL3n btn-xmiddle-1XiJB btn-default-2wq9q c-modal-footer-button");
-        const copyBtn = this.ce('button', args.COPY, footer, "btn-DxL3n btn-xmiddle-1XiJB btn-primary-2CEZZ c-modal-footer-button");
+            const footer = this.ce('div', 0, win, "c-modal-footer");
 
-        const showT = setTimeout(() =&gt; main.className = "c-modal-wrap c-modal-has-title c-modal-enter-done", 600);
-        
-        const exit = (re) =&gt; {
-            clearTimeout(showT);
-            mask.remove();
-            main.className = "c-modal-wrap c-modal-has-title c-modal-enter c-modal-exit";
-            setTimeout(() =&gt; main.remove(), 600);
-            resolve(re);
-        };
+            // 根据按钮显示类型决定显示哪些按钮
+            let buttonsToShow = [];
+            switch (args.BUTTON_TYPE) {
+                case 'positive':
+                    buttonsToShow = [
+                        this.ce('button', args.CONFIRM, footer, "btn-DxL3n btn-xmiddle-1XiJB btn-primary-2CEZZ c-modal-footer-button")
+                    ];
+                    break;
+                case 'negative':
+                    buttonsToShow = [
+                        this.ce('button', args.CANCEL, footer, "btn-DxL3n btn-xmiddle-1XiJB btn-default-2wq9q c-modal-footer-button")
+                    ];
+                    break;
+                case 'both':
+                default:
+                    buttonsToShow = [
+                        this.ce('button', args.CANCEL, footer, "btn-DxL3n btn-xmiddle-1XiJB btn-default-2wq9q c-modal-footer-button"),
+                        this.ce('button', args.CONFIRM, footer, "btn-DxL3n btn-xmiddle-1XiJB btn-primary-2CEZZ c-modal-footer-button")
+                    ];
+                    break;
+            }
 
-        close.addEventListener("click", () =&gt; exit('close'));
-        cancelBtn.addEventListener("click", e =&gt; {
-            if (e.isTrusted) exit('cancel');
-        });
-        
-        copyBtn.addEventListener("click", e =&gt; {
-            if (e.isTrusted) {
-                navigator.clipboard.writeText(args.HIGHLIGHT)
-                    .then(() =&gt; {
-                        exit('复制成功');
-                    })
-                    .catch(() =&gt; {
-                        exit('复制失败，请手动选择并复制');
+            const showT = setTimeout(() =&gt; main.className = "c-modal-wrap c-modal-has-title c-modal-enter-done", 600);
+            
+            const exit = (re) =&gt; {
+                clearTimeout(showT);
+                mask.remove();
+                main.className = "c-modal-wrap c-modal-has-title c-modal-enter c-modal-exit";
+                setTimeout(() =&gt; main.remove(), 600);
+                resolve(re);
+            };
+
+            close.addEventListener("click", () =&gt; exit('close'));
+            buttonsToShow.forEach((btn, index) =&gt; {
+                if (btn.textContent === args.CONFIRM) {
+                    btn.addEventListener("click", e =&gt; {
+                        if (e.isTrusted) exit('confirm');
                     });
-            }
+                } else if (btn.textContent === args.CANCEL) {
+                    btn.addEventListener("click", e =&gt; {
+                        if (e.isTrusted) exit('cancel');
+                    });
+                }
+            });
         });
-    });
+    }
+
+    showInputPopup(args) {
+        return new Promise(resolve =&gt; {
+            const mask = this.ce('div', 0, document.body, "c-mask-container c-modal-mask");
+            mask.style.zIndex = '100002';
+            
+            const main = this.ce('div', 0, document.body, "c-modal-wrap c-modal-has-title c-modal-enter c-modal-enter-active");
+            main.style.zIndex = '100002';
+            
+            const win = this.ce('div', 0, main, "c-modal-container c-modal-dark-container modal-container-S");
+            const title = this.ce('div', args.TITLE, win, "c-modal-title c-modal-dark-title");
+            const close = this.ce('div', '&lt;img src="https://m.ccw.site/creator-college/icons/darkClose.svg" alt="close"&gt;', win, "c-modal-close", "h");
+            
+            const contentBody = this.ce('div', 0, win, "c-modal-body c-modal-dark-body");
+            const content = this.ce('div', 0, contentBody, "c-modal-content");
+            
+            // 输入框区域
+            const inputSection = this.ce('div', 0, content);
+            inputSection.style.cssText = `
+                margin: 20px 0;
+                text-align: center;
+            `;
+            
+            const inputField = this.ce('input', 0, inputSection);
+            inputField.type = 'text';
+            inputField.placeholder = args.HINT;
+            inputField.value = args.DEFAULT;
+            inputField.style.cssText = `
+                width: 80%;
+                height: 40px;
+                border: 1px solid #444;
+                border-radius: 10px;
+                background: #1A1A1A;
+                color: white;
+                padding: 0 15px;
+                font-size: 14px;
+                outline: none;
+            `;
+
+            // 安全提示
+            const securityNote = this.ce('div', '此弹窗非官方弹出，请注意辨认 by慕然科技的社区弹窗', content, "security-note");
+            securityNote.style.cssText = `
+                margin-top: 15px;
+                font-size: 10px;
+                color: #888;
+                text-align: center;
+            `;
+
+            const footer = this.ce('div', 0, win, "c-modal-footer");
+            const cancelBtn = this.ce('button', args.CANCEL, footer, "btn-DxL3n btn-xmiddle-1XiJB btn-default-2wq9q c-modal-footer-button");
+            const confirmBtn = this.ce('button', args.CONFIRM, footer, "btn-DxL3n btn-xmiddle-1XiJB btn-primary-2CEZZ c-modal-footer-button");
+
+            const showT = setTimeout(() =&gt; main.className = "c-modal-wrap c-modal-has-title c-modal-enter-done", 600);
+            
+            const exit = (re, value = '') =&gt; {
+                clearTimeout(showT);
+                mask.remove();
+                main.className = "c-modal-wrap c-modal-has-title c-modal-enter c-modal-exit";
+                setTimeout(() =&gt; main.remove(), 600);
+                this.lastResult = re;
+                this.inputValue = value;
+                resolve(re);
+            };
+
+            close.addEventListener("click", () =&gt; exit('close'));
+            cancelBtn.addEventListener("click", e =&gt; {
+                if (e.isTrusted) exit('cancel');
+            });
+            confirmBtn.addEventListener("click", e =&gt; {
+                if (e.isTrusted) exit('confirm', inputField.value);
+            });
+            
+            // 回车键确认
+            inputField.onkeypress = (e) =&gt; {
+                if (e.key === 'Enter') {
+                    exit('confirm', inputField.value);
+                }
+            };
+            
+            // 自动聚焦输入框
+            inputField.focus();
+            inputField.select();
+        });
+    }
+
+    showHighlightPopup(args) {
+        return new Promise(resolve =&gt; {
+            const mask = this.ce('div', 0, document.body, "c-mask-container c-modal-mask");
+            mask.style.zIndex = '100002';
+            
+            const main = this.ce('div', 0, document.body, "c-modal-wrap c-modal-has-title c-modal-enter c-modal-enter-active");
+            main.style.zIndex = '100002';
+            
+            const win = this.ce('div', 0, main, "c-modal-container c-modal-dark-container modal-container-S");
+            const title = this.ce('div', args.TITLE, win, "c-modal-title c-modal-dark-title");
+            const close = this.ce('div', '&lt;img src="https://m.ccw.site/creator-college/icons/darkClose.svg" alt="close"&gt;', win, "c-modal-close", "h");
+            
+            const contentBody = this.ce('div', 0, win, "c-modal-body c-modal-dark-body");
+            const content = this.ce('div', 0, contentBody, "c-modal-content");
+            
+            // 说明文字
+            const desc = this.ce('div', this.parseMarkdownLinks(args.DESC), content, "", "h");
+            desc.style.cssText = `
+                margin-bottom: 15px;
+                text-align: center;
+                color: #CCCCCC;
+            `;
+
+            // 突出文本展示
+            const highlightText = this.ce('div', args.HIGHLIGHT, content);
+            highlightText.style.cssText = `
+                width: 80%;
+                height: 40px;
+                border: 1px solid #555;
+                border-radius: 10px;
+                background: #64748b;
+                color: #5cff6e;
+                line-height: 40px;
+                margin: 0 auto 20px;
+                font-family: monospace;
+                font-weight: bold;
+                font-size: 14px;
+                text-align: center;
+            `;
+
+            // 安全提示
+            const securityNote = this.ce('div', '此弹窗非官方弹出，请注意辨认 by慕然科技的社区弹窗', content, "security-note");
+            securityNote.style.cssText = `
+                margin-top: 15px;
+                font-size: 10px;
+                color: #888;
+                text-align: center;
+            `;
+
+            const footer = this.ce('div', 0, win, "c-modal-footer");
+            const cancelBtn = this.ce('button', args.CANCEL, footer, "btn-DxL3n btn-xmiddle-1XiJB btn-default-2wq9q c-modal-footer-button");
+            const copyBtn = this.ce('button', args.COPY, footer, "btn-DxL3n btn-xmiddle-1XiJB btn-primary-2CEZZ c-modal-footer-button");
+
+            const showT = setTimeout(() =&gt; main.className = "c-modal-wrap c-modal-has-title c-modal-enter-done", 600);
+            
+            const exit = (re) =&gt; {
+                clearTimeout(showT);
+                mask.remove();
+                main.className = "c-modal-wrap c-modal-has-title c-modal-enter c-modal-exit";
+                setTimeout(() =&gt; main.remove(), 600);
+                resolve(re);
+            };
+
+            close.addEventListener("click", () =&gt; exit('close'));
+            cancelBtn.addEventListener("click", e =&gt; {
+                if (e.isTrusted) exit('cancel');
+            });
+            
+            copyBtn.addEventListener("click", e =&gt; {
+                if (e.isTrusted) {
+                    navigator.clipboard.writeText(args.HIGHLIGHT)
+                        .then(() =&gt; {
+                            exit('复制成功');
+                        })
+                        .catch(() =&gt; {
+                            exit('复制失败，请手动选择并复制');
+                        });
+                }
+            });
+        });
+    }
+
+    getLastResult() {
+        return this.lastResult || '';
+    }
+
+    getInputValue() {
+        return this.inputValue || '';
+    }
 }
 
-getLastResult() {
-    return this.lastResult || '';
-}
-
-getInputValue() {
-    return this.inputValue || '';
-}
-</code></pre>
-<p>}</p>
-<p>// 注册扩展<br>
-Scratch.extensions.register(new CommunityPopupExtension());`</p></div>
+// 注册扩展
+Scratch.extensions.register(new CommunityPopupExtension());
+</code></pre></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
