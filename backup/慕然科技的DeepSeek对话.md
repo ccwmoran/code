@@ -1,4 +1,4 @@
-`[慕然科技官网](https://ccwmoran.github.io)`
+[`慕然科技官网`](https://ccwmoran.github.io)
 ```
 (function(Scratch) {
     'use strict';
