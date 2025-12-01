@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>慕然科技Scratch积木扩展库</title><link>https://ccwmoran.github.io/code</link><description>慕然科技官网https://ccwmoran.github.io</description><copyright>慕然科技Scratch积木扩展库</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg</url><title>avatar</title><link>https://ccwmoran.github.io/code</link></image><lastBuildDate>Mon, 01 Dec 2025 14:40:13 +0000</lastBuildDate><managingEditor>慕然科技Scratch积木扩展库</managingEditor><ttl>60</ttl><webMaster>慕然科技Scratch积木扩展库</webMaster><item><title>慕然科技的微信风格弹窗</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-wei-xin-feng-ge-dan-chuang.html</link><description>```
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>慕然科技Scratch积木扩展库</title><link>https://ccwmoran.github.io/code</link><description>慕然科技官网https://ccwmoran.github.io</description><copyright>慕然科技Scratch积木扩展库</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg</url><title>avatar</title><link>https://ccwmoran.github.io/code</link></image><lastBuildDate>Mon, 01 Dec 2025 14:42:05 +0000</lastBuildDate><managingEditor>慕然科技Scratch积木扩展库</managingEditor><ttl>60</ttl><webMaster>慕然科技Scratch积木扩展库</webMaster><item><title>慕然科技的微信风格弹窗</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-wei-xin-feng-ge-dan-chuang.html</link><description>```
 (function(Scratch) {
     'use strict';
     
@@ -1815,14 +1815,17 @@ class HarmonyOSPopupExtension {
 }
 
 Scratch.extensions.register(new HarmonyOSPopupExtension());
-```。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/Morgan-de-HarmonyOS-dan-chuang.html</guid><pubDate>Sun, 30 Nov 2025 13:04:28 +0000</pubDate></item><item><title>代码库使用须知</title><link>https://ccwmoran.github.io/code/post/dai-ma-ku-shi-yong-xu-zhi.html</link><description>**1.本代码库`所有`扩展版权归慕然科技工作室所有**
+```。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/Morgan-de-HarmonyOS-dan-chuang.html</guid><pubDate>Sun, 30 Nov 2025 13:04:28 +0000</pubDate></item><item><title>代码库使用须知</title><link>https://ccwmoran.github.io/code/post/dai-ma-ku-shi-yong-xu-zhi.html</link><description>![moran logo-png.png](https://github.com/user-attachments/assets/58ec6763-8926-4ae3-96d6-c047ad61b223)
+**1.本代码库`所有`扩展版权归慕然科技工作室所有**
 **2.本代码库内`所有`积木扩展仅供学习参考和Scratch作品创作，禁止`任何`商用或其他用途**
-**3.`任何`使用扩展不当导致的任何损失慕然科技均不负责**
+**3.`任何`使用扩展不当导致的`任何`损失慕然科技均不负责**
 **4.`最终合法解释权`归慕然科技工作室和Morgan所有**
 **5.转载请务必`标明原作者（慕然科技或Morgan）`和`慕然科技官网（ccwmoran.github.io）`**
-**6.严禁未经许可上传至`任何`代码平台（如CCW扩展试验场、TurboWarp扩展库等）**
+**6.严禁未经许可上传至`任何`代码平台或扩展商店（如CCW扩展试验场、TurboWarp扩展库等）**
 **7.如果你发现有违反本文档`任意`一条内容的行为请告诉我（在此文档下方评论）**
 **8.访问本代码库`任意`一篇代码，即表示你同意以上内容**
+&gt; 更新时间：2025.12.1
+&gt;慕然科技-Morgan
 
 。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/dai-ma-ku-shi-yong-xu-zhi.html</guid><pubDate>Sun, 30 Nov 2025 12:07:08 +0000</pubDate></item><item><title>慕然科技的模拟封号</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-mo-ni-feng-hao.html</link><description>```
 //慕然科技官网ccwmoran.github.io
