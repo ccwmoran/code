@@ -1,5 +1,138 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>慕然科技Scratch积木扩展库</title><link>https://ccwmoran.github.io/code</link><description>慕然科技官网https://ccwmoran.github.io</description><copyright>慕然科技Scratch积木扩展库</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg</url><title>avatar</title><link>https://ccwmoran.github.io/code</link></image><lastBuildDate>Mon, 01 Dec 2025 14:42:05 +0000</lastBuildDate><managingEditor>慕然科技Scratch积木扩展库</managingEditor><ttl>60</ttl><webMaster>慕然科技Scratch积木扩展库</webMaster><item><title>慕然科技的微信风格弹窗</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-wei-xin-feng-ge-dan-chuang.html</link><description>```
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>慕然科技Scratch积木扩展库</title><link>https://ccwmoran.github.io/code</link><description>慕然科技官网https://ccwmoran.github.io</description><copyright>慕然科技Scratch积木扩展库</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg</url><title>avatar</title><link>https://ccwmoran.github.io/code</link></image><lastBuildDate>Mon, 01 Dec 2025 14:45:09 +0000</lastBuildDate><managingEditor>慕然科技Scratch积木扩展库</managingEditor><ttl>60</ttl><webMaster>慕然科技Scratch积木扩展库</webMaster><item><title>慕然科技的积木隐藏</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-ji-mu-yin-cang.html</link><description>&gt; 隐藏编辑器中所有积木
+`慕然科技官网ccwmoran.github.io`
+```
+(function(Scratch) {
+    'use strict';
+    const Blockly = Scratch.Blockly;
+
+    class BiyuanExtension {
+        constructor() {
+            this.workspace = null;
+            this.original = {
+                domToBlock: null,
+                setVisible: null,
+                contextMenu: null
+            };
+            this.observer = null;
+            this.checkInterval = null;
+        }
+
+        getInfo() {
+            return {
+                id: 'hide',
+                name: '慕然科技的积木隐藏',
+                color: '#00704A',
+                blocks: []
+            };
+        }
+
+        applyProtection() {
+            // 保存原始引用
+            const originalContextMenu = Blockly.ContextMenu;
+            
+            // 劫持积木创建
+            this.original.domToBlock = Blockly.Xml.domToBlock;
+            Blockly.Xml.domToBlock = (xml, ws) =&gt; {
+                const block = this.original.domToBlock(xml, ws);
+                this.superHide(block);
+                return block;
+            };
+
+            // 重写可见性设置
+            this.original.setVisible = Blockly.Block.prototype.setVisible;
+            Blockly.Block.prototype.setVisible = function(visible) {
+                return this.original.setVisible.call(this, visible &amp;&amp; false);
+            };
+
+            // 监控DOM变化
+            this.observer = new MutationObserver(mutations =&gt; {
+                mutations.forEach(mutation =&gt; {
+                    const element = mutation.target;
+                    if (element.classList?.contains('blocklyBlockCanvas') &amp;&amp; 
+                        element.style.display !== 'none') {
+                        element.style.display = 'none';
+                    }
+                });
+            });
+
+            // 修复this指向问题
+            const self = this;
+            this.original.contextMenu = originalContextMenu;
+            Blockly.ContextMenu = function(...args) {
+                const instance = new originalContextMenu(...args);
+                instance.show = () =&gt; {};
+                return instance;
+            };
+        }
+
+        superHide(block) {
+            // 多层隐藏技术
+            block.setVisible(false);
+            const svgRoot = block.getSvgRoot();
+            if (svgRoot) {
+                svgRoot.style.display = 'none';
+                svgRoot.setAttribute('visibility', 'hidden');
+                
+                // 添加DOM监控
+                this.observer.observe(svgRoot, {
+                    attributes: true,
+                    attributeFilter: ['style', 'visibility']
+                });
+            }
+        }
+
+        onInit() {
+            this.workspace = Scratch.vm.runtime.work  space;
+            this.applyProtection();
+            
+            // 初始隐藏
+            this.workspace.getAllBlocks().forEach(block =&gt; {
+                this.superHide(block);
+            });
+            
+            // 定时检查
+            this.checkInterval = setInterval(() =&gt; {
+                this.workspace.getAllBlocks().forEach(block =&gt; {
+                    if (block.isVisible() || 
+                        (block.getSvgRoot()?.style.display !== 'none') ||
+                        (block.getSvgRoot()?.getAttribute('visibility') === 'visible')) {
+                        this.superHide(block);
+                    }
+                });
+            }, 50);
+        }
+
+        onUnload() {
+            // 恢复原始环境
+            Blockly.Xml.domToBlock = this.original.domToBlock;
+            if (Blockly.Block.prototype.setVisible) {
+                Blockly.Block.prototype.setVisible = this.original.setVisible;
+            }
+            Blockly.ContextMenu = this.original.contextMenu;
+            
+            clearInterval(this.checkInterval);
+            this.observer?.disconnect();
+            
+            // 恢复所有元素
+            this.workspace.getAllBlocks().forEach(block =&gt; {
+                const svgRoot = block.getSvgRoot();
+                if (svgRoot) {
+                    svgRoot.style.display = '';
+                    svgRoot.removeAttribute('visibility');
+                }
+                block.setVisible(true);
+            });
+            this.workspace.resize();
+        }
+    }
+
+    const ext = new BiyuanExtension();
+    Scratch.extensions.register(ext);
+    ext.runtime.once('PROJECT_LOADED', () =&gt; ext.onInit());
+    ext.runtime.once('EXTENSION_UNLOADED', () =&gt; ext.onUnload());
+})(Scratch);
+```。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-ji-mu-yin-cang.html</guid><pubDate>Mon, 01 Dec 2025 14:44:35 +0000</pubDate></item><item><title>慕然科技的微信风格弹窗</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-wei-xin-feng-ge-dan-chuang.html</link><description>```
 (function(Scratch) {
     'use strict';
     
