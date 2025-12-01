@@ -1,5 +1,398 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>慕然科技Scratch积木扩展库</title><link>https://ccwmoran.github.io/code</link><description>慕然科技官网https://ccwmoran.github.io</description><copyright>慕然科技Scratch积木扩展库</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg</url><title>avatar</title><link>https://ccwmoran.github.io/code</link></image><lastBuildDate>Sun, 30 Nov 2025 15:15:01 +0000</lastBuildDate><managingEditor>慕然科技Scratch积木扩展库</managingEditor><ttl>60</ttl><webMaster>慕然科技Scratch积木扩展库</webMaster><item><title>Morgan的邮件发送</title><link>https://ccwmoran.github.io/code/post/Morgan-de-you-jian-fa-song.html</link><description>```
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>慕然科技Scratch积木扩展库</title><link>https://ccwmoran.github.io/code</link><description>慕然科技官网https://ccwmoran.github.io</description><copyright>慕然科技Scratch积木扩展库</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg</url><title>avatar</title><link>https://ccwmoran.github.io/code</link></image><lastBuildDate>Mon, 01 Dec 2025 14:40:13 +0000</lastBuildDate><managingEditor>慕然科技Scratch积木扩展库</managingEditor><ttl>60</ttl><webMaster>慕然科技Scratch积木扩展库</webMaster><item><title>慕然科技的微信风格弹窗</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-wei-xin-feng-ge-dan-chuang.html</link><description>```
+(function(Scratch) {
+    'use strict';
+    
+    // 扩展类定义
+    class WeChatDialogs {
+        constructor() {
+            // 存储回调函数
+            this.callbacks = {};
+            // 存储当前激活的弹窗
+            this.activeDialog = null;
+        }
+        
+        getInfo() {
+            return {
+                id: 'wxtc',
+                name: '微信弹窗',
+                color1: '#07C160',
+                color2: '#06AD56',
+                color3: '#06AD56',
+                docsURI: 'https://kejicx.github.io',
+                blocks: [
+                    {
+                        opcode: 'showAlert',
+                        blockType: Scratch.BlockType.COMMAND,
+                        text: '显示消息弹窗 内容 [CONTENT] 按钮文字 [BUTTON]',
+                        arguments: {
+                            CONTENT: {
+                                type: Scratch.ArgumentType.STRING,
+                                defaultValue: '操作成功'
+                            },
+                            BUTTON: {
+                                type: Scratch.ArgumentType.STRING,
+                                defaultValue: '确定'
+                            }
+                        }
+                    },
+                    {
+                        opcode: 'showConfirm',
+                        blockType: Scratch.BlockType.BOOLEAN,
+                        text: '显示确认弹窗 内容 [CONTENT] 确定文字 [OK] 取消文字 [CANCEL]',
+                        arguments: {
+                            CONTENT: {
+                                type: Scratch.ArgumentType.STRING,
+                                defaultValue: '确定要执行此操作吗？'
+                            },
+                            OK: {
+                                type: Scratch.ArgumentType.STRING,
+                                defaultValue: '确定'
+                            },
+                            CANCEL: {
+                                type: Scratch.ArgumentType.STRING,
+                                defaultValue: '取消'
+                            }
+                        }
+                    },
+                    {
+                        opcode: 'showPrompt',
+                        blockType: Scratch.BlockType.REPORTER,
+                        text: '显示输入弹窗 内容 [CONTENT] 提示 [PLACEHOLDER] 确定文字 [OK] 取消文字 [CANCEL]',
+                        arguments: {
+                            CONTENT: {
+                                type: Scratch.ArgumentType.STRING,
+                                defaultValue: '请输入内容'
+                            },
+                            PLACEHOLDER: {
+                                type: Scratch.ArgumentType.STRING,
+                                defaultValue: '在此输入...'
+                            },
+                            OK: {
+                                type: Scratch.ArgumentType.STRING,
+                                defaultValue: '确定'
+                            },
+                            CANCEL: {
+                                type: Scratch.ArgumentType.STRING,
+                                defaultValue: '取消'
+                            }
+                        }
+                    },
+                    '---',
+                    {
+                        opcode: 'getLastResult',
+                        blockType: Scratch.BlockType.REPORTER,
+                        text: '上次弹窗结果',
+                        disableMonitor: true
+                    },
+                    {
+                        opcode: 'getLastInput',
+                        blockType: Scratch.BlockType.REPORTER,
+                        text: '上次输入内容',
+                        disableMonitor: true
+                    },
+                    {
+                        opcode: 'isConfirmed',
+                        blockType: Scratch.BlockType.BOOLEAN,
+                        text: '上次是否确认',
+                        disableMonitor: true
+                    }
+                ],
+                menus: {}
+            };
+        }
+        
+        // 显示消息弹窗
+        showAlert(args) {
+            return new Promise((resolve) =&gt; {
+                this._createDialog({
+                    type: 'alert',
+                    content: args.CONTENT,
+                    buttonText: args.BUTTON,
+                    onClose: () =&gt; {
+                        this.lastResult = 'confirmed';
+                        resolve();
+                    }
+                });
+            });
+        }
+        
+        // 显示确认弹窗
+        showConfirm(args) {
+            return new Promise((resolve) =&gt; {
+                this._createDialog({
+                    type: 'confirm',
+                    content: args.CONTENT,
+                    okText: args.OK,
+                    cancelText: args.CANCEL,
+                    onConfirm: () =&gt; {
+                        this.lastResult = 'confirmed';
+                        this.lastConfirmed = true;
+                        resolve(true);
+                    },
+                    onCancel: () =&gt; {
+                        this.lastResult = 'cancelled';
+                        this.lastConfirmed = false;
+                        resolve(false);
+                    }
+                });
+            });
+        }
+        
+        // 显示输入弹窗
+        showPrompt(args) {
+            return new Promise((resolve) =&gt; {
+                this._createDialog({
+                    type: 'prompt',
+                    content: args.CONTENT,
+                    placeholder: args.PLACEHOLDER,
+                    okText: args.OK,
+                    cancelText: args.CANCEL,
+                    onConfirm: (inputValue) =&gt; {
+                        this.lastResult = 'confirmed';
+                        this.lastInput = inputValue || '';
+                        this.lastConfirmed = true;
+                        resolve(inputValue || '');
+                    },
+                    onCancel: () =&gt; {
+                        this.lastResult = 'cancelled';
+                        this.lastInput = '';
+                        this.lastConfirmed = false;
+                        resolve('');
+                    }
+                });
+            });
+        }
+        
+        // 获取上次弹窗结果
+        getLastResult() {
+            return this.lastResult || 'none';
+        }
+        
+        // 获取上次输入内容
+        getLastInput() {
+            return this.lastInput || '';
+        }
+        
+        // 获取上次是否确认
+        isConfirmed() {
+            return !!this.lastConfirmed;
+        }
+        
+        // 创建弹窗的私有方法
+        _createDialog(options) {
+            // 如果已有弹窗，先关闭
+            if (this.activeDialog) {
+                this._closeDialog();
+            }
+            
+            // 创建弹窗容器
+            const dialog = document.createElement('div');
+            dialog.className = 'wx-dialog-overlay';
+            dialog.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 9999;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            `;
+            
+            // 创建弹窗内容
+            const content = document.createElement('div');
+            content.className = 'wx-dialog-content';
+            content.style.cssText = `
+                background: white;
+                border-radius: 12px;
+                width: 270px;
+                overflow: hidden;
+                animation: dialogShow 0.3s ease;
+            `;
+            
+            // 添加CSS动画
+            if (!document.getElementById('wx-dialog-styles')) {
+                const style = document.createElement('style');
+                style.id = 'wx-dialog-styles';
+                style.textContent = `
+                    @keyframes dialogShow {
+                        from {
+                            opacity: 0;
+                            transform: translateY(-20px);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: translateY(0);
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            // 构建弹窗内容
+            let dialogHTML = '';
+            
+            // 弹窗消息
+            dialogHTML += `&lt;div style='padding: 20px 20px 15px; text-align: center; font-size: 17px; color: #333; line-height: 1.5;'&gt;${this._escapeHtml(options.content)}&lt;/div&gt;`;
+            
+            // 输入框（仅适用于输入弹窗）
+            if (options.type === 'prompt') {
+                dialogHTML += `
+                    &lt;div style='padding: 0 20px 15px;'&gt;
+                        &lt;input type='text' 
+                               class='wx-dialog-input' 
+                               placeholder='${this._escapeHtml(options.placeholder)}' 
+                               style='width: 100%; 
+                                      padding: 12px; 
+                                      border: 1px solid #E5E5E5; 
+                                      border-radius: 5px; 
+                                      font-size: 15px; 
+                                      outline: none;
+                                      box-sizing: border-box;'&gt;
+                    &lt;/div&gt;
+                `;
+            }
+            
+            // 按钮区域
+            dialogHTML += `&lt;div style='display: flex; border-top: 1px solid #F0F0F0;'&gt;`;
+            
+            if (options.type === 'alert') {
+                // 只有一个确定按钮
+                dialogHTML += `
+                    &lt;button class='wx-dialog-button confirm' 
+                            style='flex: 1; 
+                                   padding: 16px; 
+                                   border: none; 
+                                   background: none; 
+                                   font-size: 17px; 
+                                   color: #07C160; 
+                                   cursor: pointer;'&gt;
+                        ${this._escapeHtml(options.buttonText)}
+                    &lt;/button&gt;
+                `;
+            } else {
+                // 有取消和确定两个按钮
+                dialogHTML += `
+                    &lt;button class='wx-dialog-button cancel' 
+                            style='flex: 1; 
+                                   padding: 16px; 
+                                   border: none; 
+                                   background: none; 
+                                   font-size: 17px; 
+                                   color: #333; 
+                                   cursor: pointer;
+                                   border-right: 1px solid #F0F0F0;'&gt;
+                        ${this._escapeHtml(options.cancelText)}
+                    &lt;/button&gt;
+                    &lt;button class='wx-dialog-button confirm' 
+                            style='flex: 1; 
+                                   padding: 16px; 
+                                   border: none; 
+                                   background: none; 
+                                   font-size: 17px; 
+                                   color: #07C160; 
+                                   font-weight: 500; 
+                                   cursor: pointer;'&gt;
+                        ${this._escapeHtml(options.okText)}
+                    &lt;/button&gt;
+                `;
+            }
+            
+            dialogHTML += `&lt;/div&gt;`;
+            
+            content.innerHTML = dialogHTML;
+            dialog.appendChild(content);
+            document.body.appendChild(dialog);
+            
+            this.activeDialog = dialog;
+            
+            // 添加事件监听
+            const inputField = content.querySelector('.wx-dialog-input');
+            const confirmButton = content.querySelector('.wx-dialog-button.confirm');
+            const cancelButton = content.querySelector('.wx-dialog-button.cancel');
+            
+            const closeDialog = () =&gt; {
+                this._closeDialog();
+            };
+            
+            const handleConfirm = () =&gt; {
+                if (options.type === 'prompt') {
+                    const value = inputField ? inputField.value : '';
+                    if (options.onConfirm) options.onConfirm(value);
+                } else if (options.type === 'confirm') {
+                    if (options.onConfirm) options.onConfirm();
+                } else {
+                    if (options.onClose) options.onClose();
+                }
+                closeDialog();
+            };
+            
+            const handleCancel = () =&gt; {
+                if (options.type === 'confirm' &amp;&amp; options.onCancel) {
+                    options.onCancel();
+                } else if (options.type === 'prompt' &amp;&amp; options.onCancel) {
+                    options.onCancel();
+                }
+                closeDialog();
+            };
+            
+            // 绑定事件
+            if (confirmButton) {
+                confirmButton.addEventListener('click', handleConfirm);
+            }
+            
+            if (cancelButton) {
+                cancelButton.addEventListener('click', handleCancel);
+            }
+            
+            // 点击遮罩层关闭（仅适用于确认和输入弹窗）
+            if (options.type !== 'alert') {
+                dialog.addEventListener('click', (e) =&gt; {
+                    if (e.target === dialog) {
+                        handleCancel();
+                    }
+                });
+            }
+            
+            // 输入框回车确认
+            if (inputField) {
+                inputField.addEventListener('keypress', (e) =&gt; {
+                    if (e.key === 'Enter') {
+                        handleConfirm();
+                    }
+                });
+                
+                // 自动聚焦输入框
+                setTimeout(() =&gt; {
+                    inputField.focus();
+                }, 300);
+            }
+        }
+        
+        // 关闭弹窗
+        _closeDialog() {
+            if (this.activeDialog) {
+                document.body.removeChild(this.activeDialog);
+                this.activeDialog = null;
+            }
+        }
+        
+        // HTML转义
+        _escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    }
+    
+    // 注册扩展
+    Scratch.extensions.register(new WeChatDialogs());
+})(Scratch);
+```。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-wei-xin-feng-ge-dan-chuang.html</guid><pubDate>Mon, 01 Dec 2025 14:39:42 +0000</pubDate></item><item><title>Morgan的邮件发送</title><link>https://ccwmoran.github.io/code/post/Morgan-de-you-jian-fa-song.html</link><description>```
 (function(Scratch) {
     'use strict';
     
