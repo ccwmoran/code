@@ -10,7 +10,7 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="```
+<meta name="description" content="```js
 (function(Scratch) {
     'use strict';
     
@@ -297,7 +297,7 @@
 })(Scratch);
 ```。">
 <meta property="og:title" content="慕然科技的豆包AI对话">
-<meta property="og:description" content="```
+<meta property="og:description" content="```js
 (function(Scratch) {
     'use strict';
     
@@ -587,7 +587,7 @@
 <meta property="og:url" content="https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-dou-bao-AI-dui-hua.html">
 <meta property="og:image" content="https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg">
 <title>慕然科技的豆包AI对话</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -653,291 +653,290 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><pre class="notranslate"><code class="notranslate">(function(Scratch) {
-    'use strict';
+<div class="markdown-body" id="postBody"><div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-kos">(</span><span class="pl-k">function</span><span class="pl-kos">(</span><span class="pl-v">Scratch</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-s">'use strict'</span><span class="pl-kos">;</span>
     
-    class DouBaoChat {
-        constructor() {
-            this.apiKey = '';
-            this.currentModel = 'Doubao-1.5-pro-32k';
-            this.deepThinkingEnabled = false;
-            this.lastResponse = '';
-            this.lastThinkingResult = '';
-            this.lastThinkingTime = 0;
-            this.isProcessing = false;
+    <span class="pl-k">class</span> <span class="pl-v">DouBaoChat</span> <span class="pl-kos">{</span>
+        <span class="pl-en">constructor</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">apiKey</span> <span class="pl-c1">=</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentModel</span> <span class="pl-c1">=</span> <span class="pl-s">'Doubao-1.5-pro-32k'</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">deepThinkingEnabled</span> <span class="pl-c1">=</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastResponse</span> <span class="pl-c1">=</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastThinkingResult</span> <span class="pl-c1">=</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastThinkingTime</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">isProcessing</span> <span class="pl-c1">=</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
             
-            // 豆包模型映射
-            this.modelMap = {
-                '豆包-Pro': 'Doubao-1.5-pro-32k',
-                '豆包-Lite': 'Doubao-1.5-lite-32k',
-                '豆包-标准': 'Doubao-pro-32k'
-            };
+            <span class="pl-c">// 豆包模型映射</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">modelMap</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+                <span class="pl-s">'豆包-Pro'</span>: <span class="pl-s">'Doubao-1.5-pro-32k'</span><span class="pl-kos">,</span>
+                <span class="pl-s">'豆包-Lite'</span>: <span class="pl-s">'Doubao-1.5-lite-32k'</span><span class="pl-kos">,</span>
+                <span class="pl-s">'豆包-标准'</span>: <span class="pl-s">'Doubao-pro-32k'</span>
+            <span class="pl-kos">}</span><span class="pl-kos">;</span>
             
-            this.colors = {
-                primary: '#FF6B35',
-                secondary: '#FF8E53',
-                accent: '#FFA726'
-            };
-        }
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">colors</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+                <span class="pl-c1">primary</span>: <span class="pl-s">'#FF6B35'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">secondary</span>: <span class="pl-s">'#FF8E53'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">accent</span>: <span class="pl-s">'#FFA726'</span>
+            <span class="pl-kos">}</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        getInfo() {
-            return {
-                id: 'kjcxdb',
-                name: '慕然科技的与豆包对话',
-                color1: this.colors.primary,
-                color2: this.colors.secondary,
-                color3: this.colors.accent,
-                docsURI: 'https://docs.console.zenlayer.com/api-reference/cn/aigw/chat-completion/doubao/doubao-context-chat-completion',
-                blocks: [
-                    {
-                        opcode: 'setApiKey',
-                        blockType: Scratch.BlockType.COMMAND,
-                        text: '设置API密钥 [KEY]',
-                        arguments: {
-                            KEY: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: ''
-                            }
-                        }
-                    },
-                    {
-                        opcode: 'setModel',
-                        blockType: Scratch.BlockType.COMMAND,
-                        text: '使用模型 [MODEL]',
-                        arguments: {
-                            MODEL: {
-                                type: Scratch.ArgumentType.STRING,
-                                menu: 'models'
-                            }
-                        }
-                    },
-                    {
-                        opcode: 'setDeepThinking',
-                        blockType: Scratch.BlockType.COMMAND,
-                        text: '深度思考 [ENABLED]',
-                        arguments: {
-                            ENABLED: {
-                                type: Scratch.ArgumentType.STRING,
-                                menu: 'switch'
-                            }
-                        }
-                    },
-                    '---',
-                    {
-                        opcode: 'getThinkingResult',
-                        blockType: Scratch.BlockType.REPORTER,
-                        text: '深度思考结果',
-                        disableMonitor: true
-                    },
-                    {
-                        opcode: 'getThinkingTime',
-                        blockType: Scratch.BlockType.REPORTER,
-                        text: '深度思考用时（秒）',
-                        disableMonitor: true
-                    },
-                    {
-                        opcode: 'getLastOutput',
-                        blockType: Scratch.BlockType.REPORTER,
-                        text: '输出结果',
-                        disableMonitor: true
-                    },
-                    {
-                        opcode: 'getCurrentModel',
-                        blockType: Scratch.BlockType.REPORTER,
-                        text: '当前模型',
-                        disableMonitor: true
-                    },
-                    '---',
-                    {
-                        opcode: 'sendMessage',
-                        blockType: Scratch.BlockType.REPORTER,
-                        text: '发送消息 [MESSAGE]',
-                        arguments: {
-                            MESSAGE: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: '你好！请介绍一下你自己'
-                            }
-                        }
-                    },
-                    {
-                        opcode: 'reset',
-                        blockType: Scratch.BlockType.COMMAND,
-                        text: '重置对话'
-                    }
-                ],
-                menus: {
-                    models: {
-                        acceptReporters: false,
-                        items: [
-                            '豆包-Pro',
-                            '豆包-Lite', 
-                            '豆包-标准'
-                        ]
-                    },
-                    switch: {
-                        acceptReporters: false,
-                        items: ['打开', '关闭']
-                    }
-                }
-            };
-        }
+        <span class="pl-en">getInfo</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">return</span> <span class="pl-kos">{</span>
+                <span class="pl-c1">id</span>: <span class="pl-s">'kjcxdb'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">name</span>: <span class="pl-s">'慕然科技的与豆包对话'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">color1</span>: <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">colors</span><span class="pl-kos">.</span><span class="pl-c1">primary</span><span class="pl-kos">,</span>
+                <span class="pl-c1">color2</span>: <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">colors</span><span class="pl-kos">.</span><span class="pl-c1">secondary</span><span class="pl-kos">,</span>
+                <span class="pl-c1">color3</span>: <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">colors</span><span class="pl-kos">.</span><span class="pl-c1">accent</span><span class="pl-kos">,</span>
+                <span class="pl-c1">docsURI</span>: <span class="pl-s">'https://docs.console.zenlayer.com/api-reference/cn/aigw/chat-completion/doubao/doubao-context-chat-completion'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">blocks</span>: <span class="pl-kos">[</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'setApiKey'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'设置API密钥 [KEY]'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">KEY</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">''</span>
+                            <span class="pl-kos">}</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'setModel'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'使用模型 [MODEL]'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">MODEL</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">menu</span>: <span class="pl-s">'models'</span>
+                            <span class="pl-kos">}</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'setDeepThinking'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'深度思考 [ENABLED]'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">ENABLED</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">menu</span>: <span class="pl-s">'switch'</span>
+                            <span class="pl-kos">}</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-s">'---'</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'getThinkingResult'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">REPORTER</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'深度思考结果'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">disableMonitor</span>: <span class="pl-c1">true</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'getThinkingTime'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">REPORTER</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'深度思考用时（秒）'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">disableMonitor</span>: <span class="pl-c1">true</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'getLastOutput'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">REPORTER</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'输出结果'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">disableMonitor</span>: <span class="pl-c1">true</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'getCurrentModel'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">REPORTER</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'当前模型'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">disableMonitor</span>: <span class="pl-c1">true</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-s">'---'</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'sendMessage'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">REPORTER</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'发送消息 [MESSAGE]'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">MESSAGE</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">'你好！请介绍一下你自己'</span>
+                            <span class="pl-kos">}</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'reset'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'重置对话'</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">]</span><span class="pl-kos">,</span>
+                <span class="pl-c1">menus</span>: <span class="pl-kos">{</span>
+                    <span class="pl-c1">models</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">acceptReporters</span>: <span class="pl-c1">false</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">items</span>: <span class="pl-kos">[</span>
+                            <span class="pl-s">'豆包-Pro'</span><span class="pl-kos">,</span>
+                            <span class="pl-s">'豆包-Lite'</span><span class="pl-kos">,</span> 
+                            <span class="pl-s">'豆包-标准'</span>
+                        <span class="pl-kos">]</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">switch</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">acceptReporters</span>: <span class="pl-c1">false</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">items</span>: <span class="pl-kos">[</span><span class="pl-s">'打开'</span><span class="pl-kos">,</span> <span class="pl-s">'关闭'</span><span class="pl-kos">]</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span>
+            <span class="pl-kos">}</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        setApiKey(args) {
-            const key = args.KEY.trim();
-            if (key) {
-                this.apiKey = key;
-                console.log('API密钥已设置');
-            }
-        }
+        <span class="pl-en">setApiKey</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">const</span> <span class="pl-s1">key</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">KEY</span><span class="pl-kos">.</span><span class="pl-en">trim</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">key</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">apiKey</span> <span class="pl-c1">=</span> <span class="pl-s1">key</span><span class="pl-kos">;</span>
+                <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s">'API密钥已设置'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
+        <span class="pl-kos">}</span>
         
-        setModel(args) {
-            const modelKey = args.MODEL;
-            this.currentModel = this.modelMap[modelKey] || this.modelMap['豆包-Pro'];
-            console.log(`模型已设置为: ${modelKey} (${this.currentModel})`);
-        }
+        <span class="pl-en">setModel</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">const</span> <span class="pl-s1">modelKey</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">MODEL</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentModel</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">modelMap</span><span class="pl-kos">[</span><span class="pl-s1">modelKey</span><span class="pl-kos">]</span> <span class="pl-c1">||</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">modelMap</span><span class="pl-kos">[</span><span class="pl-s">'豆包-Pro'</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+            <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s">`模型已设置为: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">modelKey</span><span class="pl-kos">}</span></span> (<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentModel</span><span class="pl-kos">}</span></span>)`</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        setDeepThinking(args) {
-            this.deepThinkingEnabled = (args.ENABLED === '打开');
-            console.log(`深度思考: ${this.deepThinkingEnabled ? '开启' : '关闭'}`);
-        }
+        <span class="pl-en">setDeepThinking</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">deepThinkingEnabled</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">ENABLED</span> <span class="pl-c1">===</span> <span class="pl-s">'打开'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s">`深度思考: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">deepThinkingEnabled</span> ? <span class="pl-s">'开启'</span> : <span class="pl-s">'关闭'</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        getThinkingResult() {
-            if (!this.lastThinkingResult) return '暂无思考结果';
-            return this.lastThinkingResult;
-        }
+        <span class="pl-en">getThinkingResult</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastThinkingResult</span><span class="pl-kos">)</span> <span class="pl-k">return</span> <span class="pl-s">'暂无思考结果'</span><span class="pl-kos">;</span>
+            <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastThinkingResult</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        getThinkingTime() {
-            if (this.lastThinkingTime === 0) return '0';
-            return (Math.round(this.lastThinkingTime / 100) / 10).toString();
-        }
+        <span class="pl-en">getThinkingTime</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastThinkingTime</span> <span class="pl-c1">===</span> <span class="pl-c1">0</span><span class="pl-kos">)</span> <span class="pl-k">return</span> <span class="pl-s">'0'</span><span class="pl-kos">;</span>
+            <span class="pl-k">return</span> <span class="pl-kos">(</span><span class="pl-v">Math</span><span class="pl-kos">.</span><span class="pl-en">round</span><span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastThinkingTime</span> <span class="pl-c1">/</span> <span class="pl-c1">100</span><span class="pl-kos">)</span> <span class="pl-c1">/</span> <span class="pl-c1">10</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">toString</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        getLastOutput() {
-            return this.lastResponse || '暂无输出结果';
-        }
+        <span class="pl-en">getLastOutput</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastResponse</span> <span class="pl-c1">||</span> <span class="pl-s">'暂无输出结果'</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        getCurrentModel() {
-            for (const [displayName, modelId] of Object.entries(this.modelMap)) {
-                if (modelId === this.currentModel) {
-                    return displayName;
-                }
-            }
-            return this.currentModel;
-        }
+        <span class="pl-en">getCurrentModel</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">for</span> <span class="pl-kos">(</span><span class="pl-k">const</span> <span class="pl-kos">[</span><span class="pl-s1">displayName</span><span class="pl-kos">,</span> <span class="pl-s1">modelId</span><span class="pl-kos">]</span> <span class="pl-k">of</span> <span class="pl-v">Object</span><span class="pl-kos">.</span><span class="pl-en">entries</span><span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">modelMap</span><span class="pl-kos">)</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">modelId</span> <span class="pl-c1">===</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentModel</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                    <span class="pl-k">return</span> <span class="pl-s1">displayName</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span>
+            <span class="pl-kos">}</span>
+            <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentModel</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        reset() {
-            this.lastResponse = '';
-            this.lastThinkingResult = '';
-            this.lastThinkingTime = 0;
-            this.isProcessing = false;
-            console.log('对话已重置');
-        }
+        <span class="pl-en">reset</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastResponse</span> <span class="pl-c1">=</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastThinkingResult</span> <span class="pl-c1">=</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastThinkingTime</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">isProcessing</span> <span class="pl-c1">=</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
+            <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s">'对话已重置'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        sendMessage(args) {
-            if (this.isProcessing) {
-                return Promise.resolve('错误：上一个请求正在处理中，请稍后再试');
-            }
+        <span class="pl-en">sendMessage</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">isProcessing</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-k">return</span> <span class="pl-v">Promise</span><span class="pl-kos">.</span><span class="pl-en">resolve</span><span class="pl-kos">(</span><span class="pl-s">'错误：上一个请求正在处理中，请稍后再试'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
             
-            if (!this.apiKey) {
-                return Promise.resolve('错误：请先设置API密钥');
-            }
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">apiKey</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-k">return</span> <span class="pl-v">Promise</span><span class="pl-kos">.</span><span class="pl-en">resolve</span><span class="pl-kos">(</span><span class="pl-s">'错误：请先设置API密钥'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
             
-            const message = args.MESSAGE.trim();
-            if (!message) {
-                return Promise.resolve('错误：消息内容不能为空');
-            }
+            <span class="pl-k">const</span> <span class="pl-s1">message</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">MESSAGE</span><span class="pl-kos">.</span><span class="pl-en">trim</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">message</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-k">return</span> <span class="pl-v">Promise</span><span class="pl-kos">.</span><span class="pl-en">resolve</span><span class="pl-kos">(</span><span class="pl-s">'错误：消息内容不能为空'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
             
-            this.isProcessing = true;
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">isProcessing</span> <span class="pl-c1">=</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
             
-            // 构建豆包API请求数据[citation:3]
-            const requestData = {
-                model: this.currentModel,
-                messages: [
-                    {
-                        role: "user",
-                        content: message
-                    }
-                ],
-                stream: false,
-                temperature: 0.7,
-                max_tokens: 1024
-            };
+            <span class="pl-c">// 构建豆包API请求数据[citation:3]</span>
+            <span class="pl-k">const</span> <span class="pl-s1">requestData</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+                <span class="pl-c1">model</span>: <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentModel</span><span class="pl-kos">,</span>
+                <span class="pl-c1">messages</span>: <span class="pl-kos">[</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">role</span>: <span class="pl-s">"user"</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">content</span>: <span class="pl-s1">message</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">]</span><span class="pl-kos">,</span>
+                <span class="pl-c1">stream</span>: <span class="pl-c1">false</span><span class="pl-kos">,</span>
+                <span class="pl-c1">temperature</span>: <span class="pl-c1">0.7</span><span class="pl-kos">,</span>
+                <span class="pl-c1">max_tokens</span>: <span class="pl-c1">1024</span>
+            <span class="pl-kos">}</span><span class="pl-kos">;</span>
             
-            // 如果开启深度思考，调整参数以获得更详细的响应
-            if (this.deepThinkingEnabled) {
-                requestData.temperature = 0.3; // 更低的温度以获得更集中的思考
-                requestData.max_tokens = 2048; // 更多的token以容纳思考过程
-            }
+            <span class="pl-c">// 如果开启深度思考，调整参数以获得更详细的响应</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">deepThinkingEnabled</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-s1">requestData</span><span class="pl-kos">.</span><span class="pl-c1">temperature</span> <span class="pl-c1">=</span> <span class="pl-c1">0.3</span><span class="pl-kos">;</span> <span class="pl-c">// 更低的温度以获得更集中的思考</span>
+                <span class="pl-s1">requestData</span><span class="pl-kos">.</span><span class="pl-c1">max_tokens</span> <span class="pl-c1">=</span> <span class="pl-c1">2048</span><span class="pl-kos">;</span> <span class="pl-c">// 更多的token以容纳思考过程</span>
+            <span class="pl-kos">}</span>
             
-            const startTime = Date.now();
+            <span class="pl-k">const</span> <span class="pl-s1">startTime</span> <span class="pl-c1">=</span> <span class="pl-v">Date</span><span class="pl-kos">.</span><span class="pl-en">now</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
             
-            // 调用豆包API[citation:3]
-            return fetch('https://gateway.theturbo.ai/v1/context/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + this.apiKey,
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(requestData)
-            })
-            .then(response =&gt; {
-                if (!response.ok) {
-                    throw new Error(`HTTP错误: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data =&gt; {
-                const endTime = Date.now();
-                this.lastThinkingTime = endTime - startTime;
+            <span class="pl-c">// 调用豆包API[citation:3]</span>
+            <span class="pl-k">return</span> <span class="pl-en">fetch</span><span class="pl-kos">(</span><span class="pl-s">'https://gateway.theturbo.ai/v1/context/chat/completions'</span><span class="pl-kos">,</span> <span class="pl-kos">{</span>
+                <span class="pl-c1">method</span>: <span class="pl-s">'POST'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">headers</span>: <span class="pl-kos">{</span>
+                    <span class="pl-s">'Content-Type'</span>: <span class="pl-s">'application/json'</span><span class="pl-kos">,</span>
+                    <span class="pl-s">'Authorization'</span>: <span class="pl-s">'Bearer '</span> <span class="pl-c1">+</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">apiKey</span><span class="pl-kos">,</span>
+                    <span class="pl-s">'Accept'</span>: <span class="pl-s">'application/json'</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-c1">body</span>: <span class="pl-c1">JSON</span><span class="pl-kos">.</span><span class="pl-en">stringify</span><span class="pl-kos">(</span><span class="pl-s1">requestData</span><span class="pl-kos">)</span>
+            <span class="pl-kos">}</span><span class="pl-kos">)</span>
+            <span class="pl-kos">.</span><span class="pl-en">then</span><span class="pl-kos">(</span><span class="pl-s1">response</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">response</span><span class="pl-kos">.</span><span class="pl-c1">ok</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                    <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-v">Error</span><span class="pl-kos">(</span><span class="pl-s">`HTTP错误: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">response</span><span class="pl-kos">.</span><span class="pl-c1">status</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span>
+                <span class="pl-k">return</span> <span class="pl-s1">response</span><span class="pl-kos">.</span><span class="pl-en">json</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">)</span>
+            <span class="pl-kos">.</span><span class="pl-en">then</span><span class="pl-kos">(</span><span class="pl-s1">data</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-k">const</span> <span class="pl-s1">endTime</span> <span class="pl-c1">=</span> <span class="pl-v">Date</span><span class="pl-kos">.</span><span class="pl-en">now</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastThinkingTime</span> <span class="pl-c1">=</span> <span class="pl-s1">endTime</span> <span class="pl-c1">-</span> <span class="pl-s1">startTime</span><span class="pl-kos">;</span>
                 
-                if (data.error) {
-                    throw new Error(data.error.message || 'API返回错误');
-                }
+                <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">data</span><span class="pl-kos">.</span><span class="pl-c1">error</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                    <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-v">Error</span><span class="pl-kos">(</span><span class="pl-s1">data</span><span class="pl-kos">.</span><span class="pl-c1">error</span><span class="pl-kos">.</span><span class="pl-c1">message</span> <span class="pl-c1">||</span> <span class="pl-s">'API返回错误'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span>
                 
-                if (data.choices &amp;&amp; data.choices.length &gt; 0) {
-                    const message = data.choices[0].message;
+                <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">data</span><span class="pl-kos">.</span><span class="pl-c1">choices</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">data</span><span class="pl-kos">.</span><span class="pl-c1">choices</span><span class="pl-kos">.</span><span class="pl-c1">length</span> <span class="pl-c1">&gt;</span> <span class="pl-c1">0</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                    <span class="pl-k">const</span> <span class="pl-s1">message</span> <span class="pl-c1">=</span> <span class="pl-s1">data</span><span class="pl-kos">.</span><span class="pl-c1">choices</span><span class="pl-kos">[</span><span class="pl-c1">0</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">message</span><span class="pl-kos">;</span>
                     
-                    // 获取响应内容
-                    this.lastResponse = message.content || '无响应内容';
+                    <span class="pl-c">// 获取响应内容</span>
+                    <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastResponse</span> <span class="pl-c1">=</span> <span class="pl-s1">message</span><span class="pl-kos">.</span><span class="pl-c1">content</span> <span class="pl-c1">||</span> <span class="pl-s">'无响应内容'</span><span class="pl-kos">;</span>
                     
-                    // 构建思考结果信息
-                    let thinkingInfo = '';
-                    if (data.usage) {
-                        thinkingInfo = `Tokens使用: 输入${data.usage.prompt_tokens} 输出${data.usage.completion_tokens} 总计${data.usage.total_tokens}`;
-                    }
-                    if (data.choices[0].finish_reason) {
-                        thinkingInfo += thinkingInfo ? ` | 完成原因: ${data.choices[0].finish_reason}` : `完成原因: ${data.choices[0].finish_reason}`;
-                    }
+                    <span class="pl-c">// 构建思考结果信息</span>
+                    <span class="pl-k">let</span> <span class="pl-s1">thinkingInfo</span> <span class="pl-c1">=</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+                    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">data</span><span class="pl-kos">.</span><span class="pl-c1">usage</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                        <span class="pl-s1">thinkingInfo</span> <span class="pl-c1">=</span> <span class="pl-s">`Tokens使用: 输入<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">data</span><span class="pl-kos">.</span><span class="pl-c1">usage</span><span class="pl-kos">.</span><span class="pl-c1">prompt_tokens</span><span class="pl-kos">}</span></span> 输出<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">data</span><span class="pl-kos">.</span><span class="pl-c1">usage</span><span class="pl-kos">.</span><span class="pl-c1">completion_tokens</span><span class="pl-kos">}</span></span> 总计<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">data</span><span class="pl-kos">.</span><span class="pl-c1">usage</span><span class="pl-kos">.</span><span class="pl-c1">total_tokens</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span>
+                    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">data</span><span class="pl-kos">.</span><span class="pl-c1">choices</span><span class="pl-kos">[</span><span class="pl-c1">0</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">finish_reason</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                        <span class="pl-s1">thinkingInfo</span> <span class="pl-c1">+=</span> <span class="pl-s1">thinkingInfo</span> ? <span class="pl-s">` | 完成原因: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">data</span><span class="pl-kos">.</span><span class="pl-c1">choices</span><span class="pl-kos">[</span><span class="pl-c1">0</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">finish_reason</span><span class="pl-kos">}</span></span>`</span> : <span class="pl-s">`完成原因: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">data</span><span class="pl-kos">.</span><span class="pl-c1">choices</span><span class="pl-kos">[</span><span class="pl-c1">0</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">finish_reason</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span>
                     
-                    // 如果是深度思考模式，尝试从响应中提取更多思考信息
-                    if (this.deepThinkingEnabled) {
-                        // 这里可以添加对思考过程的解析逻辑
-                        // 豆包API可能不会直接返回思考过程，但我们可以记录一些元数据
-                        thinkingInfo += ' | 深度思考模式: 已开启';
-                    }
+                    <span class="pl-c">// 如果是深度思考模式，尝试从响应中提取更多思考信息</span>
+                    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">deepThinkingEnabled</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                        <span class="pl-c">// 这里可以添加对思考过程的解析逻辑</span>
+                        <span class="pl-c">// 豆包API可能不会直接返回思考过程，但我们可以记录一些元数据</span>
+                        <span class="pl-s1">thinkingInfo</span> <span class="pl-c1">+=</span> <span class="pl-s">' | 深度思考模式: 已开启'</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span>
                     
-                    this.lastThinkingResult = thinkingInfo || '无元数据信息';
+                    <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastThinkingResult</span> <span class="pl-c1">=</span> <span class="pl-s1">thinkingInfo</span> <span class="pl-c1">||</span> <span class="pl-s">'无元数据信息'</span><span class="pl-kos">;</span>
                     
-                    return this.lastResponse;
-                } else {
-                    throw new Error('API返回数据异常');
-                }
-            })
-            .catch(error =&gt; {
-                console.error('豆包API错误:', error);
-                this.lastResponse = '';
-                this.lastThinkingResult = '';
-                return `错误：${error.message}`;
-            })
-            .finally(() =&gt; {
-                this.isProcessing = false;
-            });
-        }
-    }
+                    <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastResponse</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span> <span class="pl-k">else</span> <span class="pl-kos">{</span>
+                    <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-v">Error</span><span class="pl-kos">(</span><span class="pl-s">'API返回数据异常'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span>
+            <span class="pl-kos">}</span><span class="pl-kos">)</span>
+            <span class="pl-kos">.</span><span class="pl-en">catch</span><span class="pl-kos">(</span><span class="pl-s1">error</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">error</span><span class="pl-kos">(</span><span class="pl-s">'豆包API错误:'</span><span class="pl-kos">,</span> <span class="pl-s1">error</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastResponse</span> <span class="pl-c1">=</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastThinkingResult</span> <span class="pl-c1">=</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+                <span class="pl-k">return</span> <span class="pl-s">`错误：<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">error</span><span class="pl-kos">.</span><span class="pl-c1">message</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">)</span>
+            <span class="pl-kos">.</span><span class="pl-en">finally</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">isProcessing</span> <span class="pl-c1">=</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
     
-    Scratch.extensions.register(new DouBaoChat());
-})(Scratch);
-</code></pre></div>
+    <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">extensions</span><span class="pl-kos">.</span><span class="pl-en">register</span><span class="pl-kos">(</span><span class="pl-k">new</span> <span class="pl-v">DouBaoChat</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">(</span><span class="pl-v">Scratch</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
