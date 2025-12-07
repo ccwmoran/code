@@ -1,6 +1,6 @@
 
-```
-//官网https://ccwmoran.github.io
+```js
+//慕然科技官网https://ccwmoran.github.io
 class MorganToolboxV8{
 constructor(){this.lastResponse=''}
 getInfo(){
