@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>慕然科技Scratch积木扩展库</title><link>https://ccwmoran.github.io/code</link><description>慕然科技官网https://ccwmoran.github.io</description><copyright>慕然科技Scratch积木扩展库</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg</url><title>avatar</title><link>https://ccwmoran.github.io/code</link></image><lastBuildDate>Sun, 07 Dec 2025 13:17:24 +0000</lastBuildDate><managingEditor>慕然科技Scratch积木扩展库</managingEditor><ttl>60</ttl><webMaster>慕然科技Scratch积木扩展库</webMaster><item><title>慕然科技的灵动岛</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-ling-dong-dao.html</link><description>```js
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>慕然科技Scratch积木扩展库</title><link>https://ccwmoran.github.io/code</link><description>慕然科技官网https://ccwmoran.github.io</description><copyright>慕然科技Scratch积木扩展库</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg</url><title>avatar</title><link>https://ccwmoran.github.io/code</link></image><lastBuildDate>Sun, 07 Dec 2025 16:43:33 +0000</lastBuildDate><managingEditor>慕然科技Scratch积木扩展库</managingEditor><ttl>60</ttl><webMaster>慕然科技Scratch积木扩展库</webMaster><item><title>慕然科技的灵动岛</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-ling-dong-dao.html</link><description>```js
 // 慕然科技的灵动岛 - Scratch 3.0扩展
 // 扩展ID: moranldd
 // 扩展名称: 慕然科技的灵动岛
@@ -868,7 +868,7 @@ if (typeof Scratch !== 'undefined' &amp;&amp; Scratch.extensions) {
     ext.runtime.once('PROJECT_LOADED', () =&gt; ext.onInit());
     ext.runtime.once('EXTENSION_UNLOADED', () =&gt; ext.onUnload());
 })(Scratch);
-```。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-ji-mu-yin-cang.html</guid><pubDate>Mon, 01 Dec 2025 14:44:35 +0000</pubDate></item><item><title>慕然科技的微信风格弹窗</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-wei-xin-feng-ge-dan-chuang.html</link><description>```
+```。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-ji-mu-yin-cang.html</guid><pubDate>Mon, 01 Dec 2025 14:44:35 +0000</pubDate></item><item><title>慕然科技的微信风格弹窗</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-wei-xin-feng-ge-dan-chuang.html</link><description>```js
 (function(Scratch) {
     'use strict';
     
@@ -1328,7 +1328,7 @@ if (typeof Scratch !== 'undefined' &amp;&amp; Scratch.extensions) {
                             },
                             CONTENT: {
                                 type: Scratch.ArgumentType.STRING,
-                                defaultValue: '这是一封来自Scratch的测试邮件。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/Morgan-de-you-jian-fa-song.html</guid><pubDate>Sun, 30 Nov 2025 13:35:37 +0000</pubDate></item><item><title>慕然科技的腾讯混元大模型对话</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-teng-xun-hun-yuan-da-mo-xing-dui-hua.html</link><description>```
+                                defaultValue: '这是一封来自Scratch的测试邮件。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/Morgan-de-you-jian-fa-song.html</guid><pubDate>Sun, 30 Nov 2025 13:35:37 +0000</pubDate></item><item><title>慕然科技的腾讯混元大模型对话</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-teng-xun-hun-yuan-da-mo-xing-dui-hua.html</link><description>```js
 (function(Scratch) {
     'use strict';
     
@@ -1831,7 +1831,7 @@ if (typeof Scratch !== 'undefined' &amp;&amp; Scratch.extensions) {
     
     Scratch.extensions.register(new DouBaoChat());
 })(Scratch);
-```。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-dou-bao-AI-dui-hua.html</guid><pubDate>Sun, 30 Nov 2025 13:32:38 +0000</pubDate></item><item><title>慕然科技的ChatGPT对话</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-ChatGPT-dui-hua.html</link><description>```
+```。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-dou-bao-AI-dui-hua.html</guid><pubDate>Sun, 30 Nov 2025 13:32:38 +0000</pubDate></item><item><title>慕然科技的ChatGPT对话</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-ChatGPT-dui-hua.html</link><description>```js
 (function(Scratch) {
     'use strict';
     
@@ -2049,7 +2049,7 @@ if (typeof Scratch !== 'undefined' &amp;&amp; Scratch.extensions) {
             const messages = [...this.conversationHistory];
             
             // 添加系统提示词
-            let systemMessage = '你是一个有帮助的AI助手。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-ChatGPT-dui-hua.html</guid><pubDate>Sun, 30 Nov 2025 13:28:06 +0000</pubDate></item><item><title>慕然科技的智谱清言对话</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-zhi-pu-qing-yan-dui-hua.html</link><description>```
+            let systemMessage = '你是一个有帮助的AI助手。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-ChatGPT-dui-hua.html</guid><pubDate>Sun, 30 Nov 2025 13:28:06 +0000</pubDate></item><item><title>慕然科技的智谱清言对话</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-zhi-pu-qing-yan-dui-hua.html</link><description>```js
 (function(Scratch) {
     'use strict';
     
@@ -2640,7 +2640,7 @@ if (typeof Scratch !== 'undefined' &amp;&amp; Scratch.extensions) {
     // 注册扩展
     Scratch.extensions.register(new DeepSeekDialogs());
 })(Scratch);
-```。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-DeepSeek-dui-hua.html</guid><pubDate>Sun, 30 Nov 2025 13:23:12 +0000</pubDate></item><item><title>Morgan的HarmonyOS弹窗</title><link>https://ccwmoran.github.io/code/post/Morgan-de-HarmonyOS-dan-chuang.html</link><description>```
+```。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-DeepSeek-dui-hua.html</guid><pubDate>Sun, 30 Nov 2025 13:23:12 +0000</pubDate></item><item><title>Morgan的HarmonyOS弹窗</title><link>https://ccwmoran.github.io/code/post/Morgan-de-HarmonyOS-dan-chuang.html</link><description>```js
 class HarmonyOSPopupExtension {
     constructor() { this.lastResult = null; }
 
@@ -2699,7 +2699,7 @@ Scratch.extensions.register(new HarmonyOSPopupExtension());
 &gt; 更新时间：2025.12.1
 &gt;慕然科技-Morgan
 
-。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/dai-ma-ku-shi-yong-xu-zhi.html</guid><pubDate>Sun, 30 Nov 2025 12:07:08 +0000</pubDate></item><item><title>慕然科技的模拟封号</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-mo-ni-feng-hao.html</link><description>```
+。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/dai-ma-ku-shi-yong-xu-zhi.html</guid><pubDate>Sun, 30 Nov 2025 12:07:08 +0000</pubDate></item><item><title>慕然科技的模拟封号</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-mo-ni-feng-hao.html</link><description>```js
 //慕然科技官网ccwmoran.github.io
 class BanSimulatorExtension{
 constructor(){this.modalStyle=null}
@@ -2840,7 +2840,7 @@ class MorganSecurityV2 {
 3. 超级保护模式: 检测到违规时崩溃页面
 4. 请合理使用本扩展功能
 
-注意: 使用本扩展即表示您同意承担所有相关责任。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/Morgan-de-an-quan-bao-hu-zu-jian.html</guid><pubDate>Sun, 30 Nov 2025 12:02:41 +0000</pubDate></item><item><title>慕然科技的图片展示</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-tu-pian-zhan-shi.html</link><description>```
+注意: 使用本扩展即表示您同意承担所有相关责任。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/Morgan-de-an-quan-bao-hu-zu-jian.html</guid><pubDate>Sun, 30 Nov 2025 12:02:41 +0000</pubDate></item><item><title>慕然科技的图片展示</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-tu-pian-zhan-shi.html</link><description>```js
 // 图片展示扩展 - 慕然科技的图片展示
 // 扩展ID: photo
 //慕然科技官网ccwmoran.github.io
@@ -3626,10 +3626,10 @@ class MoranKimiExtension {
 
 // 注册扩展
 Scratch.extensions.register(new MoranKimiExtension());
-```。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-Kimi-dui-hua.html</guid><pubDate>Sun, 30 Nov 2025 11:56:26 +0000</pubDate></item><item><title>慕然科技的社区弹窗</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-she-qu-dan-chuang.html</link><description>```
-//弹窗样式代码来自Chen-Jin的社区弹窗扩展
+```。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-Kimi-dui-hua.html</guid><pubDate>Sun, 30 Nov 2025 11:56:26 +0000</pubDate></item><item><title>慕然科技的社区弹窗</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-she-qu-dan-chuang.html</link><description>```js
+//弹窗样式代码来自共创世界Chen-Jin的社区弹窗扩展
 //弹窗积木和功能等由Morgan制作
-//仅CCW共创世界中可用弹窗（其他未知）
+//仅CCW共创世界中可用此弹窗（其他未知）
 class CommunityPopupExtension {
     constructor() {
         this.lastResult = null;

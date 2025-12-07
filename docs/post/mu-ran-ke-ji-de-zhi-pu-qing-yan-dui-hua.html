@@ -10,7 +10,7 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="```
+<meta name="description" content="```js
 (function(Scratch) {
     'use strict';
     
@@ -311,7 +311,7 @@
 })(Scratch);
 ```。">
 <meta property="og:title" content="慕然科技的智谱清言对话">
-<meta property="og:description" content="```
+<meta property="og:description" content="```js
 (function(Scratch) {
     'use strict';
     
@@ -615,7 +615,7 @@
 <meta property="og:url" content="https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-zhi-pu-qing-yan-dui-hua.html">
 <meta property="og:image" content="https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg">
 <title>慕然科技的智谱清言对话</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -681,305 +681,304 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><pre class="notranslate"><code class="notranslate">(function(Scratch) {
-    'use strict';
+<div class="markdown-body" id="postBody"><div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-kos">(</span><span class="pl-k">function</span><span class="pl-kos">(</span><span class="pl-v">Scratch</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-s">'use strict'</span><span class="pl-kos">;</span>
     
-    class GLMChat {
-        constructor() {
-            this.apiKey = '';
-            this.currentModel = 'glm-4-flash';
-            this.webSearchEnabled = false;
-            this.lastResponse = '';
-            this.lastThinkingResult = '';
-            this.lastThinkingTime = 0;
-            this.isProcessing = false;
+    <span class="pl-k">class</span> <span class="pl-v">GLMChat</span> <span class="pl-kos">{</span>
+        <span class="pl-en">constructor</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">apiKey</span> <span class="pl-c1">=</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentModel</span> <span class="pl-c1">=</span> <span class="pl-s">'glm-4-flash'</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">webSearchEnabled</span> <span class="pl-c1">=</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastResponse</span> <span class="pl-c1">=</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastThinkingResult</span> <span class="pl-c1">=</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastThinkingTime</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">isProcessing</span> <span class="pl-c1">=</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
             
-            this.modelMap = {
-                'GLM-4-Flash': 'glm-4-flash',
-                'GLM-4-Long': 'glm-4-long',
-                'GLM-4-Air': 'glm-4-air',
-                'GLM-4-AirX': 'glm-4-airx',
-                'GLM-4-Plus': 'glm-4-plus',
-                'GLM-4-0520': 'glm-4-0520',
-                'GLM-4-0520-实验版': 'glm-4-0520-experimental',
-                'GLM-4V': 'glm-4v',
-                'GLM-4V-Plus': 'glm-4v-plus',
-                'GLM-4V-0520': 'glm-4v-0520'
-            };
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">modelMap</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+                <span class="pl-s">'GLM-4-Flash'</span>: <span class="pl-s">'glm-4-flash'</span><span class="pl-kos">,</span>
+                <span class="pl-s">'GLM-4-Long'</span>: <span class="pl-s">'glm-4-long'</span><span class="pl-kos">,</span>
+                <span class="pl-s">'GLM-4-Air'</span>: <span class="pl-s">'glm-4-air'</span><span class="pl-kos">,</span>
+                <span class="pl-s">'GLM-4-AirX'</span>: <span class="pl-s">'glm-4-airx'</span><span class="pl-kos">,</span>
+                <span class="pl-s">'GLM-4-Plus'</span>: <span class="pl-s">'glm-4-plus'</span><span class="pl-kos">,</span>
+                <span class="pl-s">'GLM-4-0520'</span>: <span class="pl-s">'glm-4-0520'</span><span class="pl-kos">,</span>
+                <span class="pl-s">'GLM-4-0520-实验版'</span>: <span class="pl-s">'glm-4-0520-experimental'</span><span class="pl-kos">,</span>
+                <span class="pl-s">'GLM-4V'</span>: <span class="pl-s">'glm-4v'</span><span class="pl-kos">,</span>
+                <span class="pl-s">'GLM-4V-Plus'</span>: <span class="pl-s">'glm-4v-plus'</span><span class="pl-kos">,</span>
+                <span class="pl-s">'GLM-4V-0520'</span>: <span class="pl-s">'glm-4v-0520'</span>
+            <span class="pl-kos">}</span><span class="pl-kos">;</span>
             
-            this.colors = {
-                primary: '#2D5CF6',
-                secondary: '#1A3FD9',
-                accent: '#5B82F8'
-            };
-        }
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">colors</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+                <span class="pl-c1">primary</span>: <span class="pl-s">'#2D5CF6'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">secondary</span>: <span class="pl-s">'#1A3FD9'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">accent</span>: <span class="pl-s">'#5B82F8'</span>
+            <span class="pl-kos">}</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        getInfo() {
-            return {
-                id: 'kjcxglm',
-                name: '慕然科技的智谱清言',
-                color1: this.colors.primary,
-                color2: this.colors.secondary,
-                color3: this.colors.accent,
-                docsURI: 'https://open.bigmodel.cn/',
-                blocks: [
-                    {
-                        opcode: 'setApiKey',
-                        blockType: Scratch.BlockType.COMMAND,
-                        text: '设置API密钥 [KEY]',
-                        arguments: {
-                            KEY: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: ''
-                            }
-                        }
-                    },
-                    {
-                        opcode: 'setModel',
-                        blockType: Scratch.BlockType.COMMAND,
-                        text: '使用模型 [MODEL]',
-                        arguments: {
-                            MODEL: {
-                                type: Scratch.ArgumentType.STRING,
-                                menu: 'models'
-                            }
-                        }
-                    },
-                    {
-                        opcode: 'setWebSearch',
-                        blockType: Scratch.BlockType.COMMAND,
-                        text: '联网搜索 [ENABLED]',
-                        arguments: {
-                            ENABLED: {
-                                type: Scratch.ArgumentType.STRING,
-                                menu: 'switch'
-                            }
-                        }
-                    },
-                    '---',
-                    {
-                        opcode: 'getThinkingResult',
-                        blockType: Scratch.BlockType.REPORTER,
-                        text: '思考结果',
-                        disableMonitor: true
-                    },
-                    {
-                        opcode: 'getThinkingTime',
-                        blockType: Scratch.BlockType.REPORTER,
-                        text: '思考用时（秒）',
-                        disableMonitor: true
-                    },
-                    {
-                        opcode: 'getLastOutput',
-                        blockType: Scratch.BlockType.REPORTER,
-                        text: '输出结果',
-                        disableMonitor: true
-                    },
-                    {
-                        opcode: 'getCurrentModel',
-                        blockType: Scratch.BlockType.REPORTER,
-                        text: '当前模型',
-                        disableMonitor: true
-                    },
-                    '---',
-                    {
-                        opcode: 'sendMessage',
-                        blockType: Scratch.BlockType.REPORTER,
-                        text: '发送消息 [MESSAGE]',
-                        arguments: {
-                            MESSAGE: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: '你好！请介绍一下你自己'
-                            }
-                        }
-                    },
-                    {
-                        opcode: 'reset',
-                        blockType: Scratch.BlockType.COMMAND,
-                        text: '重置对话'
-                    }
-                ],
-                menus: {
-                    models: {
-                        acceptReporters: false,
-                        items: [
-                            'GLM-4-Flash',
-                            'GLM-4-Long', 
-                            'GLM-4-Air',
-                            'GLM-4-AirX',
-                            'GLM-4-Plus',
-                            'GLM-4-0520',
-                            'GLM-4-0520-实验版',
-                            'GLM-4V',
-                            'GLM-4V-Plus',
-                            'GLM-4V-0520'
-                        ]
-                    },
-                    switch: {
-                        acceptReporters: false,
-                        items: ['打开', '关闭']
-                    }
-                }
-            };
-        }
+        <span class="pl-en">getInfo</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">return</span> <span class="pl-kos">{</span>
+                <span class="pl-c1">id</span>: <span class="pl-s">'kjcxglm'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">name</span>: <span class="pl-s">'慕然科技的智谱清言'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">color1</span>: <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">colors</span><span class="pl-kos">.</span><span class="pl-c1">primary</span><span class="pl-kos">,</span>
+                <span class="pl-c1">color2</span>: <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">colors</span><span class="pl-kos">.</span><span class="pl-c1">secondary</span><span class="pl-kos">,</span>
+                <span class="pl-c1">color3</span>: <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">colors</span><span class="pl-kos">.</span><span class="pl-c1">accent</span><span class="pl-kos">,</span>
+                <span class="pl-c1">docsURI</span>: <span class="pl-s">'https://open.bigmodel.cn/'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">blocks</span>: <span class="pl-kos">[</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'setApiKey'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'设置API密钥 [KEY]'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">KEY</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">''</span>
+                            <span class="pl-kos">}</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'setModel'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'使用模型 [MODEL]'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">MODEL</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">menu</span>: <span class="pl-s">'models'</span>
+                            <span class="pl-kos">}</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'setWebSearch'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'联网搜索 [ENABLED]'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">ENABLED</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">menu</span>: <span class="pl-s">'switch'</span>
+                            <span class="pl-kos">}</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-s">'---'</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'getThinkingResult'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">REPORTER</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'思考结果'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">disableMonitor</span>: <span class="pl-c1">true</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'getThinkingTime'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">REPORTER</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'思考用时（秒）'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">disableMonitor</span>: <span class="pl-c1">true</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'getLastOutput'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">REPORTER</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'输出结果'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">disableMonitor</span>: <span class="pl-c1">true</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'getCurrentModel'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">REPORTER</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'当前模型'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">disableMonitor</span>: <span class="pl-c1">true</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-s">'---'</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'sendMessage'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">REPORTER</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'发送消息 [MESSAGE]'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">MESSAGE</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">'你好！请介绍一下你自己'</span>
+                            <span class="pl-kos">}</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'reset'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'重置对话'</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">]</span><span class="pl-kos">,</span>
+                <span class="pl-c1">menus</span>: <span class="pl-kos">{</span>
+                    <span class="pl-c1">models</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">acceptReporters</span>: <span class="pl-c1">false</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">items</span>: <span class="pl-kos">[</span>
+                            <span class="pl-s">'GLM-4-Flash'</span><span class="pl-kos">,</span>
+                            <span class="pl-s">'GLM-4-Long'</span><span class="pl-kos">,</span> 
+                            <span class="pl-s">'GLM-4-Air'</span><span class="pl-kos">,</span>
+                            <span class="pl-s">'GLM-4-AirX'</span><span class="pl-kos">,</span>
+                            <span class="pl-s">'GLM-4-Plus'</span><span class="pl-kos">,</span>
+                            <span class="pl-s">'GLM-4-0520'</span><span class="pl-kos">,</span>
+                            <span class="pl-s">'GLM-4-0520-实验版'</span><span class="pl-kos">,</span>
+                            <span class="pl-s">'GLM-4V'</span><span class="pl-kos">,</span>
+                            <span class="pl-s">'GLM-4V-Plus'</span><span class="pl-kos">,</span>
+                            <span class="pl-s">'GLM-4V-0520'</span>
+                        <span class="pl-kos">]</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">switch</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">acceptReporters</span>: <span class="pl-c1">false</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">items</span>: <span class="pl-kos">[</span><span class="pl-s">'打开'</span><span class="pl-kos">,</span> <span class="pl-s">'关闭'</span><span class="pl-kos">]</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span>
+            <span class="pl-kos">}</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        setApiKey(args) {
-            const key = args.KEY.trim();
-            if (key) {
-                this.apiKey = key;
-                console.log('API密钥已设置');
-            }
-        }
+        <span class="pl-en">setApiKey</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">const</span> <span class="pl-s1">key</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">KEY</span><span class="pl-kos">.</span><span class="pl-en">trim</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">key</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">apiKey</span> <span class="pl-c1">=</span> <span class="pl-s1">key</span><span class="pl-kos">;</span>
+                <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s">'API密钥已设置'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
+        <span class="pl-kos">}</span>
         
-        setModel(args) {
-            const modelKey = args.MODEL;
-            this.currentModel = this.modelMap[modelKey] || this.modelMap['GLM-4-Flash'];
-            console.log(`模型已设置为: ${modelKey} (${this.currentModel})`);
-        }
+        <span class="pl-en">setModel</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">const</span> <span class="pl-s1">modelKey</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">MODEL</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentModel</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">modelMap</span><span class="pl-kos">[</span><span class="pl-s1">modelKey</span><span class="pl-kos">]</span> <span class="pl-c1">||</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">modelMap</span><span class="pl-kos">[</span><span class="pl-s">'GLM-4-Flash'</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+            <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s">`模型已设置为: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">modelKey</span><span class="pl-kos">}</span></span> (<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentModel</span><span class="pl-kos">}</span></span>)`</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        setWebSearch(args) {
-            this.webSearchEnabled = (args.ENABLED === '打开');
-            console.log(`联网搜索: ${this.webSearchEnabled ? '开启' : '关闭'}`);
-        }
+        <span class="pl-en">setWebSearch</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">webSearchEnabled</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">ENABLED</span> <span class="pl-c1">===</span> <span class="pl-s">'打开'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s">`联网搜索: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">webSearchEnabled</span> ? <span class="pl-s">'开启'</span> : <span class="pl-s">'关闭'</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        getThinkingResult() {
-            if (!this.lastThinkingResult) return '暂无思考结果';
-            return this.lastThinkingResult;
-        }
+        <span class="pl-en">getThinkingResult</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastThinkingResult</span><span class="pl-kos">)</span> <span class="pl-k">return</span> <span class="pl-s">'暂无思考结果'</span><span class="pl-kos">;</span>
+            <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastThinkingResult</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        getThinkingTime() {
-            if (this.lastThinkingTime === 0) return '0';
-            return (Math.round(this.lastThinkingTime / 100) / 10).toString();
-        }
+        <span class="pl-en">getThinkingTime</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastThinkingTime</span> <span class="pl-c1">===</span> <span class="pl-c1">0</span><span class="pl-kos">)</span> <span class="pl-k">return</span> <span class="pl-s">'0'</span><span class="pl-kos">;</span>
+            <span class="pl-k">return</span> <span class="pl-kos">(</span><span class="pl-v">Math</span><span class="pl-kos">.</span><span class="pl-en">round</span><span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastThinkingTime</span> <span class="pl-c1">/</span> <span class="pl-c1">100</span><span class="pl-kos">)</span> <span class="pl-c1">/</span> <span class="pl-c1">10</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">toString</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        getLastOutput() {
-            return this.lastResponse || '暂无输出结果';
-        }
+        <span class="pl-en">getLastOutput</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastResponse</span> <span class="pl-c1">||</span> <span class="pl-s">'暂无输出结果'</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        getCurrentModel() {
-            for (const [displayName, modelId] of Object.entries(this.modelMap)) {
-                if (modelId === this.currentModel) {
-                    return displayName;
-                }
-            }
-            return this.currentModel;
-        }
+        <span class="pl-en">getCurrentModel</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">for</span> <span class="pl-kos">(</span><span class="pl-k">const</span> <span class="pl-kos">[</span><span class="pl-s1">displayName</span><span class="pl-kos">,</span> <span class="pl-s1">modelId</span><span class="pl-kos">]</span> <span class="pl-k">of</span> <span class="pl-v">Object</span><span class="pl-kos">.</span><span class="pl-en">entries</span><span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">modelMap</span><span class="pl-kos">)</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">modelId</span> <span class="pl-c1">===</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentModel</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                    <span class="pl-k">return</span> <span class="pl-s1">displayName</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span>
+            <span class="pl-kos">}</span>
+            <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentModel</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        reset() {
-            this.lastResponse = '';
-            this.lastThinkingResult = '';
-            this.lastThinkingTime = 0;
-            this.isProcessing = false;
-            console.log('对话已重置');
-        }
+        <span class="pl-en">reset</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastResponse</span> <span class="pl-c1">=</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastThinkingResult</span> <span class="pl-c1">=</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastThinkingTime</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">isProcessing</span> <span class="pl-c1">=</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
+            <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s">'对话已重置'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        sendMessage(args) {
-            if (this.isProcessing) {
-                return Promise.resolve('错误：上一个请求正在处理中，请稍后再试');
-            }
+        <span class="pl-en">sendMessage</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">isProcessing</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-k">return</span> <span class="pl-v">Promise</span><span class="pl-kos">.</span><span class="pl-en">resolve</span><span class="pl-kos">(</span><span class="pl-s">'错误：上一个请求正在处理中，请稍后再试'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
             
-            if (!this.apiKey) {
-                return Promise.resolve('错误：请先设置API密钥');
-            }
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">apiKey</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-k">return</span> <span class="pl-v">Promise</span><span class="pl-kos">.</span><span class="pl-en">resolve</span><span class="pl-kos">(</span><span class="pl-s">'错误：请先设置API密钥'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
             
-            const message = args.MESSAGE.trim();
-            if (!message) {
-                return Promise.resolve('错误：消息内容不能为空');
-            }
+            <span class="pl-k">const</span> <span class="pl-s1">message</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">MESSAGE</span><span class="pl-kos">.</span><span class="pl-en">trim</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">message</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-k">return</span> <span class="pl-v">Promise</span><span class="pl-kos">.</span><span class="pl-en">resolve</span><span class="pl-kos">(</span><span class="pl-s">'错误：消息内容不能为空'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
             
-            this.isProcessing = true;
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">isProcessing</span> <span class="pl-c1">=</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
             
-            const requestData = {
-                model: this.currentModel,
-                messages: [
-                    {
-                        role: "user",
-                        content: message
-                    }
-                ],
-                stream: false
-            };
+            <span class="pl-k">const</span> <span class="pl-s1">requestData</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+                <span class="pl-c1">model</span>: <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentModel</span><span class="pl-kos">,</span>
+                <span class="pl-c1">messages</span>: <span class="pl-kos">[</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">role</span>: <span class="pl-s">"user"</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">content</span>: <span class="pl-s1">message</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">]</span><span class="pl-kos">,</span>
+                <span class="pl-c1">stream</span>: <span class="pl-c1">false</span>
+            <span class="pl-kos">}</span><span class="pl-kos">;</span>
             
-            if (this.webSearchEnabled) {
-                requestData.tools = [
-                    {
-                        type: "web_search",
-                        web_search: {
-                            enable: true,
-                            search_result: true
-                        }
-                    }
-                ];
-            }
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">webSearchEnabled</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-s1">requestData</span><span class="pl-kos">.</span><span class="pl-c1">tools</span> <span class="pl-c1">=</span> <span class="pl-kos">[</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">type</span>: <span class="pl-s">"web_search"</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">web_search</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">enable</span>: <span class="pl-c1">true</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">search_result</span>: <span class="pl-c1">true</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">]</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
             
-            const startTime = Date.now();
+            <span class="pl-k">const</span> <span class="pl-s1">startTime</span> <span class="pl-c1">=</span> <span class="pl-v">Date</span><span class="pl-kos">.</span><span class="pl-en">now</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
             
-            return fetch('https://open.bigmodel.cn/api/paas/v4/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + this.apiKey
-                },
-                body: JSON.stringify(requestData)
-            })
-            .then(response =&gt; {
-                if (!response.ok) {
-                    throw new Error(`HTTP错误: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data =&gt; {
-                const endTime = Date.now();
-                this.lastThinkingTime = endTime - startTime;
+            <span class="pl-k">return</span> <span class="pl-en">fetch</span><span class="pl-kos">(</span><span class="pl-s">'https://open.bigmodel.cn/api/paas/v4/chat/completions'</span><span class="pl-kos">,</span> <span class="pl-kos">{</span>
+                <span class="pl-c1">method</span>: <span class="pl-s">'POST'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">headers</span>: <span class="pl-kos">{</span>
+                    <span class="pl-s">'Content-Type'</span>: <span class="pl-s">'application/json'</span><span class="pl-kos">,</span>
+                    <span class="pl-s">'Authorization'</span>: <span class="pl-s">'Bearer '</span> <span class="pl-c1">+</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">apiKey</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-c1">body</span>: <span class="pl-c1">JSON</span><span class="pl-kos">.</span><span class="pl-en">stringify</span><span class="pl-kos">(</span><span class="pl-s1">requestData</span><span class="pl-kos">)</span>
+            <span class="pl-kos">}</span><span class="pl-kos">)</span>
+            <span class="pl-kos">.</span><span class="pl-en">then</span><span class="pl-kos">(</span><span class="pl-s1">response</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">response</span><span class="pl-kos">.</span><span class="pl-c1">ok</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                    <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-v">Error</span><span class="pl-kos">(</span><span class="pl-s">`HTTP错误: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">response</span><span class="pl-kos">.</span><span class="pl-c1">status</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span>
+                <span class="pl-k">return</span> <span class="pl-s1">response</span><span class="pl-kos">.</span><span class="pl-en">json</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">)</span>
+            <span class="pl-kos">.</span><span class="pl-en">then</span><span class="pl-kos">(</span><span class="pl-s1">data</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-k">const</span> <span class="pl-s1">endTime</span> <span class="pl-c1">=</span> <span class="pl-v">Date</span><span class="pl-kos">.</span><span class="pl-en">now</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastThinkingTime</span> <span class="pl-c1">=</span> <span class="pl-s1">endTime</span> <span class="pl-c1">-</span> <span class="pl-s1">startTime</span><span class="pl-kos">;</span>
                 
-                if (data.error) {
-                    throw new Error(data.error.message || 'API返回错误');
-                }
+                <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">data</span><span class="pl-kos">.</span><span class="pl-c1">error</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                    <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-v">Error</span><span class="pl-kos">(</span><span class="pl-s1">data</span><span class="pl-kos">.</span><span class="pl-c1">error</span><span class="pl-kos">.</span><span class="pl-c1">message</span> <span class="pl-c1">||</span> <span class="pl-s">'API返回错误'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span>
                 
-                if (data.choices &amp;&amp; data.choices.length &gt; 0) {
-                    const message = data.choices[0].message;
+                <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">data</span><span class="pl-kos">.</span><span class="pl-c1">choices</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">data</span><span class="pl-kos">.</span><span class="pl-c1">choices</span><span class="pl-kos">.</span><span class="pl-c1">length</span> <span class="pl-c1">&gt;</span> <span class="pl-c1">0</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                    <span class="pl-k">const</span> <span class="pl-s1">message</span> <span class="pl-c1">=</span> <span class="pl-s1">data</span><span class="pl-kos">.</span><span class="pl-c1">choices</span><span class="pl-kos">[</span><span class="pl-c1">0</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">message</span><span class="pl-kos">;</span>
                     
-                    if (Array.isArray(message.content)) {
-                        let textContent = '';
-                        for (const item of message.content) {
-                            if (item.type === 'text') {
-                                textContent += item.text;
-                            }
-                        }
-                        this.lastResponse = textContent;
-                    } else {
-                        this.lastResponse = message.content;
-                    }
+                    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-v">Array</span><span class="pl-kos">.</span><span class="pl-en">isArray</span><span class="pl-kos">(</span><span class="pl-s1">message</span><span class="pl-kos">.</span><span class="pl-c1">content</span><span class="pl-kos">)</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                        <span class="pl-k">let</span> <span class="pl-s1">textContent</span> <span class="pl-c1">=</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+                        <span class="pl-k">for</span> <span class="pl-kos">(</span><span class="pl-k">const</span> <span class="pl-s1">item</span> <span class="pl-k">of</span> <span class="pl-s1">message</span><span class="pl-kos">.</span><span class="pl-c1">content</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">item</span><span class="pl-kos">.</span><span class="pl-c1">type</span> <span class="pl-c1">===</span> <span class="pl-s">'text'</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                                <span class="pl-s1">textContent</span> <span class="pl-c1">+=</span> <span class="pl-s1">item</span><span class="pl-kos">.</span><span class="pl-c1">text</span><span class="pl-kos">;</span>
+                            <span class="pl-kos">}</span>
+                        <span class="pl-kos">}</span>
+                        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastResponse</span> <span class="pl-c1">=</span> <span class="pl-s1">textContent</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span> <span class="pl-k">else</span> <span class="pl-kos">{</span>
+                        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastResponse</span> <span class="pl-c1">=</span> <span class="pl-s1">message</span><span class="pl-kos">.</span><span class="pl-c1">content</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span>
                     
-                    let thinkingInfo = '';
-                    if (data.usage) {
-                        thinkingInfo = `Tokens: 输入${data.usage.prompt_tokens} 输出${data.usage.completion_tokens} 总计${data.usage.total_tokens}`;
-                    }
-                    if (data.choices[0].finish_reason) {
-                        thinkingInfo += thinkingInfo ? ` | 完成原因: ${data.choices[0].finish_reason}` : `完成原因: ${data.choices[0].finish_reason}`;
-                    }
-                    this.lastThinkingResult = thinkingInfo || '无元数据信息';
+                    <span class="pl-k">let</span> <span class="pl-s1">thinkingInfo</span> <span class="pl-c1">=</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+                    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">data</span><span class="pl-kos">.</span><span class="pl-c1">usage</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                        <span class="pl-s1">thinkingInfo</span> <span class="pl-c1">=</span> <span class="pl-s">`Tokens: 输入<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">data</span><span class="pl-kos">.</span><span class="pl-c1">usage</span><span class="pl-kos">.</span><span class="pl-c1">prompt_tokens</span><span class="pl-kos">}</span></span> 输出<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">data</span><span class="pl-kos">.</span><span class="pl-c1">usage</span><span class="pl-kos">.</span><span class="pl-c1">completion_tokens</span><span class="pl-kos">}</span></span> 总计<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">data</span><span class="pl-kos">.</span><span class="pl-c1">usage</span><span class="pl-kos">.</span><span class="pl-c1">total_tokens</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span>
+                    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">data</span><span class="pl-kos">.</span><span class="pl-c1">choices</span><span class="pl-kos">[</span><span class="pl-c1">0</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">finish_reason</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                        <span class="pl-s1">thinkingInfo</span> <span class="pl-c1">+=</span> <span class="pl-s1">thinkingInfo</span> ? <span class="pl-s">` | 完成原因: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">data</span><span class="pl-kos">.</span><span class="pl-c1">choices</span><span class="pl-kos">[</span><span class="pl-c1">0</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">finish_reason</span><span class="pl-kos">}</span></span>`</span> : <span class="pl-s">`完成原因: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">data</span><span class="pl-kos">.</span><span class="pl-c1">choices</span><span class="pl-kos">[</span><span class="pl-c1">0</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">finish_reason</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span>
+                    <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastThinkingResult</span> <span class="pl-c1">=</span> <span class="pl-s1">thinkingInfo</span> <span class="pl-c1">||</span> <span class="pl-s">'无元数据信息'</span><span class="pl-kos">;</span>
                     
-                    return this.lastResponse;
-                } else {
-                    throw new Error('API返回数据异常');
-                }
-            })
-            .catch(error =&gt; {
-                console.error('智谱清言API错误:', error);
-                this.lastResponse = '';
-                this.lastThinkingResult = '';
-                return `错误：${error.message}`;
-            })
-            .finally(() =&gt; {
-                this.isProcessing = false;
-            });
-        }
-    }
+                    <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastResponse</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span> <span class="pl-k">else</span> <span class="pl-kos">{</span>
+                    <span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-v">Error</span><span class="pl-kos">(</span><span class="pl-s">'API返回数据异常'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span>
+            <span class="pl-kos">}</span><span class="pl-kos">)</span>
+            <span class="pl-kos">.</span><span class="pl-en">catch</span><span class="pl-kos">(</span><span class="pl-s1">error</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">error</span><span class="pl-kos">(</span><span class="pl-s">'智谱清言API错误:'</span><span class="pl-kos">,</span> <span class="pl-s1">error</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastResponse</span> <span class="pl-c1">=</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastThinkingResult</span> <span class="pl-c1">=</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+                <span class="pl-k">return</span> <span class="pl-s">`错误：<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">error</span><span class="pl-kos">.</span><span class="pl-c1">message</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">)</span>
+            <span class="pl-kos">.</span><span class="pl-en">finally</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">isProcessing</span> <span class="pl-c1">=</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
     
-    Scratch.extensions.register(new GLMChat());
-})(Scratch);
-</code></pre></div>
+    <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">extensions</span><span class="pl-kos">.</span><span class="pl-en">register</span><span class="pl-kos">(</span><span class="pl-k">new</span> <span class="pl-v">GLMChat</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">(</span><span class="pl-v">Scratch</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

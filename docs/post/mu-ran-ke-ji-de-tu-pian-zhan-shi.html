@@ -10,7 +10,7 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="```
+<meta name="description" content="```js
 // 图片展示扩展 - 慕然科技的图片展示
 // 扩展ID: photo
 //慕然科技官网ccwmoran.github.io
@@ -534,7 +534,7 @@ class PhotoDisplayExtension {
 Scratch.extensions.register(new PhotoDisplayExtension());
 ```。">
 <meta property="og:title" content="慕然科技的图片展示">
-<meta property="og:description" content="```
+<meta property="og:description" content="```js
 // 图片展示扩展 - 慕然科技的图片展示
 // 扩展ID: photo
 //慕然科技官网ccwmoran.github.io
@@ -1061,7 +1061,7 @@ Scratch.extensions.register(new PhotoDisplayExtension());
 <meta property="og:url" content="https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-tu-pian-zhan-shi.html">
 <meta property="og:image" content="https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg">
 <title>慕然科技的图片展示</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -1127,528 +1127,527 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><pre class="notranslate"><code class="notranslate">// 图片展示扩展 - 慕然科技的图片展示
-// 扩展ID: photo
-//慕然科技官网ccwmoran.github.io
+<div class="markdown-body" id="postBody"><div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-c">// 图片展示扩展 - 慕然科技的图片展示</span>
+<span class="pl-c">// 扩展ID: photo</span>
+<span class="pl-c">//慕然科技官网ccwmoran.github.io</span>
 
-class PhotoDisplayExtension {
-    constructor() {
-        this.images = {};
-        this.nextZIndex = 1000;
+<span class="pl-k">class</span> <span class="pl-v">PhotoDisplayExtension</span> <span class="pl-kos">{</span>
+    <span class="pl-en">constructor</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span><span class="pl-kos">}</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">nextZIndex</span> <span class="pl-c1">=</span> <span class="pl-c1">1000</span><span class="pl-kos">;</span>
         
-        // 形状选项
-        this.shapeOptions = [
-            '原图',
-            '圆形', 
-            '正方形',
-            '圆角矩形',
-            '椭圆形'
-        ];
-    }
+        <span class="pl-c">// 形状选项</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">shapeOptions</span> <span class="pl-c1">=</span> <span class="pl-kos">[</span>
+            <span class="pl-s">'原图'</span><span class="pl-kos">,</span>
+            <span class="pl-s">'圆形'</span><span class="pl-kos">,</span> 
+            <span class="pl-s">'正方形'</span><span class="pl-kos">,</span>
+            <span class="pl-s">'圆角矩形'</span><span class="pl-kos">,</span>
+            <span class="pl-s">'椭圆形'</span>
+        <span class="pl-kos">]</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    getInfo() {
-        return {
-            id: 'photo',
-            name: '科技创新的图片展示',
-            color1: '#4A90E2',
-            color2: '#357ABD',
-            blocks: [
-                {
-                    opcode: 'showImage',
-                    blockType: Scratch.BlockType.COMMAND,
-                    text: '显示图片 名称 [NAME] 地址 [URL] 位置 X [X] Y [Y] 大小 [SIZE] 形状 [SHAPE]',
-                    arguments: {
-                        NAME: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '图片1'
-                        },
-                        URL: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: 'https://example.com/image.jpg'
-                        },
-                        X: {
-                            type: Scratch.ArgumentType.NUMBER,
-                            defaultValue: 100
-                        },
-                        Y: {
-                            type: Scratch.ArgumentType.NUMBER,
-                            defaultValue: 100
-                        },
-                        SIZE: {
-                            type: Scratch.ArgumentType.NUMBER,
-                            defaultValue: 150
-                        },
-                        SHAPE: {
-                            type: Scratch.ArgumentType.STRING,
-                            menu: 'SHAPE_MENU'
-                        }
-                    }
-                },
-                {
-                    opcode: 'removeImage',
-                    blockType: Scratch.BlockType.COMMAND,
-                    text: '删除图片 [NAME]',
-                    arguments: {
-                        NAME: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '图片1'
-                        }
-                    }
-                },
-                {
-                    opcode: 'moveImage',
-                    blockType: Scratch.BlockType.COMMAND,
-                    text: '移动图片 [NAME] 到 X [X] Y [Y]',
-                    arguments: {
-                        NAME: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '图片1'
-                        },
-                        X: {
-                            type: Scratch.ArgumentType.NUMBER,
-                            defaultValue: 200
-                        },
-                        Y: {
-                            type: Scratch.ArgumentType.NUMBER,
-                            defaultValue: 200
-                        }
-                    }
-                },
-                {
-                    opcode: 'resizeImage',
-                    blockType: Scratch.BlockType.COMMAND,
-                    text: '设置图片 [NAME] 大小为 [SIZE]',
-                    arguments: {
-                        NAME: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '图片1'
-                        },
-                        SIZE: {
-                            type: Scratch.ArgumentType.NUMBER,
-                            defaultValue: 200
-                        }
-                    }
-                },
-                {
-                    opcode: 'changeImageShape',
-                    blockType: Scratch.BlockType.COMMAND,
-                    text: '设置图片 [NAME] 形状为 [SHAPE]',
-                    arguments: {
-                        NAME: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '图片1'
-                        },
-                        SHAPE: {
-                            type: Scratch.ArgumentType.STRING,
-                            menu: 'SHAPE_MENU'
-                        }
-                    }
-                },
-                {
-                    opcode: 'setImageOpacity',
-                    blockType: Scratch.BlockType.COMMAND,
-                    text: '设置图片 [NAME] 透明度 [OPACITY]%',
-                    arguments: {
-                        NAME: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '图片1'
-                        },
-                        OPACITY: {
-                            type: Scratch.ArgumentType.NUMBER,
-                            defaultValue: 100
-                        }
-                    }
-                },
-                {
-                    opcode: 'bringToFront',
-                    blockType: Scratch.BlockType.COMMAND,
-                    text: '将图片 [NAME] 置于顶层',
-                    arguments: {
-                        NAME: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '图片1'
-                        }
-                    }
-                },
-                {
-                    opcode: 'sendToBack',
-                    blockType: Scratch.BlockType.COMMAND,
-                    text: '将图片 [NAME] 置于底层',
-                    arguments: {
-                        NAME: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '图片1'
-                        }
-                    }
-                },
-                {
-                    opcode: 'rotateImage',
-                    blockType: Scratch.BlockType.COMMAND,
-                    text: '旋转图片 [NAME] [DEGREES] 度',
-                    arguments: {
-                        NAME: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '图片1'
-                        },
-                        DEGREES: {
-                            type: Scratch.ArgumentType.NUMBER,
-                            defaultValue: 45
-                        }
-                    }
-                },
-                {
-                    opcode: 'flipImage',
-                    blockType: Scratch.BlockType.COMMAND,
-                    text: '翻转图片 [NAME] [DIRECTION]',
-                    arguments: {
-                        NAME: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '图片1'
-                        },
-                        DIRECTION: {
-                            type: Scratch.ArgumentType.STRING,
-                            menu: 'FLIP_MENU'
-                        }
-                    }
-                },
-                {
-                    opcode: 'whenImageClicked',
-                    blockType: Scratch.BlockType.HAT,
-                    text: '当图片 [NAME] 被点击',
-                    arguments: {
-                        NAME: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '图片1'
-                        }
-                    }
-                },
-                {
-                    opcode: 'getImageX',
-                    blockType: Scratch.BlockType.REPORTER,
-                    text: '图片 [NAME] 的X坐标',
-                    arguments: {
-                        NAME: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '图片1'
-                        }
-                    }
-                },
-                {
-                    opcode: 'getImageY',
-                    blockType: Scratch.BlockType.REPORTER,
-                    text: '图片 [NAME] 的Y坐标',
-                    arguments: {
-                        NAME: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '图片1'
-                        }
-                    }
-                },
-                {
-                    opcode: 'getImageCount',
-                    blockType: Scratch.BlockType.REPORTER,
-                    text: '图片数量'
-                },
-                {
-                    opcode: 'imageExists',
-                    blockType: Scratch.BlockType.BOOLEAN,
-                    text: '图片 [NAME] 存在?',
-                    arguments: {
-                        NAME: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '图片1'
-                        }
-                    }
-                }
-            ],
-            menus: {
-                SHAPE_MENU: {
-                    items: this.shapeOptions
-                },
-                FLIP_MENU: {
-                    items: ['水平翻转', '垂直翻转']
-                }
-            },
-            docsURI: 'https://kejicx.github.io/doc/'
-        };
-    }
+    <span class="pl-en">getInfo</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">return</span> <span class="pl-kos">{</span>
+            <span class="pl-c1">id</span>: <span class="pl-s">'photo'</span><span class="pl-kos">,</span>
+            <span class="pl-c1">name</span>: <span class="pl-s">'科技创新的图片展示'</span><span class="pl-kos">,</span>
+            <span class="pl-c1">color1</span>: <span class="pl-s">'#4A90E2'</span><span class="pl-kos">,</span>
+            <span class="pl-c1">color2</span>: <span class="pl-s">'#357ABD'</span><span class="pl-kos">,</span>
+            <span class="pl-c1">blocks</span>: <span class="pl-kos">[</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'showImage'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'显示图片 名称 [NAME] 地址 [URL] 位置 X [X] Y [Y] 大小 [SIZE] 形状 [SHAPE]'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">NAME</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'图片1'</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">URL</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'https://example.com/image.jpg'</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">X</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">NUMBER</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-c1">100</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">Y</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">NUMBER</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-c1">100</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">SIZE</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">NUMBER</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-c1">150</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">SHAPE</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">menu</span>: <span class="pl-s">'SHAPE_MENU'</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'removeImage'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'删除图片 [NAME]'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">NAME</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'图片1'</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'moveImage'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'移动图片 [NAME] 到 X [X] Y [Y]'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">NAME</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'图片1'</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">X</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">NUMBER</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-c1">200</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">Y</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">NUMBER</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-c1">200</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'resizeImage'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'设置图片 [NAME] 大小为 [SIZE]'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">NAME</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'图片1'</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">SIZE</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">NUMBER</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-c1">200</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'changeImageShape'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'设置图片 [NAME] 形状为 [SHAPE]'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">NAME</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'图片1'</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">SHAPE</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">menu</span>: <span class="pl-s">'SHAPE_MENU'</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'setImageOpacity'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'设置图片 [NAME] 透明度 [OPACITY]%'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">NAME</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'图片1'</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">OPACITY</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">NUMBER</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-c1">100</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'bringToFront'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'将图片 [NAME] 置于顶层'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">NAME</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'图片1'</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'sendToBack'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'将图片 [NAME] 置于底层'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">NAME</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'图片1'</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'rotateImage'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'旋转图片 [NAME] [DEGREES] 度'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">NAME</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'图片1'</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">DEGREES</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">NUMBER</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-c1">45</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'flipImage'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'翻转图片 [NAME] [DIRECTION]'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">NAME</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'图片1'</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">DIRECTION</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">menu</span>: <span class="pl-s">'FLIP_MENU'</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'whenImageClicked'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">HAT</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'当图片 [NAME] 被点击'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">NAME</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'图片1'</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'getImageX'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">REPORTER</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'图片 [NAME] 的X坐标'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">NAME</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'图片1'</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'getImageY'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">REPORTER</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'图片 [NAME] 的Y坐标'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">NAME</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'图片1'</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'getImageCount'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">REPORTER</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'图片数量'</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'imageExists'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">BOOLEAN</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'图片 [NAME] 存在?'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">NAME</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'图片1'</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span>
+            <span class="pl-kos">]</span><span class="pl-kos">,</span>
+            <span class="pl-c1">menus</span>: <span class="pl-kos">{</span>
+                <span class="pl-c1">SHAPE_MENU</span>: <span class="pl-kos">{</span>
+                    <span class="pl-c1">items</span>: <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">shapeOptions</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-c1">FLIP_MENU</span>: <span class="pl-kos">{</span>
+                    <span class="pl-c1">items</span>: <span class="pl-kos">[</span><span class="pl-s">'水平翻转'</span><span class="pl-kos">,</span> <span class="pl-s">'垂直翻转'</span><span class="pl-kos">]</span>
+                <span class="pl-kos">}</span>
+            <span class="pl-kos">}</span><span class="pl-kos">,</span>
+            <span class="pl-c1">docsURI</span>: <span class="pl-s">'https://kejicx.github.io/doc/'</span>
+        <span class="pl-kos">}</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    // 显示图片
-    showImage(args) {
-        const { NAME, URL, X, Y, SIZE, SHAPE } = args;
+    <span class="pl-c">// 显示图片</span>
+    <span class="pl-en">showImage</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">const</span> <span class="pl-kos">{</span> <span class="pl-c1">NAME</span><span class="pl-kos">,</span> <span class="pl-c1">URL</span><span class="pl-kos">,</span> X<span class="pl-kos">,</span> Y<span class="pl-kos">,</span> <span class="pl-c1">SIZE</span><span class="pl-kos">,</span> <span class="pl-c1">SHAPE</span> <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">;</span>
         
-        // 如果图片已存在，先移除
-        if (this.images[NAME]) {
-            this.removeImage({ NAME });
-        }
+        <span class="pl-c">// 如果图片已存在，先移除</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">removeImage</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">NAME</span> <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        // 创建图片元素
-        const img = new Image();
-        img.onload = () =&gt; {
-            this._applyImageStyles(img, X, Y, SIZE, SHAPE);
-        };
-        img.onerror = () =&gt; {
-            console.error(`无法加载图片: ${URL}`);
-        };
+        <span class="pl-c">// 创建图片元素</span>
+        <span class="pl-k">const</span> <span class="pl-s1">img</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">Image</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-en">onload</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">_applyImageStyles</span><span class="pl-kos">(</span><span class="pl-s1">img</span><span class="pl-kos">,</span> <span class="pl-v">X</span><span class="pl-kos">,</span> <span class="pl-v">Y</span><span class="pl-kos">,</span> <span class="pl-c1">SIZE</span><span class="pl-kos">,</span> <span class="pl-c1">SHAPE</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span><span class="pl-kos">;</span>
+        <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-en">onerror</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">error</span><span class="pl-kos">(</span><span class="pl-s">`无法加载图片: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-c1">URL</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span><span class="pl-kos">;</span>
         
-        img.src = URL;
-        img.dataset.name = NAME;
-        img.dataset.loaded = 'false';
+        <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">src</span> <span class="pl-c1">=</span> <span class="pl-c1">URL</span><span class="pl-kos">;</span>
+        <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">dataset</span><span class="pl-kos">.</span><span class="pl-c1">name</span> <span class="pl-c1">=</span> <span class="pl-c1">NAME</span><span class="pl-kos">;</span>
+        <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">dataset</span><span class="pl-kos">.</span><span class="pl-c1">loaded</span> <span class="pl-c1">=</span> <span class="pl-s">'false'</span><span class="pl-kos">;</span>
         
-        // 添加点击事件
-        img.addEventListener('click', (event) =&gt; {
-            event.stopPropagation();
-            this._handleImageClick(NAME);
-        });
+        <span class="pl-c">// 添加点击事件</span>
+        <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">'click'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-s1">event</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+            <span class="pl-s1">event</span><span class="pl-kos">.</span><span class="pl-en">stopPropagation</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">_handleImageClick</span><span class="pl-kos">(</span><span class="pl-c1">NAME</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
         
-        // 添加到舞台
-        const stage = this._getStage();
-        if (stage) {
-            stage.appendChild(img);
-        } else {
-            console.warn('无法找到舞台元素');
-            document.body.appendChild(img);
-        }
+        <span class="pl-c">// 添加到舞台</span>
+        <span class="pl-k">const</span> <span class="pl-s1">stage</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">_getStage</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">stage</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-s1">stage</span><span class="pl-kos">.</span><span class="pl-en">appendChild</span><span class="pl-kos">(</span><span class="pl-s1">img</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span> <span class="pl-k">else</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">warn</span><span class="pl-kos">(</span><span class="pl-s">'无法找到舞台元素'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-c1">body</span><span class="pl-kos">.</span><span class="pl-en">appendChild</span><span class="pl-kos">(</span><span class="pl-s1">img</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        // 存储图片信息
-        this.images[NAME] = {
-            element: img,
-            url: URL,
-            x: X,
-            y: Y,
-            size: SIZE,
-            shape: SHAPE,
-            opacity: 100,
-            rotation: 0,
-            zIndex: this.nextZIndex++
-        };
-    }
+        <span class="pl-c">// 存储图片信息</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+            <span class="pl-c1">element</span>: <span class="pl-s1">img</span><span class="pl-kos">,</span>
+            <span class="pl-c1">url</span>: <span class="pl-c1">URL</span><span class="pl-kos">,</span>
+            <span class="pl-c1">x</span>: <span class="pl-v">X</span><span class="pl-kos">,</span>
+            <span class="pl-c1">y</span>: <span class="pl-v">Y</span><span class="pl-kos">,</span>
+            <span class="pl-c1">size</span>: <span class="pl-c1">SIZE</span><span class="pl-kos">,</span>
+            <span class="pl-c1">shape</span>: <span class="pl-c1">SHAPE</span><span class="pl-kos">,</span>
+            <span class="pl-c1">opacity</span>: <span class="pl-c1">100</span><span class="pl-kos">,</span>
+            <span class="pl-c1">rotation</span>: <span class="pl-c1">0</span><span class="pl-kos">,</span>
+            <span class="pl-c1">zIndex</span>: <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">nextZIndex</span><span class="pl-c1">++</span>
+        <span class="pl-kos">}</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    // 删除图片
-    removeImage(args) {
-        const { NAME } = args;
-        if (this.images[NAME]) {
-            const img = this.images[NAME].element;
-            if (img.parentNode) {
-                img.parentNode.removeChild(img);
-            }
-            delete this.images[NAME];
-        }
-    }
+    <span class="pl-c">// 删除图片</span>
+    <span class="pl-en">removeImage</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">const</span> <span class="pl-kos">{</span> <span class="pl-c1">NAME</span> <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">;</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">const</span> <span class="pl-s1">img</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">element</span><span class="pl-kos">;</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">parentNode</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">parentNode</span><span class="pl-kos">.</span><span class="pl-en">removeChild</span><span class="pl-kos">(</span><span class="pl-s1">img</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
+            <span class="pl-k">delete</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
 
-    // 移动图片
-    moveImage(args) {
-        const { NAME, X, Y } = args;
-        if (this.images[NAME]) {
-            const img = this.images[NAME].element;
-            img.style.left = X + 'px';
-            img.style.top = Y + 'px';
-            this.images[NAME].x = X;
-            this.images[NAME].y = Y;
-        }
-    }
+    <span class="pl-c">// 移动图片</span>
+    <span class="pl-en">moveImage</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">const</span> <span class="pl-kos">{</span> <span class="pl-c1">NAME</span><span class="pl-kos">,</span> X<span class="pl-kos">,</span> Y <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">;</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">const</span> <span class="pl-s1">img</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">element</span><span class="pl-kos">;</span>
+            <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">left</span> <span class="pl-c1">=</span> <span class="pl-v">X</span> <span class="pl-c1">+</span> <span class="pl-s">'px'</span><span class="pl-kos">;</span>
+            <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">top</span> <span class="pl-c1">=</span> <span class="pl-v">Y</span> <span class="pl-c1">+</span> <span class="pl-s">'px'</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">x</span> <span class="pl-c1">=</span> <span class="pl-v">X</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">y</span> <span class="pl-c1">=</span> <span class="pl-v">Y</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
 
-    // 调整图片大小
-    resizeImage(args) {
-        const { NAME, SIZE } = args;
-        if (this.images[NAME]) {
-            const img = this.images[NAME].element;
-            img.style.width = SIZE + 'px';
-            img.style.height = SIZE + 'px';
-            this.images[NAME].size = SIZE;
+    <span class="pl-c">// 调整图片大小</span>
+    <span class="pl-en">resizeImage</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">const</span> <span class="pl-kos">{</span> <span class="pl-c1">NAME</span><span class="pl-kos">,</span> <span class="pl-c1">SIZE</span> <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">;</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">const</span> <span class="pl-s1">img</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">element</span><span class="pl-kos">;</span>
+            <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">width</span> <span class="pl-c1">=</span> <span class="pl-c1">SIZE</span> <span class="pl-c1">+</span> <span class="pl-s">'px'</span><span class="pl-kos">;</span>
+            <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">height</span> <span class="pl-c1">=</span> <span class="pl-c1">SIZE</span> <span class="pl-c1">+</span> <span class="pl-s">'px'</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">size</span> <span class="pl-c1">=</span> <span class="pl-c1">SIZE</span><span class="pl-kos">;</span>
             
-            // 重新应用形状
-            this._applyShape(img, this.images[NAME].shape);
-        }
-    }
+            <span class="pl-c">// 重新应用形状</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">_applyShape</span><span class="pl-kos">(</span><span class="pl-s1">img</span><span class="pl-kos">,</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">shape</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
 
-    // 更改图片形状
-    changeImageShape(args) {
-        const { NAME, SHAPE } = args;
-        if (this.images[NAME]) {
-            const img = this.images[NAME].element;
-            this._applyShape(img, SHAPE);
-            this.images[NAME].shape = SHAPE;
-        }
-    }
+    <span class="pl-c">// 更改图片形状</span>
+    <span class="pl-en">changeImageShape</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">const</span> <span class="pl-kos">{</span> <span class="pl-c1">NAME</span><span class="pl-kos">,</span> <span class="pl-c1">SHAPE</span> <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">;</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">const</span> <span class="pl-s1">img</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">element</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">_applyShape</span><span class="pl-kos">(</span><span class="pl-s1">img</span><span class="pl-kos">,</span> <span class="pl-c1">SHAPE</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">shape</span> <span class="pl-c1">=</span> <span class="pl-c1">SHAPE</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
 
-    // 设置透明度
-    setImageOpacity(args) {
-        const { NAME, OPACITY } = args;
-        if (this.images[NAME]) {
-            const img = this.images[NAME].element;
-            const opacityValue = Math.max(0, Math.min(100, OPACITY)) / 100;
-            img.style.opacity = opacityValue;
-            this.images[NAME].opacity = OPACITY;
-        }
-    }
+    <span class="pl-c">// 设置透明度</span>
+    <span class="pl-en">setImageOpacity</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">const</span> <span class="pl-kos">{</span> <span class="pl-c1">NAME</span><span class="pl-kos">,</span> <span class="pl-c1">OPACITY</span> <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">;</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">const</span> <span class="pl-s1">img</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">element</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">opacityValue</span> <span class="pl-c1">=</span> <span class="pl-v">Math</span><span class="pl-kos">.</span><span class="pl-en">max</span><span class="pl-kos">(</span><span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-v">Math</span><span class="pl-kos">.</span><span class="pl-en">min</span><span class="pl-kos">(</span><span class="pl-c1">100</span><span class="pl-kos">,</span> <span class="pl-c1">OPACITY</span><span class="pl-kos">)</span><span class="pl-kos">)</span> <span class="pl-c1">/</span> <span class="pl-c1">100</span><span class="pl-kos">;</span>
+            <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">opacity</span> <span class="pl-c1">=</span> <span class="pl-s1">opacityValue</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">opacity</span> <span class="pl-c1">=</span> <span class="pl-c1">OPACITY</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
 
-    // 置于顶层
-    bringToFront(args) {
-        const { NAME } = args;
-        if (this.images[NAME]) {
-            const img = this.images[NAME].element;
-            img.style.zIndex = this.nextZIndex++;
-            this.images[NAME].zIndex = img.style.zIndex;
-        }
-    }
+    <span class="pl-c">// 置于顶层</span>
+    <span class="pl-en">bringToFront</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">const</span> <span class="pl-kos">{</span> <span class="pl-c1">NAME</span> <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">;</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">const</span> <span class="pl-s1">img</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">element</span><span class="pl-kos">;</span>
+            <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">zIndex</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">nextZIndex</span><span class="pl-c1">++</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">zIndex</span> <span class="pl-c1">=</span> <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">zIndex</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
 
-    // 置于底层
-    sendToBack(args) {
-        const { NAME } = args;
-        if (this.images[NAME]) {
-            const img = this.images[NAME].element;
-            img.style.zIndex = 0;
-            this.images[NAME].zIndex = 0;
-        }
-    }
+    <span class="pl-c">// 置于底层</span>
+    <span class="pl-en">sendToBack</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">const</span> <span class="pl-kos">{</span> <span class="pl-c1">NAME</span> <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">;</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">const</span> <span class="pl-s1">img</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">element</span><span class="pl-kos">;</span>
+            <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">zIndex</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">zIndex</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
 
-    // 旋转图片
-    rotateImage(args) {
-        const { NAME, DEGREES } = args;
-        if (this.images[NAME]) {
-            const img = this.images[NAME].element;
-            img.style.transform = `rotate(${DEGREES}deg)`;
-            this.images[NAME].rotation = DEGREES;
-        }
-    }
+    <span class="pl-c">// 旋转图片</span>
+    <span class="pl-en">rotateImage</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">const</span> <span class="pl-kos">{</span> <span class="pl-c1">NAME</span><span class="pl-kos">,</span> <span class="pl-c1">DEGREES</span> <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">;</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">const</span> <span class="pl-s1">img</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">element</span><span class="pl-kos">;</span>
+            <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">transform</span> <span class="pl-c1">=</span> <span class="pl-s">`rotate(<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-c1">DEGREES</span><span class="pl-kos">}</span></span>deg)`</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">rotation</span> <span class="pl-c1">=</span> <span class="pl-c1">DEGREES</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
 
-    // 翻转图片
-    flipImage(args) {
-        const { NAME, DIRECTION } = args;
-        if (this.images[NAME]) {
-            const img = this.images[NAME].element;
-            let currentTransform = img.style.transform || '';
+    <span class="pl-c">// 翻转图片</span>
+    <span class="pl-en">flipImage</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">const</span> <span class="pl-kos">{</span> <span class="pl-c1">NAME</span><span class="pl-kos">,</span> <span class="pl-c1">DIRECTION</span> <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">;</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">const</span> <span class="pl-s1">img</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">element</span><span class="pl-kos">;</span>
+            <span class="pl-k">let</span> <span class="pl-s1">currentTransform</span> <span class="pl-c1">=</span> <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">transform</span> <span class="pl-c1">||</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
             
-            // 移除现有的翻转样式
-            currentTransform = currentTransform.replace(/scaleX\([^)]*\)/g, '');
-            currentTransform = currentTransform.replace(/scaleY\([^)]*\)/g, '');
+            <span class="pl-c">// 移除现有的翻转样式</span>
+            <span class="pl-s1">currentTransform</span> <span class="pl-c1">=</span> <span class="pl-s1">currentTransform</span><span class="pl-kos">.</span><span class="pl-en">replace</span><span class="pl-kos">(</span><span class="pl-pds"><span class="pl-c1">/</span><span class="pl-s">s</span><span class="pl-s">c</span><span class="pl-s">a</span><span class="pl-s">l</span><span class="pl-s">e</span><span class="pl-s">X</span><span class="pl-cce">\(</span><span class="pl-kos">[</span><span class="pl-c1">^</span><span class="pl-c1">)</span><span class="pl-kos">]</span><span class="pl-c1">*</span><span class="pl-cce">\)</span><span class="pl-c1">/</span>g</span><span class="pl-kos">,</span> <span class="pl-s">''</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">currentTransform</span> <span class="pl-c1">=</span> <span class="pl-s1">currentTransform</span><span class="pl-kos">.</span><span class="pl-en">replace</span><span class="pl-kos">(</span><span class="pl-pds"><span class="pl-c1">/</span><span class="pl-s">s</span><span class="pl-s">c</span><span class="pl-s">a</span><span class="pl-s">l</span><span class="pl-s">e</span><span class="pl-s">Y</span><span class="pl-cce">\(</span><span class="pl-kos">[</span><span class="pl-c1">^</span><span class="pl-c1">)</span><span class="pl-kos">]</span><span class="pl-c1">*</span><span class="pl-cce">\)</span><span class="pl-c1">/</span>g</span><span class="pl-kos">,</span> <span class="pl-s">''</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
             
-            if (DIRECTION === '水平翻转') {
-                currentTransform += ' scaleX(-1)';
-            } else if (DIRECTION === '垂直翻转') {
-                currentTransform += ' scaleY(-1)';
-            }
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">DIRECTION</span> <span class="pl-c1">===</span> <span class="pl-s">'水平翻转'</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-s1">currentTransform</span> <span class="pl-c1">+=</span> <span class="pl-s">' scaleX(-1)'</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span> <span class="pl-k">else</span> <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">DIRECTION</span> <span class="pl-c1">===</span> <span class="pl-s">'垂直翻转'</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-s1">currentTransform</span> <span class="pl-c1">+=</span> <span class="pl-s">' scaleY(-1)'</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
             
-            img.style.transform = currentTransform.trim();
-        }
-    }
+            <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">transform</span> <span class="pl-c1">=</span> <span class="pl-s1">currentTransform</span><span class="pl-kos">.</span><span class="pl-en">trim</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
 
-    // 图片点击事件处理
-    whenImageClicked(args) {
-        // 这个函数由Scratch运行时调用，当图片被点击时触发相应的事件
-        // 实际实现中，这里会返回一个布尔值来触发帽子积木
-        return false;
-    }
+    <span class="pl-c">// 图片点击事件处理</span>
+    <span class="pl-en">whenImageClicked</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-c">// 这个函数由Scratch运行时调用，当图片被点击时触发相应的事件</span>
+        <span class="pl-c">// 实际实现中，这里会返回一个布尔值来触发帽子积木</span>
+        <span class="pl-k">return</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    // 获取图片X坐标
-    getImageX(args) {
-        const { NAME } = args;
-        return this.images[NAME] ? this.images[NAME].x : 0;
-    }
+    <span class="pl-c">// 获取图片X坐标</span>
+    <span class="pl-en">getImageX</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">const</span> <span class="pl-kos">{</span> <span class="pl-c1">NAME</span> <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">;</span>
+        <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span> ? <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">x</span> : <span class="pl-c1">0</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    // 获取图片Y坐标
-    getImageY(args) {
-        const { NAME } = args;
-        return this.images[NAME] ? this.images[NAME].y : 0;
-    }
+    <span class="pl-c">// 获取图片Y坐标</span>
+    <span class="pl-en">getImageY</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">const</span> <span class="pl-kos">{</span> <span class="pl-c1">NAME</span> <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">;</span>
+        <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span> ? <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">y</span> : <span class="pl-c1">0</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    // 获取图片数量
-    getImageCount() {
-        return Object.keys(this.images).length;
-    }
+    <span class="pl-c">// 获取图片数量</span>
+    <span class="pl-en">getImageCount</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">return</span> <span class="pl-v">Object</span><span class="pl-kos">.</span><span class="pl-en">keys</span><span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-c1">length</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    // 检查图片是否存在
-    imageExists(args) {
-        const { NAME } = args;
-        return !!this.images[NAME];
-    }
+    <span class="pl-c">// 检查图片是否存在</span>
+    <span class="pl-en">imageExists</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">const</span> <span class="pl-kos">{</span> <span class="pl-c1">NAME</span> <span class="pl-kos">}</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">;</span>
+        <span class="pl-k">return</span> <span class="pl-c1">!</span><span class="pl-c1">!</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">[</span><span class="pl-c1">NAME</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    // 内部方法：应用图片样式
-    _applyImageStyles(img, x, y, size, shape) {
-        img.style.position = 'absolute';
-        img.style.left = x + 'px';
-        img.style.top = y + 'px';
-        img.style.width = size + 'px';
-        img.style.height = size + 'px';
-        img.style.zIndex = this.nextZIndex++;
-        img.style.cursor = 'pointer';
-        img.style.userSelect = 'none';
-        img.dataset.loaded = 'true';
+    <span class="pl-c">// 内部方法：应用图片样式</span>
+    <span class="pl-en">_applyImageStyles</span><span class="pl-kos">(</span><span class="pl-s1">img</span><span class="pl-kos">,</span> <span class="pl-s1">x</span><span class="pl-kos">,</span> <span class="pl-s1">y</span><span class="pl-kos">,</span> <span class="pl-s1">size</span><span class="pl-kos">,</span> <span class="pl-s1">shape</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">position</span> <span class="pl-c1">=</span> <span class="pl-s">'absolute'</span><span class="pl-kos">;</span>
+        <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">left</span> <span class="pl-c1">=</span> <span class="pl-s1">x</span> <span class="pl-c1">+</span> <span class="pl-s">'px'</span><span class="pl-kos">;</span>
+        <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">top</span> <span class="pl-c1">=</span> <span class="pl-s1">y</span> <span class="pl-c1">+</span> <span class="pl-s">'px'</span><span class="pl-kos">;</span>
+        <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">width</span> <span class="pl-c1">=</span> <span class="pl-s1">size</span> <span class="pl-c1">+</span> <span class="pl-s">'px'</span><span class="pl-kos">;</span>
+        <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">height</span> <span class="pl-c1">=</span> <span class="pl-s1">size</span> <span class="pl-c1">+</span> <span class="pl-s">'px'</span><span class="pl-kos">;</span>
+        <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">zIndex</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">nextZIndex</span><span class="pl-c1">++</span><span class="pl-kos">;</span>
+        <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">cursor</span> <span class="pl-c1">=</span> <span class="pl-s">'pointer'</span><span class="pl-kos">;</span>
+        <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">userSelect</span> <span class="pl-c1">=</span> <span class="pl-s">'none'</span><span class="pl-kos">;</span>
+        <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">dataset</span><span class="pl-kos">.</span><span class="pl-c1">loaded</span> <span class="pl-c1">=</span> <span class="pl-s">'true'</span><span class="pl-kos">;</span>
         
-        this._applyShape(img, shape);
-    }
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">_applyShape</span><span class="pl-kos">(</span><span class="pl-s1">img</span><span class="pl-kos">,</span> <span class="pl-s1">shape</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    // 内部方法：应用形状
-    _applyShape(img, shape) {
-        // 重置样式
-        img.style.borderRadius = '0';
-        img.style.objectFit = 'cover';
-        img.style.clipPath = 'none';
+    <span class="pl-c">// 内部方法：应用形状</span>
+    <span class="pl-en">_applyShape</span><span class="pl-kos">(</span><span class="pl-s1">img</span><span class="pl-kos">,</span> <span class="pl-s1">shape</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-c">// 重置样式</span>
+        <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">borderRadius</span> <span class="pl-c1">=</span> <span class="pl-s">'0'</span><span class="pl-kos">;</span>
+        <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">objectFit</span> <span class="pl-c1">=</span> <span class="pl-s">'cover'</span><span class="pl-kos">;</span>
+        <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">clipPath</span> <span class="pl-c1">=</span> <span class="pl-s">'none'</span><span class="pl-kos">;</span>
         
-        switch(shape) {
-            case '圆形':
-                img.style.borderRadius = '50%';
-                break;
-            case '正方形':
-                img.style.borderRadius = '0';
-                break;
-            case '原图':
-                img.style.objectFit = 'contain';
-                break;
-            case '圆角矩形':
-                img.style.borderRadius = '15%';
-                break;
-            case '椭圆形':
-                img.style.borderRadius = '50% / 25%';
-                break;
-        }
-    }
+        <span class="pl-k">switch</span><span class="pl-kos">(</span><span class="pl-s1">shape</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">case</span> <span class="pl-s">'圆形'</span>:
+                <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">borderRadius</span> <span class="pl-c1">=</span> <span class="pl-s">'50%'</span><span class="pl-kos">;</span>
+                <span class="pl-k">break</span><span class="pl-kos">;</span>
+            <span class="pl-k">case</span> <span class="pl-s">'正方形'</span>:
+                <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">borderRadius</span> <span class="pl-c1">=</span> <span class="pl-s">'0'</span><span class="pl-kos">;</span>
+                <span class="pl-k">break</span><span class="pl-kos">;</span>
+            <span class="pl-k">case</span> <span class="pl-s">'原图'</span>:
+                <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">objectFit</span> <span class="pl-c1">=</span> <span class="pl-s">'contain'</span><span class="pl-kos">;</span>
+                <span class="pl-k">break</span><span class="pl-kos">;</span>
+            <span class="pl-k">case</span> <span class="pl-s">'圆角矩形'</span>:
+                <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">borderRadius</span> <span class="pl-c1">=</span> <span class="pl-s">'15%'</span><span class="pl-kos">;</span>
+                <span class="pl-k">break</span><span class="pl-kos">;</span>
+            <span class="pl-k">case</span> <span class="pl-s">'椭圆形'</span>:
+                <span class="pl-s1">img</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">borderRadius</span> <span class="pl-c1">=</span> <span class="pl-s">'50% / 25%'</span><span class="pl-kos">;</span>
+                <span class="pl-k">break</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
 
-    // 内部方法：获取舞台元素
-    _getStage() {
-        // 尝试不同的选择器来找到舞台
-        const selectors = [
-            '#stage',
-            '.stage',
-            '[class*="stage"]',
-            '.gui_stage'
-        ];
+    <span class="pl-c">// 内部方法：获取舞台元素</span>
+    <span class="pl-en">_getStage</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-c">// 尝试不同的选择器来找到舞台</span>
+        <span class="pl-k">const</span> <span class="pl-s1">selectors</span> <span class="pl-c1">=</span> <span class="pl-kos">[</span>
+            <span class="pl-s">'#stage'</span><span class="pl-kos">,</span>
+            <span class="pl-s">'.stage'</span><span class="pl-kos">,</span>
+            <span class="pl-s">'[class*="stage"]'</span><span class="pl-kos">,</span>
+            <span class="pl-s">'.gui_stage'</span>
+        <span class="pl-kos">]</span><span class="pl-kos">;</span>
         
-        for (const selector of selectors) {
-            const element = document.querySelector(selector);
-            if (element) {
-                return element;
-            }
-        }
+        <span class="pl-k">for</span> <span class="pl-kos">(</span><span class="pl-k">const</span> <span class="pl-s1">selector</span> <span class="pl-k">of</span> <span class="pl-s1">selectors</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">const</span> <span class="pl-s1">element</span> <span class="pl-c1">=</span> <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-en">querySelector</span><span class="pl-kos">(</span><span class="pl-s1">selector</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">element</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-k">return</span> <span class="pl-s1">element</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
+        <span class="pl-kos">}</span>
         
-        return document.body;
-    }
+        <span class="pl-k">return</span> <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-c1">body</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    // 内部方法：处理图片点击
-    _handleImageClick(name) {
-        // 这里可以添加自定义的点击处理逻辑
-        console.log(`图片 ${name} 被点击`);
+    <span class="pl-c">// 内部方法：处理图片点击</span>
+    <span class="pl-en">_handleImageClick</span><span class="pl-kos">(</span><span class="pl-s1">name</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-c">// 这里可以添加自定义的点击处理逻辑</span>
+        <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s">`图片 <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">name</span><span class="pl-kos">}</span></span> 被点击`</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
         
-        // 触发Scratch事件（如果需要）
-        // 实际实现中，这里会与Scratch运行时交互来触发帽子积木
-    }
+        <span class="pl-c">// 触发Scratch事件（如果需要）</span>
+        <span class="pl-c">// 实际实现中，这里会与Scratch运行时交互来触发帽子积木</span>
+    <span class="pl-kos">}</span>
 
-    // 清理函数
-    _shutdown() {
-        // 移除所有图片
-        for (const name in this.images) {
-            if (this.images.hasOwnProperty(name)) {
-                this.removeImage({ NAME: name });
-            }
-        }
-        this.images = {};
-    }
-}
+    <span class="pl-c">// 清理函数</span>
+    <span class="pl-en">_shutdown</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-c">// 移除所有图片</span>
+        <span class="pl-k">for</span> <span class="pl-kos">(</span><span class="pl-k">const</span> <span class="pl-s1">name</span> <span class="pl-k">in</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span><span class="pl-kos">.</span><span class="pl-en">hasOwnProperty</span><span class="pl-kos">(</span><span class="pl-s1">name</span><span class="pl-kos">)</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">removeImage</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">NAME</span>: <span class="pl-s1">name</span> <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
+        <span class="pl-kos">}</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">images</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span><span class="pl-kos">}</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span>
 
-// 注册扩展
-Scratch.extensions.register(new PhotoDisplayExtension());
-</code></pre></div>
+<span class="pl-c">// 注册扩展</span>
+<span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">extensions</span><span class="pl-kos">.</span><span class="pl-en">register</span><span class="pl-kos">(</span><span class="pl-k">new</span> <span class="pl-v">PhotoDisplayExtension</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

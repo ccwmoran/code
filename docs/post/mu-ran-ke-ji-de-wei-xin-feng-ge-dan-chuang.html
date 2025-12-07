@@ -10,7 +10,7 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="```
+<meta name="description" content="```js
 (function(Scratch) {
     'use strict';
     
@@ -405,7 +405,7 @@
 })(Scratch);
 ```。">
 <meta property="og:title" content="慕然科技的微信风格弹窗">
-<meta property="og:description" content="```
+<meta property="og:description" content="```js
 (function(Scratch) {
     'use strict';
     
@@ -803,7 +803,7 @@
 <meta property="og:url" content="https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-wei-xin-feng-ge-dan-chuang.html">
 <meta property="og:image" content="https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg">
 <title>慕然科技的微信风格弹窗</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -869,399 +869,398 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><pre class="notranslate"><code class="notranslate">(function(Scratch) {
-    'use strict';
+<div class="markdown-body" id="postBody"><div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-kos">(</span><span class="pl-k">function</span><span class="pl-kos">(</span><span class="pl-v">Scratch</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-s">'use strict'</span><span class="pl-kos">;</span>
     
-    // 扩展类定义
-    class WeChatDialogs {
-        constructor() {
-            // 存储回调函数
-            this.callbacks = {};
-            // 存储当前激活的弹窗
-            this.activeDialog = null;
-        }
+    <span class="pl-c">// 扩展类定义</span>
+    <span class="pl-k">class</span> <span class="pl-v">WeChatDialogs</span> <span class="pl-kos">{</span>
+        <span class="pl-en">constructor</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-c">// 存储回调函数</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">callbacks</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span><span class="pl-kos">}</span><span class="pl-kos">;</span>
+            <span class="pl-c">// 存储当前激活的弹窗</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activeDialog</span> <span class="pl-c1">=</span> <span class="pl-c1">null</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        getInfo() {
-            return {
-                id: 'wxtc',
-                name: '微信弹窗',
-                color1: '#07C160',
-                color2: '#06AD56',
-                color3: '#06AD56',
-                docsURI: 'https://kejicx.github.io',
-                blocks: [
-                    {
-                        opcode: 'showAlert',
-                        blockType: Scratch.BlockType.COMMAND,
-                        text: '显示消息弹窗 内容 [CONTENT] 按钮文字 [BUTTON]',
-                        arguments: {
-                            CONTENT: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: '操作成功'
-                            },
-                            BUTTON: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: '确定'
-                            }
-                        }
-                    },
-                    {
-                        opcode: 'showConfirm',
-                        blockType: Scratch.BlockType.BOOLEAN,
-                        text: '显示确认弹窗 内容 [CONTENT] 确定文字 [OK] 取消文字 [CANCEL]',
-                        arguments: {
-                            CONTENT: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: '确定要执行此操作吗？'
-                            },
-                            OK: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: '确定'
-                            },
-                            CANCEL: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: '取消'
-                            }
-                        }
-                    },
-                    {
-                        opcode: 'showPrompt',
-                        blockType: Scratch.BlockType.REPORTER,
-                        text: '显示输入弹窗 内容 [CONTENT] 提示 [PLACEHOLDER] 确定文字 [OK] 取消文字 [CANCEL]',
-                        arguments: {
-                            CONTENT: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: '请输入内容'
-                            },
-                            PLACEHOLDER: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: '在此输入...'
-                            },
-                            OK: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: '确定'
-                            },
-                            CANCEL: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: '取消'
-                            }
-                        }
-                    },
-                    '---',
-                    {
-                        opcode: 'getLastResult',
-                        blockType: Scratch.BlockType.REPORTER,
-                        text: '上次弹窗结果',
-                        disableMonitor: true
-                    },
-                    {
-                        opcode: 'getLastInput',
-                        blockType: Scratch.BlockType.REPORTER,
-                        text: '上次输入内容',
-                        disableMonitor: true
-                    },
-                    {
-                        opcode: 'isConfirmed',
-                        blockType: Scratch.BlockType.BOOLEAN,
-                        text: '上次是否确认',
-                        disableMonitor: true
-                    }
-                ],
-                menus: {}
-            };
-        }
+        <span class="pl-en">getInfo</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">return</span> <span class="pl-kos">{</span>
+                <span class="pl-c1">id</span>: <span class="pl-s">'wxtc'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">name</span>: <span class="pl-s">'微信弹窗'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">color1</span>: <span class="pl-s">'#07C160'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">color2</span>: <span class="pl-s">'#06AD56'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">color3</span>: <span class="pl-s">'#06AD56'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">docsURI</span>: <span class="pl-s">'https://kejicx.github.io'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">blocks</span>: <span class="pl-kos">[</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'showAlert'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'显示消息弹窗 内容 [CONTENT] 按钮文字 [BUTTON]'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">CONTENT</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">'操作成功'</span>
+                            <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">BUTTON</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">'确定'</span>
+                            <span class="pl-kos">}</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'showConfirm'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">BOOLEAN</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'显示确认弹窗 内容 [CONTENT] 确定文字 [OK] 取消文字 [CANCEL]'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">CONTENT</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">'确定要执行此操作吗？'</span>
+                            <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">OK</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">'确定'</span>
+                            <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">CANCEL</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">'取消'</span>
+                            <span class="pl-kos">}</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'showPrompt'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">REPORTER</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'显示输入弹窗 内容 [CONTENT] 提示 [PLACEHOLDER] 确定文字 [OK] 取消文字 [CANCEL]'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">CONTENT</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">'请输入内容'</span>
+                            <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">PLACEHOLDER</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">'在此输入...'</span>
+                            <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">OK</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">'确定'</span>
+                            <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">CANCEL</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">'取消'</span>
+                            <span class="pl-kos">}</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-s">'---'</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'getLastResult'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">REPORTER</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'上次弹窗结果'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">disableMonitor</span>: <span class="pl-c1">true</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'getLastInput'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">REPORTER</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'上次输入内容'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">disableMonitor</span>: <span class="pl-c1">true</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'isConfirmed'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">BOOLEAN</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'上次是否确认'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">disableMonitor</span>: <span class="pl-c1">true</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">]</span><span class="pl-kos">,</span>
+                <span class="pl-c1">menus</span>: <span class="pl-kos">{</span><span class="pl-kos">}</span>
+            <span class="pl-kos">}</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        // 显示消息弹窗
-        showAlert(args) {
-            return new Promise((resolve) =&gt; {
-                this._createDialog({
-                    type: 'alert',
-                    content: args.CONTENT,
-                    buttonText: args.BUTTON,
-                    onClose: () =&gt; {
-                        this.lastResult = 'confirmed';
-                        resolve();
-                    }
-                });
-            });
-        }
+        <span class="pl-c">// 显示消息弹窗</span>
+        <span class="pl-en">showAlert</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-v">Promise</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-s1">resolve</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">_createDialog</span><span class="pl-kos">(</span><span class="pl-kos">{</span>
+                    <span class="pl-c1">type</span>: <span class="pl-s">'alert'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">content</span>: <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">CONTENT</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">buttonText</span>: <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">BUTTON</span><span class="pl-kos">,</span>
+                    <span class="pl-en">onClose</span>: <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastResult</span> <span class="pl-c1">=</span> <span class="pl-s">'confirmed'</span><span class="pl-kos">;</span>
+                        <span class="pl-s1">resolve</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        // 显示确认弹窗
-        showConfirm(args) {
-            return new Promise((resolve) =&gt; {
-                this._createDialog({
-                    type: 'confirm',
-                    content: args.CONTENT,
-                    okText: args.OK,
-                    cancelText: args.CANCEL,
-                    onConfirm: () =&gt; {
-                        this.lastResult = 'confirmed';
-                        this.lastConfirmed = true;
-                        resolve(true);
-                    },
-                    onCancel: () =&gt; {
-                        this.lastResult = 'cancelled';
-                        this.lastConfirmed = false;
-                        resolve(false);
-                    }
-                });
-            });
-        }
+        <span class="pl-c">// 显示确认弹窗</span>
+        <span class="pl-en">showConfirm</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-v">Promise</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-s1">resolve</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">_createDialog</span><span class="pl-kos">(</span><span class="pl-kos">{</span>
+                    <span class="pl-c1">type</span>: <span class="pl-s">'confirm'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">content</span>: <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">CONTENT</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">okText</span>: <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">OK</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">cancelText</span>: <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">CANCEL</span><span class="pl-kos">,</span>
+                    <span class="pl-en">onConfirm</span>: <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastResult</span> <span class="pl-c1">=</span> <span class="pl-s">'confirmed'</span><span class="pl-kos">;</span>
+                        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastConfirmed</span> <span class="pl-c1">=</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
+                        <span class="pl-s1">resolve</span><span class="pl-kos">(</span><span class="pl-c1">true</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-en">onCancel</span>: <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastResult</span> <span class="pl-c1">=</span> <span class="pl-s">'cancelled'</span><span class="pl-kos">;</span>
+                        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastConfirmed</span> <span class="pl-c1">=</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
+                        <span class="pl-s1">resolve</span><span class="pl-kos">(</span><span class="pl-c1">false</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        // 显示输入弹窗
-        showPrompt(args) {
-            return new Promise((resolve) =&gt; {
-                this._createDialog({
-                    type: 'prompt',
-                    content: args.CONTENT,
-                    placeholder: args.PLACEHOLDER,
-                    okText: args.OK,
-                    cancelText: args.CANCEL,
-                    onConfirm: (inputValue) =&gt; {
-                        this.lastResult = 'confirmed';
-                        this.lastInput = inputValue || '';
-                        this.lastConfirmed = true;
-                        resolve(inputValue || '');
-                    },
-                    onCancel: () =&gt; {
-                        this.lastResult = 'cancelled';
-                        this.lastInput = '';
-                        this.lastConfirmed = false;
-                        resolve('');
-                    }
-                });
-            });
-        }
+        <span class="pl-c">// 显示输入弹窗</span>
+        <span class="pl-en">showPrompt</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-v">Promise</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-s1">resolve</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">_createDialog</span><span class="pl-kos">(</span><span class="pl-kos">{</span>
+                    <span class="pl-c1">type</span>: <span class="pl-s">'prompt'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">content</span>: <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">CONTENT</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">placeholder</span>: <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">PLACEHOLDER</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">okText</span>: <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">OK</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">cancelText</span>: <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">CANCEL</span><span class="pl-kos">,</span>
+                    <span class="pl-en">onConfirm</span>: <span class="pl-kos">(</span><span class="pl-s1">inputValue</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastResult</span> <span class="pl-c1">=</span> <span class="pl-s">'confirmed'</span><span class="pl-kos">;</span>
+                        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastInput</span> <span class="pl-c1">=</span> <span class="pl-s1">inputValue</span> <span class="pl-c1">||</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+                        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastConfirmed</span> <span class="pl-c1">=</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
+                        <span class="pl-s1">resolve</span><span class="pl-kos">(</span><span class="pl-s1">inputValue</span> <span class="pl-c1">||</span> <span class="pl-s">''</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-en">onCancel</span>: <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastResult</span> <span class="pl-c1">=</span> <span class="pl-s">'cancelled'</span><span class="pl-kos">;</span>
+                        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastInput</span> <span class="pl-c1">=</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+                        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastConfirmed</span> <span class="pl-c1">=</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
+                        <span class="pl-s1">resolve</span><span class="pl-kos">(</span><span class="pl-s">''</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        // 获取上次弹窗结果
-        getLastResult() {
-            return this.lastResult || 'none';
-        }
+        <span class="pl-c">// 获取上次弹窗结果</span>
+        <span class="pl-en">getLastResult</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastResult</span> <span class="pl-c1">||</span> <span class="pl-s">'none'</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        // 获取上次输入内容
-        getLastInput() {
-            return this.lastInput || '';
-        }
+        <span class="pl-c">// 获取上次输入内容</span>
+        <span class="pl-en">getLastInput</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastInput</span> <span class="pl-c1">||</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        // 获取上次是否确认
-        isConfirmed() {
-            return !!this.lastConfirmed;
-        }
+        <span class="pl-c">// 获取上次是否确认</span>
+        <span class="pl-en">isConfirmed</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">return</span> <span class="pl-c1">!</span><span class="pl-c1">!</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastConfirmed</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        // 创建弹窗的私有方法
-        _createDialog(options) {
-            // 如果已有弹窗，先关闭
-            if (this.activeDialog) {
-                this._closeDialog();
-            }
+        <span class="pl-c">// 创建弹窗的私有方法</span>
+        <span class="pl-en">_createDialog</span><span class="pl-kos">(</span><span class="pl-s1">options</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-c">// 如果已有弹窗，先关闭</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activeDialog</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">_closeDialog</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
             
-            // 创建弹窗容器
-            const dialog = document.createElement('div');
-            dialog.className = 'wx-dialog-overlay';
-            dialog.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 9999;
-                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-            `;
+            <span class="pl-c">// 创建弹窗容器</span>
+            <span class="pl-k">const</span> <span class="pl-s1">dialog</span> <span class="pl-c1">=</span> <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-en">createElement</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">dialog</span><span class="pl-kos">.</span><span class="pl-c1">className</span> <span class="pl-c1">=</span> <span class="pl-s">'wx-dialog-overlay'</span><span class="pl-kos">;</span>
+            <span class="pl-s1">dialog</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">cssText</span> <span class="pl-c1">=</span> <span class="pl-s">`</span>
+<span class="pl-s">                position: fixed;</span>
+<span class="pl-s">                top: 0;</span>
+<span class="pl-s">                left: 0;</span>
+<span class="pl-s">                width: 100%;</span>
+<span class="pl-s">                height: 100%;</span>
+<span class="pl-s">                background: rgba(0, 0, 0, 0.5);</span>
+<span class="pl-s">                display: flex;</span>
+<span class="pl-s">                align-items: center;</span>
+<span class="pl-s">                justify-content: center;</span>
+<span class="pl-s">                z-index: 9999;</span>
+<span class="pl-s">                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;</span>
+<span class="pl-s">            `</span><span class="pl-kos">;</span>
             
-            // 创建弹窗内容
-            const content = document.createElement('div');
-            content.className = 'wx-dialog-content';
-            content.style.cssText = `
-                background: white;
-                border-radius: 12px;
-                width: 270px;
-                overflow: hidden;
-                animation: dialogShow 0.3s ease;
-            `;
+            <span class="pl-c">// 创建弹窗内容</span>
+            <span class="pl-k">const</span> <span class="pl-s1">content</span> <span class="pl-c1">=</span> <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-en">createElement</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">content</span><span class="pl-kos">.</span><span class="pl-c1">className</span> <span class="pl-c1">=</span> <span class="pl-s">'wx-dialog-content'</span><span class="pl-kos">;</span>
+            <span class="pl-s1">content</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">cssText</span> <span class="pl-c1">=</span> <span class="pl-s">`</span>
+<span class="pl-s">                background: white;</span>
+<span class="pl-s">                border-radius: 12px;</span>
+<span class="pl-s">                width: 270px;</span>
+<span class="pl-s">                overflow: hidden;</span>
+<span class="pl-s">                animation: dialogShow 0.3s ease;</span>
+<span class="pl-s">            `</span><span class="pl-kos">;</span>
             
-            // 添加CSS动画
-            if (!document.getElementById('wx-dialog-styles')) {
-                const style = document.createElement('style');
-                style.id = 'wx-dialog-styles';
-                style.textContent = `
-                    @keyframes dialogShow {
-                        from {
-                            opacity: 0;
-                            transform: translateY(-20px);
-                        }
-                        to {
-                            opacity: 1;
-                            transform: translateY(0);
-                        }
-                    }
-                `;
-                document.head.appendChild(style);
-            }
+            <span class="pl-c">// 添加CSS动画</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-en">getElementById</span><span class="pl-kos">(</span><span class="pl-s">'wx-dialog-styles'</span><span class="pl-kos">)</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-k">const</span> <span class="pl-s1">style</span> <span class="pl-c1">=</span> <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-en">createElement</span><span class="pl-kos">(</span><span class="pl-s">'style'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-s1">style</span><span class="pl-kos">.</span><span class="pl-c1">id</span> <span class="pl-c1">=</span> <span class="pl-s">'wx-dialog-styles'</span><span class="pl-kos">;</span>
+                <span class="pl-s1">style</span><span class="pl-kos">.</span><span class="pl-c1">textContent</span> <span class="pl-c1">=</span> <span class="pl-s">`</span>
+<span class="pl-s">                    @keyframes dialogShow {</span>
+<span class="pl-s">                        from {</span>
+<span class="pl-s">                            opacity: 0;</span>
+<span class="pl-s">                            transform: translateY(-20px);</span>
+<span class="pl-s">                        }</span>
+<span class="pl-s">                        to {</span>
+<span class="pl-s">                            opacity: 1;</span>
+<span class="pl-s">                            transform: translateY(0);</span>
+<span class="pl-s">                        }</span>
+<span class="pl-s">                    }</span>
+<span class="pl-s">                `</span><span class="pl-kos">;</span>
+                <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-c1">head</span><span class="pl-kos">.</span><span class="pl-en">appendChild</span><span class="pl-kos">(</span><span class="pl-s1">style</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
             
-            // 构建弹窗内容
-            let dialogHTML = '';
+            <span class="pl-c">// 构建弹窗内容</span>
+            <span class="pl-k">let</span> <span class="pl-s1">dialogHTML</span> <span class="pl-c1">=</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
             
-            // 弹窗消息
-            dialogHTML += `&lt;div style="padding: 20px 20px 15px; text-align: center; font-size: 17px; color: #333; line-height: 1.5;"&gt;${this._escapeHtml(options.content)}&lt;/div&gt;`;
+            <span class="pl-c">// 弹窗消息</span>
+            <span class="pl-s1">dialogHTML</span> <span class="pl-c1">+=</span> <span class="pl-s">`&lt;div style="padding: 20px 20px 15px; text-align: center; font-size: 17px; color: #333; line-height: 1.5;"&gt;<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">_escapeHtml</span><span class="pl-kos">(</span><span class="pl-s1">options</span><span class="pl-kos">.</span><span class="pl-c1">content</span><span class="pl-kos">)</span><span class="pl-kos">}</span></span>&lt;/div&gt;`</span><span class="pl-kos">;</span>
             
-            // 输入框（仅适用于输入弹窗）
-            if (options.type === 'prompt') {
-                dialogHTML += `
-                    &lt;div style="padding: 0 20px 15px;"&gt;
-                        &lt;input type="text" 
-                               class="wx-dialog-input" 
-                               placeholder="${this._escapeHtml(options.placeholder)}" 
-                               style="width: 100%; 
-                                      padding: 12px; 
-                                      border: 1px solid #E5E5E5; 
-                                      border-radius: 5px; 
-                                      font-size: 15px; 
-                                      outline: none;
-                                      box-sizing: border-box;"&gt;
-                    &lt;/div&gt;
-                `;
-            }
+            <span class="pl-c">// 输入框（仅适用于输入弹窗）</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">options</span><span class="pl-kos">.</span><span class="pl-c1">type</span> <span class="pl-c1">===</span> <span class="pl-s">'prompt'</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-s1">dialogHTML</span> <span class="pl-c1">+=</span> <span class="pl-s">`</span>
+<span class="pl-s">                    &lt;div style="padding: 0 20px 15px;"&gt;</span>
+<span class="pl-s">                        &lt;input type="text" </span>
+<span class="pl-s">                               class="wx-dialog-input" </span>
+<span class="pl-s">                               placeholder="<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">_escapeHtml</span><span class="pl-kos">(</span><span class="pl-s1">options</span><span class="pl-kos">.</span><span class="pl-c1">placeholder</span><span class="pl-kos">)</span><span class="pl-kos">}</span></span>" </span>
+<span class="pl-s">                               style="width: 100%; </span>
+<span class="pl-s">                                      padding: 12px; </span>
+<span class="pl-s">                                      border: 1px solid #E5E5E5; </span>
+<span class="pl-s">                                      border-radius: 5px; </span>
+<span class="pl-s">                                      font-size: 15px; </span>
+<span class="pl-s">                                      outline: none;</span>
+<span class="pl-s">                                      box-sizing: border-box;"&gt;</span>
+<span class="pl-s">                    &lt;/div&gt;</span>
+<span class="pl-s">                `</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
             
-            // 按钮区域
-            dialogHTML += `&lt;div style="display: flex; border-top: 1px solid #F0F0F0;"&gt;`;
+            <span class="pl-c">// 按钮区域</span>
+            <span class="pl-s1">dialogHTML</span> <span class="pl-c1">+=</span> <span class="pl-s">`&lt;div style="display: flex; border-top: 1px solid #F0F0F0;"&gt;`</span><span class="pl-kos">;</span>
             
-            if (options.type === 'alert') {
-                // 只有一个确定按钮
-                dialogHTML += `
-                    &lt;button class="wx-dialog-button confirm" 
-                            style="flex: 1; 
-                                   padding: 16px; 
-                                   border: none; 
-                                   background: none; 
-                                   font-size: 17px; 
-                                   color: #07C160; 
-                                   cursor: pointer;"&gt;
-                        ${this._escapeHtml(options.buttonText)}
-                    &lt;/button&gt;
-                `;
-            } else {
-                // 有取消和确定两个按钮
-                dialogHTML += `
-                    &lt;button class="wx-dialog-button cancel" 
-                            style="flex: 1; 
-                                   padding: 16px; 
-                                   border: none; 
-                                   background: none; 
-                                   font-size: 17px; 
-                                   color: #333; 
-                                   cursor: pointer;
-                                   border-right: 1px solid #F0F0F0;"&gt;
-                        ${this._escapeHtml(options.cancelText)}
-                    &lt;/button&gt;
-                    &lt;button class="wx-dialog-button confirm" 
-                            style="flex: 1; 
-                                   padding: 16px; 
-                                   border: none; 
-                                   background: none; 
-                                   font-size: 17px; 
-                                   color: #07C160; 
-                                   font-weight: 500; 
-                                   cursor: pointer;"&gt;
-                        ${this._escapeHtml(options.okText)}
-                    &lt;/button&gt;
-                `;
-            }
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">options</span><span class="pl-kos">.</span><span class="pl-c1">type</span> <span class="pl-c1">===</span> <span class="pl-s">'alert'</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-c">// 只有一个确定按钮</span>
+                <span class="pl-s1">dialogHTML</span> <span class="pl-c1">+=</span> <span class="pl-s">`</span>
+<span class="pl-s">                    &lt;button class="wx-dialog-button confirm" </span>
+<span class="pl-s">                            style="flex: 1; </span>
+<span class="pl-s">                                   padding: 16px; </span>
+<span class="pl-s">                                   border: none; </span>
+<span class="pl-s">                                   background: none; </span>
+<span class="pl-s">                                   font-size: 17px; </span>
+<span class="pl-s">                                   color: #07C160; </span>
+<span class="pl-s">                                   cursor: pointer;"&gt;</span>
+<span class="pl-s">                        <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">_escapeHtml</span><span class="pl-kos">(</span><span class="pl-s1">options</span><span class="pl-kos">.</span><span class="pl-c1">buttonText</span><span class="pl-kos">)</span><span class="pl-kos">}</span></span></span>
+<span class="pl-s">                    &lt;/button&gt;</span>
+<span class="pl-s">                `</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span> <span class="pl-k">else</span> <span class="pl-kos">{</span>
+                <span class="pl-c">// 有取消和确定两个按钮</span>
+                <span class="pl-s1">dialogHTML</span> <span class="pl-c1">+=</span> <span class="pl-s">`</span>
+<span class="pl-s">                    &lt;button class="wx-dialog-button cancel" </span>
+<span class="pl-s">                            style="flex: 1; </span>
+<span class="pl-s">                                   padding: 16px; </span>
+<span class="pl-s">                                   border: none; </span>
+<span class="pl-s">                                   background: none; </span>
+<span class="pl-s">                                   font-size: 17px; </span>
+<span class="pl-s">                                   color: #333; </span>
+<span class="pl-s">                                   cursor: pointer;</span>
+<span class="pl-s">                                   border-right: 1px solid #F0F0F0;"&gt;</span>
+<span class="pl-s">                        <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">_escapeHtml</span><span class="pl-kos">(</span><span class="pl-s1">options</span><span class="pl-kos">.</span><span class="pl-c1">cancelText</span><span class="pl-kos">)</span><span class="pl-kos">}</span></span></span>
+<span class="pl-s">                    &lt;/button&gt;</span>
+<span class="pl-s">                    &lt;button class="wx-dialog-button confirm" </span>
+<span class="pl-s">                            style="flex: 1; </span>
+<span class="pl-s">                                   padding: 16px; </span>
+<span class="pl-s">                                   border: none; </span>
+<span class="pl-s">                                   background: none; </span>
+<span class="pl-s">                                   font-size: 17px; </span>
+<span class="pl-s">                                   color: #07C160; </span>
+<span class="pl-s">                                   font-weight: 500; </span>
+<span class="pl-s">                                   cursor: pointer;"&gt;</span>
+<span class="pl-s">                        <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">_escapeHtml</span><span class="pl-kos">(</span><span class="pl-s1">options</span><span class="pl-kos">.</span><span class="pl-c1">okText</span><span class="pl-kos">)</span><span class="pl-kos">}</span></span></span>
+<span class="pl-s">                    &lt;/button&gt;</span>
+<span class="pl-s">                `</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
             
-            dialogHTML += `&lt;/div&gt;`;
+            <span class="pl-s1">dialogHTML</span> <span class="pl-c1">+=</span> <span class="pl-s">`&lt;/div&gt;`</span><span class="pl-kos">;</span>
             
-            content.innerHTML = dialogHTML;
-            dialog.appendChild(content);
-            document.body.appendChild(dialog);
+            <span class="pl-s1">content</span><span class="pl-kos">.</span><span class="pl-c1">innerHTML</span> <span class="pl-c1">=</span> <span class="pl-s1">dialogHTML</span><span class="pl-kos">;</span>
+            <span class="pl-s1">dialog</span><span class="pl-kos">.</span><span class="pl-en">appendChild</span><span class="pl-kos">(</span><span class="pl-s1">content</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-c1">body</span><span class="pl-kos">.</span><span class="pl-en">appendChild</span><span class="pl-kos">(</span><span class="pl-s1">dialog</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
             
-            this.activeDialog = dialog;
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activeDialog</span> <span class="pl-c1">=</span> <span class="pl-s1">dialog</span><span class="pl-kos">;</span>
             
-            // 添加事件监听
-            const inputField = content.querySelector('.wx-dialog-input');
-            const confirmButton = content.querySelector('.wx-dialog-button.confirm');
-            const cancelButton = content.querySelector('.wx-dialog-button.cancel');
+            <span class="pl-c">// 添加事件监听</span>
+            <span class="pl-k">const</span> <span class="pl-s1">inputField</span> <span class="pl-c1">=</span> <span class="pl-s1">content</span><span class="pl-kos">.</span><span class="pl-en">querySelector</span><span class="pl-kos">(</span><span class="pl-s">'.wx-dialog-input'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">confirmButton</span> <span class="pl-c1">=</span> <span class="pl-s1">content</span><span class="pl-kos">.</span><span class="pl-en">querySelector</span><span class="pl-kos">(</span><span class="pl-s">'.wx-dialog-button.confirm'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">cancelButton</span> <span class="pl-c1">=</span> <span class="pl-s1">content</span><span class="pl-kos">.</span><span class="pl-en">querySelector</span><span class="pl-kos">(</span><span class="pl-s">'.wx-dialog-button.cancel'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
             
-            const closeDialog = () =&gt; {
-                this._closeDialog();
-            };
+            <span class="pl-k">const</span> <span class="pl-en">closeDialog</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">_closeDialog</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">;</span>
             
-            const handleConfirm = () =&gt; {
-                if (options.type === 'prompt') {
-                    const value = inputField ? inputField.value : '';
-                    if (options.onConfirm) options.onConfirm(value);
-                } else if (options.type === 'confirm') {
-                    if (options.onConfirm) options.onConfirm();
-                } else {
-                    if (options.onClose) options.onClose();
-                }
-                closeDialog();
-            };
+            <span class="pl-k">const</span> <span class="pl-en">handleConfirm</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">options</span><span class="pl-kos">.</span><span class="pl-c1">type</span> <span class="pl-c1">===</span> <span class="pl-s">'prompt'</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                    <span class="pl-k">const</span> <span class="pl-s1">value</span> <span class="pl-c1">=</span> <span class="pl-s1">inputField</span> ? <span class="pl-s1">inputField</span><span class="pl-kos">.</span><span class="pl-c1">value</span> : <span class="pl-s">''</span><span class="pl-kos">;</span>
+                    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">options</span><span class="pl-kos">.</span><span class="pl-c1">onConfirm</span><span class="pl-kos">)</span> <span class="pl-s1">options</span><span class="pl-kos">.</span><span class="pl-en">onConfirm</span><span class="pl-kos">(</span><span class="pl-s1">value</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span> <span class="pl-k">else</span> <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">options</span><span class="pl-kos">.</span><span class="pl-c1">type</span> <span class="pl-c1">===</span> <span class="pl-s">'confirm'</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">options</span><span class="pl-kos">.</span><span class="pl-c1">onConfirm</span><span class="pl-kos">)</span> <span class="pl-s1">options</span><span class="pl-kos">.</span><span class="pl-en">onConfirm</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span> <span class="pl-k">else</span> <span class="pl-kos">{</span>
+                    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">options</span><span class="pl-kos">.</span><span class="pl-c1">onClose</span><span class="pl-kos">)</span> <span class="pl-s1">options</span><span class="pl-kos">.</span><span class="pl-en">onClose</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span>
+                <span class="pl-en">closeDialog</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">;</span>
             
-            const handleCancel = () =&gt; {
-                if (options.type === 'confirm' &amp;&amp; options.onCancel) {
-                    options.onCancel();
-                } else if (options.type === 'prompt' &amp;&amp; options.onCancel) {
-                    options.onCancel();
-                }
-                closeDialog();
-            };
+            <span class="pl-k">const</span> <span class="pl-en">handleCancel</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">options</span><span class="pl-kos">.</span><span class="pl-c1">type</span> <span class="pl-c1">===</span> <span class="pl-s">'confirm'</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">options</span><span class="pl-kos">.</span><span class="pl-c1">onCancel</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                    <span class="pl-s1">options</span><span class="pl-kos">.</span><span class="pl-en">onCancel</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span> <span class="pl-k">else</span> <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">options</span><span class="pl-kos">.</span><span class="pl-c1">type</span> <span class="pl-c1">===</span> <span class="pl-s">'prompt'</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">options</span><span class="pl-kos">.</span><span class="pl-c1">onCancel</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                    <span class="pl-s1">options</span><span class="pl-kos">.</span><span class="pl-en">onCancel</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span>
+                <span class="pl-en">closeDialog</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">;</span>
             
-            // 绑定事件
-            if (confirmButton) {
-                confirmButton.addEventListener('click', handleConfirm);
-            }
+            <span class="pl-c">// 绑定事件</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">confirmButton</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-s1">confirmButton</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">'click'</span><span class="pl-kos">,</span> <span class="pl-en">handleConfirm</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
             
-            if (cancelButton) {
-                cancelButton.addEventListener('click', handleCancel);
-            }
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">cancelButton</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-s1">cancelButton</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">'click'</span><span class="pl-kos">,</span> <span class="pl-en">handleCancel</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
             
-            // 点击遮罩层关闭（仅适用于确认和输入弹窗）
-            if (options.type !== 'alert') {
-                dialog.addEventListener('click', (e) =&gt; {
-                    if (e.target === dialog) {
-                        handleCancel();
-                    }
-                });
-            }
+            <span class="pl-c">// 点击遮罩层关闭（仅适用于确认和输入弹窗）</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">options</span><span class="pl-kos">.</span><span class="pl-c1">type</span> <span class="pl-c1">!==</span> <span class="pl-s">'alert'</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-s1">dialog</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">'click'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-c1">target</span> <span class="pl-c1">===</span> <span class="pl-s1">dialog</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                        <span class="pl-en">handleCancel</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
             
-            // 输入框回车确认
-            if (inputField) {
-                inputField.addEventListener('keypress', (e) =&gt; {
-                    if (e.key === 'Enter') {
-                        handleConfirm();
-                    }
-                });
+            <span class="pl-c">// 输入框回车确认</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">inputField</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-s1">inputField</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">'keypress'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-c1">key</span> <span class="pl-c1">===</span> <span class="pl-s">'Enter'</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                        <span class="pl-en">handleConfirm</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
                 
-                // 自动聚焦输入框
-                setTimeout(() =&gt; {
-                    inputField.focus();
-                }, 300);
-            }
-        }
+                <span class="pl-c">// 自动聚焦输入框</span>
+                <span class="pl-en">setTimeout</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                    <span class="pl-s1">inputField</span><span class="pl-kos">.</span><span class="pl-en">focus</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span> <span class="pl-c1">300</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
+        <span class="pl-kos">}</span>
         
-        // 关闭弹窗
-        _closeDialog() {
-            if (this.activeDialog) {
-                document.body.removeChild(this.activeDialog);
-                this.activeDialog = null;
-            }
-        }
+        <span class="pl-c">// 关闭弹窗</span>
+        <span class="pl-en">_closeDialog</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activeDialog</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-c1">body</span><span class="pl-kos">.</span><span class="pl-en">removeChild</span><span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activeDialog</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activeDialog</span> <span class="pl-c1">=</span> <span class="pl-c1">null</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
+        <span class="pl-kos">}</span>
         
-        // HTML转义
-        _escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-    }
+        <span class="pl-c">// HTML转义</span>
+        <span class="pl-en">_escapeHtml</span><span class="pl-kos">(</span><span class="pl-s1">text</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">const</span> <span class="pl-s1">div</span> <span class="pl-c1">=</span> <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-en">createElement</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">div</span><span class="pl-kos">.</span><span class="pl-c1">textContent</span> <span class="pl-c1">=</span> <span class="pl-s1">text</span><span class="pl-kos">;</span>
+            <span class="pl-k">return</span> <span class="pl-s1">div</span><span class="pl-kos">.</span><span class="pl-c1">innerHTML</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
     
-    // 注册扩展
-    Scratch.extensions.register(new WeChatDialogs());
-})(Scratch);
-</code></pre></div>
+    <span class="pl-c">// 注册扩展</span>
+    <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">extensions</span><span class="pl-kos">.</span><span class="pl-en">register</span><span class="pl-kos">(</span><span class="pl-k">new</span> <span class="pl-v">WeChatDialogs</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">(</span><span class="pl-v">Scratch</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

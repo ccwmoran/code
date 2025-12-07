@@ -1,4 +1,4 @@
-```
+```js
 (function(Scratch) {
     'use strict';
     

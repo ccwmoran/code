@@ -1,4 +1,4 @@
-```
+```js
 class HarmonyOSPopupExtension {
     constructor() { this.lastResult = null; }
 

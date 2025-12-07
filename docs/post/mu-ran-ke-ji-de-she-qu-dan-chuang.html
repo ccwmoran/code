@@ -10,10 +10,10 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="```
-//弹窗样式代码来自Chen-Jin的社区弹窗扩展
+<meta name="description" content="```js
+//弹窗样式代码来自共创世界Chen-Jin的社区弹窗扩展
 //弹窗积木和功能等由Morgan制作
-//仅CCW共创世界中可用弹窗（其他未知）
+//仅CCW共创世界中可用此弹窗（其他未知）
 class CommunityPopupExtension {
     constructor() {
         this.lastResult = null;
@@ -409,10 +409,10 @@ Scratch.extensions.register(new CommunityPopupExtension());
 ```
 。">
 <meta property="og:title" content="慕然科技的社区弹窗">
-<meta property="og:description" content="```
-//弹窗样式代码来自Chen-Jin的社区弹窗扩展
+<meta property="og:description" content="```js
+//弹窗样式代码来自共创世界Chen-Jin的社区弹窗扩展
 //弹窗积木和功能等由Morgan制作
-//仅CCW共创世界中可用弹窗（其他未知）
+//仅CCW共创世界中可用此弹窗（其他未知）
 class CommunityPopupExtension {
     constructor() {
         this.lastResult = null;
@@ -811,7 +811,7 @@ Scratch.extensions.register(new CommunityPopupExtension());
 <meta property="og:url" content="https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-she-qu-dan-chuang.html">
 <meta property="og:image" content="https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg">
 <title>慕然科技的社区弹窗</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -877,402 +877,401 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><pre class="notranslate"><code class="notranslate">//弹窗样式代码来自Chen-Jin的社区弹窗扩展
-//弹窗积木和功能等由Morgan制作
-//仅CCW共创世界中可用弹窗（其他未知）
-class CommunityPopupExtension {
-    constructor() {
-        this.lastResult = null;
-        this.inputValue = '';
-    }
+<div class="markdown-body" id="postBody"><div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-c">//弹窗样式代码来自共创世界Chen-Jin的社区弹窗扩展</span>
+<span class="pl-c">//弹窗积木和功能等由Morgan制作</span>
+<span class="pl-c">//仅CCW共创世界中可用此弹窗（其他未知）</span>
+<span class="pl-k">class</span> <span class="pl-v">CommunityPopupExtension</span> <span class="pl-kos">{</span>
+    <span class="pl-en">constructor</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastResult</span> <span class="pl-c1">=</span> <span class="pl-c1">null</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">inputValue</span> <span class="pl-c1">=</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    getInfo() {
-        return {
-            id: 'kjcxsqtc',
-            name: '慕然科技的社区弹窗',
-            color: '#5cff6e',
-            docsURI: 'https://ccwmoran.github.io',
-            blocks: [
-                {
-                    opcode: 'showTextPopup',
-                    blockType: Scratch.BlockType.COMMAND,
-                    text: '显示纯文本提示 标题 [TITLE] 内容 [CONTENT] 按钮显示 [BUTTON_TYPE] 积极按钮 [CONFIRM] 消极按钮 [CANCEL]',
-                    arguments: {
-                        TITLE: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '提示'
-                        },
-                        CONTENT: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '这是一个纯文本提示'
-                        },
-                        BUTTON_TYPE: {
-                            type: Scratch.ArgumentType.STRING,
-                            menu: 'buttonType',
-                            defaultValue: 'both'
-                        },
-                        CONFIRM: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '确认'
-                        },
-                        CANCEL: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '取消'
-                        }
-                    }
-                },
-                {
-                    opcode: 'showInputPopup',
-                    blockType: Scratch.BlockType.COMMAND,
-                    text: '显示输入框提示 标题 [TITLE] 提示文字 [HINT] 默认值 [DEFAULT] 积极按钮 [CONFIRM] 消极按钮 [CANCEL]',
-                    arguments: {
-                        TITLE: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '输入'
-                        },
-                        HINT: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '请输入内容'
-                        },
-                        DEFAULT: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: ''
-                        },
-                        CONFIRM: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '确定'
-                        },
-                        CANCEL: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '取消'
-                        }
-                    }
-                },
-                {
-                    opcode: 'showHighlightPopup',
-                    blockType: Scratch.BlockType.COMMAND,
-                    text: '显示文本突出提示 标题 [TITLE] 说明文字 [DESC] 突出文本 [HIGHLIGHT] 积极按钮 [COPY] 消极按钮 [CANCEL]',
-                    arguments: {
-                        TITLE: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '文本突出'
-                        },
-                        DESC: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '以下是需要突出的文本内容'
-                        },
-                        HIGHLIGHT: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '突出显示的文本'
-                        },
-                        COPY: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '复制'
-                        },
-                        CANCEL: {
-                            type: Scratch.ArgumentType.STRING,
-                            defaultValue: '取消'
-                        }
-                    }
-                },
-                {
-                    opcode: 'getLastResult',
-                    blockType: Scratch.BlockType.REPORTER,
-                    text: '弹窗结果',
-                    disableMonitor: true
-                },
-                {
-                    opcode: 'getInputValue',
-                    blockType: Scratch.BlockType.REPORTER,
-                    text: '输入框内容',
-                    disableMonitor: true
-                }
-            ],
-            menus: {
-                buttonType: {
-                    items: [
-                        {
-                            text: '都显示',
-                            value: 'both'
-                        },
-                        {
-                            text: '积极按钮',
-                            value: 'positive'
-                        },
-                        {
-                            text: '消极按钮',
-                            value: 'negative'
-                        }
-                    ]
-                }
-            }
-        };
-    }
+    <span class="pl-en">getInfo</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">return</span> <span class="pl-kos">{</span>
+            <span class="pl-c1">id</span>: <span class="pl-s">'kjcxsqtc'</span><span class="pl-kos">,</span>
+            <span class="pl-c1">name</span>: <span class="pl-s">'慕然科技的社区弹窗'</span><span class="pl-kos">,</span>
+            <span class="pl-c1">color</span>: <span class="pl-s">'#5cff6e'</span><span class="pl-kos">,</span>
+            <span class="pl-c1">docsURI</span>: <span class="pl-s">'https://ccwmoran.github.io'</span><span class="pl-kos">,</span>
+            <span class="pl-c1">blocks</span>: <span class="pl-kos">[</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'showTextPopup'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'显示纯文本提示 标题 [TITLE] 内容 [CONTENT] 按钮显示 [BUTTON_TYPE] 积极按钮 [CONFIRM] 消极按钮 [CANCEL]'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">TITLE</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'提示'</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">CONTENT</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'这是一个纯文本提示'</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">BUTTON_TYPE</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">menu</span>: <span class="pl-s">'buttonType'</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'both'</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">CONFIRM</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'确认'</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">CANCEL</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'取消'</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'showInputPopup'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'显示输入框提示 标题 [TITLE] 提示文字 [HINT] 默认值 [DEFAULT] 积极按钮 [CONFIRM] 消极按钮 [CANCEL]'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">TITLE</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'输入'</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">HINT</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'请输入内容'</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">DEFAULT</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">''</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">CONFIRM</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'确定'</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">CANCEL</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'取消'</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'showHighlightPopup'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'显示文本突出提示 标题 [TITLE] 说明文字 [DESC] 突出文本 [HIGHLIGHT] 积极按钮 [COPY] 消极按钮 [CANCEL]'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">TITLE</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'文本突出'</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">DESC</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'以下是需要突出的文本内容'</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">HIGHLIGHT</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'突出显示的文本'</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">COPY</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'复制'</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">CANCEL</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'取消'</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'getLastResult'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">REPORTER</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'弹窗结果'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">disableMonitor</span>: <span class="pl-c1">true</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'getInputValue'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">REPORTER</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'输入框内容'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">disableMonitor</span>: <span class="pl-c1">true</span>
+                <span class="pl-kos">}</span>
+            <span class="pl-kos">]</span><span class="pl-kos">,</span>
+            <span class="pl-c1">menus</span>: <span class="pl-kos">{</span>
+                <span class="pl-c1">buttonType</span>: <span class="pl-kos">{</span>
+                    <span class="pl-c1">items</span>: <span class="pl-kos">[</span>
+                        <span class="pl-kos">{</span>
+                            <span class="pl-c1">text</span>: <span class="pl-s">'都显示'</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">value</span>: <span class="pl-s">'both'</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-kos">{</span>
+                            <span class="pl-c1">text</span>: <span class="pl-s">'积极按钮'</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">value</span>: <span class="pl-s">'positive'</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-kos">{</span>
+                            <span class="pl-c1">text</span>: <span class="pl-s">'消极按钮'</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">value</span>: <span class="pl-s">'negative'</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">]</span>
+                <span class="pl-kos">}</span>
+            <span class="pl-kos">}</span>
+        <span class="pl-kos">}</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    // 辅助函数：创建元素
-    ce(tag, text = undefined, pn = undefined, className = undefined, type = 't') {
-        var el = document.createElement(tag);
-        if (text) el[type == 'h' ? "innerHTML" : "innerText"] = text;
-        pn?.appendChild(el);
-        if (className) el.className = className;
-        return el;
-    }
+    <span class="pl-c">// 辅助函数：创建元素</span>
+    <span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s1">tag</span><span class="pl-kos">,</span> <span class="pl-s1">text</span> <span class="pl-c1">=</span> <span class="pl-c1">undefined</span><span class="pl-kos">,</span> <span class="pl-s1">pn</span> <span class="pl-c1">=</span> <span class="pl-c1">undefined</span><span class="pl-kos">,</span> <span class="pl-s1">className</span> <span class="pl-c1">=</span> <span class="pl-c1">undefined</span><span class="pl-kos">,</span> <span class="pl-s1">type</span> <span class="pl-c1">=</span> <span class="pl-s">'t'</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">var</span> <span class="pl-s1">el</span> <span class="pl-c1">=</span> <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-en">createElement</span><span class="pl-kos">(</span><span class="pl-s1">tag</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">text</span><span class="pl-kos">)</span> <span class="pl-s1">el</span><span class="pl-kos">[</span><span class="pl-s1">type</span> <span class="pl-c1">==</span> <span class="pl-s">'h'</span> ? <span class="pl-s">"innerHTML"</span> : <span class="pl-s">"innerText"</span><span class="pl-kos">]</span> <span class="pl-c1">=</span> <span class="pl-s1">text</span><span class="pl-kos">;</span>
+        <span class="pl-s1">pn</span><span class="pl-kos">?.</span><span class="pl-en">appendChild</span><span class="pl-kos">(</span><span class="pl-s1">el</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">className</span><span class="pl-kos">)</span> <span class="pl-s1">el</span><span class="pl-kos">.</span><span class="pl-c1">className</span> <span class="pl-c1">=</span> <span class="pl-s1">className</span><span class="pl-kos">;</span>
+        <span class="pl-k">return</span> <span class="pl-s1">el</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    parseMarkdownLinks(text) {
-        return text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '&lt;a href="$2" target="_blank" style="color: #5cff6e; text-decoration: underline; cursor: pointer;"&gt;$1&lt;/a&gt;');
-    }
+    <span class="pl-en">parseMarkdownLinks</span><span class="pl-kos">(</span><span class="pl-s1">text</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">return</span> <span class="pl-s1">text</span><span class="pl-kos">.</span><span class="pl-en">replace</span><span class="pl-kos">(</span><span class="pl-pds"><span class="pl-c1">/</span><span class="pl-cce">\[</span><span class="pl-kos">(</span><span class="pl-kos">[</span><span class="pl-c1">^</span><span class="pl-cce">\]</span><span class="pl-kos">]</span><span class="pl-c1">+</span><span class="pl-kos">)</span><span class="pl-cce">\]</span><span class="pl-cce">\(</span><span class="pl-kos">(</span><span class="pl-kos">[</span><span class="pl-c1">^</span><span class="pl-c1">)</span><span class="pl-kos">]</span><span class="pl-c1">+</span><span class="pl-kos">)</span><span class="pl-cce">\)</span><span class="pl-c1">/</span>g</span><span class="pl-kos">,</span> <span class="pl-s">'&lt;a href="$2" target="_blank" style="color: #5cff6e; text-decoration: underline; cursor: pointer;"&gt;$1&lt;/a&gt;'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    showTextPopup(args) {
-        return new Promise(resolve =&gt; {
-            const mask = this.ce('div', 0, document.body, "c-mask-container c-modal-mask");
-            mask.style.zIndex = '100002';
+    <span class="pl-en">showTextPopup</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-v">Promise</span><span class="pl-kos">(</span><span class="pl-s1">resolve</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+            <span class="pl-k">const</span> <span class="pl-s1">mask</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-c1">body</span><span class="pl-kos">,</span> <span class="pl-s">"c-mask-container c-modal-mask"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">mask</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">zIndex</span> <span class="pl-c1">=</span> <span class="pl-s">'100002'</span><span class="pl-kos">;</span>
             
-            const main = this.ce('div', 0, document.body, "c-modal-wrap c-modal-has-title c-modal-enter c-modal-enter-active");
-            main.style.zIndex = '100002';
+            <span class="pl-k">const</span> <span class="pl-s1">main</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-c1">body</span><span class="pl-kos">,</span> <span class="pl-s">"c-modal-wrap c-modal-has-title c-modal-enter c-modal-enter-active"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">main</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">zIndex</span> <span class="pl-c1">=</span> <span class="pl-s">'100002'</span><span class="pl-kos">;</span>
             
-            const win = this.ce('div', 0, main, "c-modal-container c-modal-dark-container modal-container-S");
-            const title = this.ce('div', args.TITLE, win, "c-modal-title c-modal-dark-title");
-            const close = this.ce('div', '&lt;img src="https://m.ccw.site/creator-college/icons/darkClose.svg" alt="close"&gt;', win, "c-modal-close", "h");
+            <span class="pl-k">const</span> <span class="pl-s1">win</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-s1">main</span><span class="pl-kos">,</span> <span class="pl-s">"c-modal-container c-modal-dark-container modal-container-S"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">title</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">TITLE</span><span class="pl-kos">,</span> <span class="pl-s1">win</span><span class="pl-kos">,</span> <span class="pl-s">"c-modal-title c-modal-dark-title"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">close</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-s">'&lt;img src="https://m.ccw.site/creator-college/icons/darkClose.svg" alt="close"&gt;'</span><span class="pl-kos">,</span> <span class="pl-s1">win</span><span class="pl-kos">,</span> <span class="pl-s">"c-modal-close"</span><span class="pl-kos">,</span> <span class="pl-s">"h"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
             
-            const contentBody = this.ce('div', 0, win, "c-modal-body c-modal-dark-body");
-            const content = this.ce('div', this.parseMarkdownLinks(args.CONTENT), contentBody, "c-modal-content", "h");
+            <span class="pl-k">const</span> <span class="pl-s1">contentBody</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-s1">win</span><span class="pl-kos">,</span> <span class="pl-s">"c-modal-body c-modal-dark-body"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">content</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">parseMarkdownLinks</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">CONTENT</span><span class="pl-kos">)</span><span class="pl-kos">,</span> <span class="pl-s1">contentBody</span><span class="pl-kos">,</span> <span class="pl-s">"c-modal-content"</span><span class="pl-kos">,</span> <span class="pl-s">"h"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
             
-            // 安全提示
-            const securityNote = this.ce('div', '此弹窗非官方弹出，请注意辨认 by慕然科技的社区弹窗', content, "security-note");
-            securityNote.style.cssText = `
-                margin-top: 15px;
-                font-size: 10px;
-                color: #888;
-                text-align: center;
-            `;
+            <span class="pl-c">// 安全提示</span>
+            <span class="pl-k">const</span> <span class="pl-s1">securityNote</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-s">'此弹窗非官方弹出，请注意辨认 by慕然科技的社区弹窗'</span><span class="pl-kos">,</span> <span class="pl-s1">content</span><span class="pl-kos">,</span> <span class="pl-s">"security-note"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">securityNote</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">cssText</span> <span class="pl-c1">=</span> <span class="pl-s">`</span>
+<span class="pl-s">                margin-top: 15px;</span>
+<span class="pl-s">                font-size: 10px;</span>
+<span class="pl-s">                color: #888;</span>
+<span class="pl-s">                text-align: center;</span>
+<span class="pl-s">            `</span><span class="pl-kos">;</span>
 
-            const footer = this.ce('div', 0, win, "c-modal-footer");
+            <span class="pl-k">const</span> <span class="pl-s1">footer</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-s1">win</span><span class="pl-kos">,</span> <span class="pl-s">"c-modal-footer"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
 
-            // 根据按钮显示类型决定显示哪些按钮
-            let buttonsToShow = [];
-            switch (args.BUTTON_TYPE) {
-                case 'positive':
-                    buttonsToShow = [
-                        this.ce('button', args.CONFIRM, footer, "btn-DxL3n btn-xmiddle-1XiJB btn-primary-2CEZZ c-modal-footer-button")
-                    ];
-                    break;
-                case 'negative':
-                    buttonsToShow = [
-                        this.ce('button', args.CANCEL, footer, "btn-DxL3n btn-xmiddle-1XiJB btn-default-2wq9q c-modal-footer-button")
-                    ];
-                    break;
-                case 'both':
-                default:
-                    buttonsToShow = [
-                        this.ce('button', args.CANCEL, footer, "btn-DxL3n btn-xmiddle-1XiJB btn-default-2wq9q c-modal-footer-button"),
-                        this.ce('button', args.CONFIRM, footer, "btn-DxL3n btn-xmiddle-1XiJB btn-primary-2CEZZ c-modal-footer-button")
-                    ];
-                    break;
-            }
+            <span class="pl-c">// 根据按钮显示类型决定显示哪些按钮</span>
+            <span class="pl-k">let</span> <span class="pl-s1">buttonsToShow</span> <span class="pl-c1">=</span> <span class="pl-kos">[</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+            <span class="pl-k">switch</span> <span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">BUTTON_TYPE</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-k">case</span> <span class="pl-s">'positive'</span>:
+                    <span class="pl-s1">buttonsToShow</span> <span class="pl-c1">=</span> <span class="pl-kos">[</span>
+                        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'button'</span><span class="pl-kos">,</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">CONFIRM</span><span class="pl-kos">,</span> <span class="pl-s1">footer</span><span class="pl-kos">,</span> <span class="pl-s">"btn-DxL3n btn-xmiddle-1XiJB btn-primary-2CEZZ c-modal-footer-button"</span><span class="pl-kos">)</span>
+                    <span class="pl-kos">]</span><span class="pl-kos">;</span>
+                    <span class="pl-k">break</span><span class="pl-kos">;</span>
+                <span class="pl-k">case</span> <span class="pl-s">'negative'</span>:
+                    <span class="pl-s1">buttonsToShow</span> <span class="pl-c1">=</span> <span class="pl-kos">[</span>
+                        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'button'</span><span class="pl-kos">,</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">CANCEL</span><span class="pl-kos">,</span> <span class="pl-s1">footer</span><span class="pl-kos">,</span> <span class="pl-s">"btn-DxL3n btn-xmiddle-1XiJB btn-default-2wq9q c-modal-footer-button"</span><span class="pl-kos">)</span>
+                    <span class="pl-kos">]</span><span class="pl-kos">;</span>
+                    <span class="pl-k">break</span><span class="pl-kos">;</span>
+                <span class="pl-k">case</span> <span class="pl-s">'both'</span>:
+                <span class="pl-k">default</span>:
+                    <span class="pl-s1">buttonsToShow</span> <span class="pl-c1">=</span> <span class="pl-kos">[</span>
+                        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'button'</span><span class="pl-kos">,</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">CANCEL</span><span class="pl-kos">,</span> <span class="pl-s1">footer</span><span class="pl-kos">,</span> <span class="pl-s">"btn-DxL3n btn-xmiddle-1XiJB btn-default-2wq9q c-modal-footer-button"</span><span class="pl-kos">)</span><span class="pl-kos">,</span>
+                        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'button'</span><span class="pl-kos">,</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">CONFIRM</span><span class="pl-kos">,</span> <span class="pl-s1">footer</span><span class="pl-kos">,</span> <span class="pl-s">"btn-DxL3n btn-xmiddle-1XiJB btn-primary-2CEZZ c-modal-footer-button"</span><span class="pl-kos">)</span>
+                    <span class="pl-kos">]</span><span class="pl-kos">;</span>
+                    <span class="pl-k">break</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
 
-            const showT = setTimeout(() =&gt; main.className = "c-modal-wrap c-modal-has-title c-modal-enter-done", 600);
+            <span class="pl-k">const</span> <span class="pl-s1">showT</span> <span class="pl-c1">=</span> <span class="pl-en">setTimeout</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">main</span><span class="pl-kos">.</span><span class="pl-c1">className</span> <span class="pl-c1">=</span> <span class="pl-s">"c-modal-wrap c-modal-has-title c-modal-enter-done"</span><span class="pl-kos">,</span> <span class="pl-c1">600</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
             
-            const exit = (re) =&gt; {
-                clearTimeout(showT);
-                mask.remove();
-                main.className = "c-modal-wrap c-modal-has-title c-modal-enter c-modal-exit";
-                setTimeout(() =&gt; main.remove(), 600);
-                resolve(re);
-            };
+            <span class="pl-k">const</span> <span class="pl-en">exit</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-s1">re</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-en">clearTimeout</span><span class="pl-kos">(</span><span class="pl-s1">showT</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-s1">mask</span><span class="pl-kos">.</span><span class="pl-en">remove</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-s1">main</span><span class="pl-kos">.</span><span class="pl-c1">className</span> <span class="pl-c1">=</span> <span class="pl-s">"c-modal-wrap c-modal-has-title c-modal-enter c-modal-exit"</span><span class="pl-kos">;</span>
+                <span class="pl-en">setTimeout</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">main</span><span class="pl-kos">.</span><span class="pl-en">remove</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">,</span> <span class="pl-c1">600</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-en">resolve</span><span class="pl-kos">(</span><span class="pl-s1">re</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">;</span>
 
-            close.addEventListener("click", () =&gt; exit('close'));
-            buttonsToShow.forEach((btn, index) =&gt; {
-                if (btn.textContent === args.CONFIRM) {
-                    btn.addEventListener("click", e =&gt; {
-                        if (e.isTrusted) exit('confirm');
-                    });
-                } else if (btn.textContent === args.CANCEL) {
-                    btn.addEventListener("click", e =&gt; {
-                        if (e.isTrusted) exit('cancel');
-                    });
-                }
-            });
-        });
-    }
+            <span class="pl-s1">close</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">"click"</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-en">exit</span><span class="pl-kos">(</span><span class="pl-s">'close'</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">buttonsToShow</span><span class="pl-kos">.</span><span class="pl-en">forEach</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-s1">btn</span><span class="pl-kos">,</span> <span class="pl-s1">index</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">btn</span><span class="pl-kos">.</span><span class="pl-c1">textContent</span> <span class="pl-c1">===</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">CONFIRM</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                    <span class="pl-s1">btn</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">"click"</span><span class="pl-kos">,</span> <span class="pl-s1">e</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-c1">isTrusted</span><span class="pl-kos">)</span> <span class="pl-en">exit</span><span class="pl-kos">(</span><span class="pl-s">'confirm'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span> <span class="pl-k">else</span> <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">btn</span><span class="pl-kos">.</span><span class="pl-c1">textContent</span> <span class="pl-c1">===</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">CANCEL</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                    <span class="pl-s1">btn</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">"click"</span><span class="pl-kos">,</span> <span class="pl-s1">e</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-c1">isTrusted</span><span class="pl-kos">)</span> <span class="pl-en">exit</span><span class="pl-kos">(</span><span class="pl-s">'cancel'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span>
+            <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    showInputPopup(args) {
-        return new Promise(resolve =&gt; {
-            const mask = this.ce('div', 0, document.body, "c-mask-container c-modal-mask");
-            mask.style.zIndex = '100002';
+    <span class="pl-en">showInputPopup</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-v">Promise</span><span class="pl-kos">(</span><span class="pl-s1">resolve</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+            <span class="pl-k">const</span> <span class="pl-s1">mask</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-c1">body</span><span class="pl-kos">,</span> <span class="pl-s">"c-mask-container c-modal-mask"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">mask</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">zIndex</span> <span class="pl-c1">=</span> <span class="pl-s">'100002'</span><span class="pl-kos">;</span>
             
-            const main = this.ce('div', 0, document.body, "c-modal-wrap c-modal-has-title c-modal-enter c-modal-enter-active");
-            main.style.zIndex = '100002';
+            <span class="pl-k">const</span> <span class="pl-s1">main</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-c1">body</span><span class="pl-kos">,</span> <span class="pl-s">"c-modal-wrap c-modal-has-title c-modal-enter c-modal-enter-active"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">main</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">zIndex</span> <span class="pl-c1">=</span> <span class="pl-s">'100002'</span><span class="pl-kos">;</span>
             
-            const win = this.ce('div', 0, main, "c-modal-container c-modal-dark-container modal-container-S");
-            const title = this.ce('div', args.TITLE, win, "c-modal-title c-modal-dark-title");
-            const close = this.ce('div', '&lt;img src="https://m.ccw.site/creator-college/icons/darkClose.svg" alt="close"&gt;', win, "c-modal-close", "h");
+            <span class="pl-k">const</span> <span class="pl-s1">win</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-s1">main</span><span class="pl-kos">,</span> <span class="pl-s">"c-modal-container c-modal-dark-container modal-container-S"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">title</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">TITLE</span><span class="pl-kos">,</span> <span class="pl-s1">win</span><span class="pl-kos">,</span> <span class="pl-s">"c-modal-title c-modal-dark-title"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">close</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-s">'&lt;img src="https://m.ccw.site/creator-college/icons/darkClose.svg" alt="close"&gt;'</span><span class="pl-kos">,</span> <span class="pl-s1">win</span><span class="pl-kos">,</span> <span class="pl-s">"c-modal-close"</span><span class="pl-kos">,</span> <span class="pl-s">"h"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
             
-            const contentBody = this.ce('div', 0, win, "c-modal-body c-modal-dark-body");
-            const content = this.ce('div', 0, contentBody, "c-modal-content");
+            <span class="pl-k">const</span> <span class="pl-s1">contentBody</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-s1">win</span><span class="pl-kos">,</span> <span class="pl-s">"c-modal-body c-modal-dark-body"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">content</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-s1">contentBody</span><span class="pl-kos">,</span> <span class="pl-s">"c-modal-content"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
             
-            // 输入框区域
-            const inputSection = this.ce('div', 0, content);
-            inputSection.style.cssText = `
-                margin: 20px 0;
-                text-align: center;
-            `;
+            <span class="pl-c">// 输入框区域</span>
+            <span class="pl-k">const</span> <span class="pl-s1">inputSection</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-s1">content</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">inputSection</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">cssText</span> <span class="pl-c1">=</span> <span class="pl-s">`</span>
+<span class="pl-s">                margin: 20px 0;</span>
+<span class="pl-s">                text-align: center;</span>
+<span class="pl-s">            `</span><span class="pl-kos">;</span>
             
-            const inputField = this.ce('input', 0, inputSection);
-            inputField.type = 'text';
-            inputField.placeholder = args.HINT;
-            inputField.value = args.DEFAULT;
-            inputField.style.cssText = `
-                width: 80%;
-                height: 40px;
-                border: 1px solid #444;
-                border-radius: 10px;
-                background: #1A1A1A;
-                color: white;
-                padding: 0 15px;
-                font-size: 14px;
-                outline: none;
-            `;
+            <span class="pl-k">const</span> <span class="pl-s1">inputField</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'input'</span><span class="pl-kos">,</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-s1">inputSection</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">inputField</span><span class="pl-kos">.</span><span class="pl-c1">type</span> <span class="pl-c1">=</span> <span class="pl-s">'text'</span><span class="pl-kos">;</span>
+            <span class="pl-s1">inputField</span><span class="pl-kos">.</span><span class="pl-c1">placeholder</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">HINT</span><span class="pl-kos">;</span>
+            <span class="pl-s1">inputField</span><span class="pl-kos">.</span><span class="pl-c1">value</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">DEFAULT</span><span class="pl-kos">;</span>
+            <span class="pl-s1">inputField</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">cssText</span> <span class="pl-c1">=</span> <span class="pl-s">`</span>
+<span class="pl-s">                width: 80%;</span>
+<span class="pl-s">                height: 40px;</span>
+<span class="pl-s">                border: 1px solid #444;</span>
+<span class="pl-s">                border-radius: 10px;</span>
+<span class="pl-s">                background: #1A1A1A;</span>
+<span class="pl-s">                color: white;</span>
+<span class="pl-s">                padding: 0 15px;</span>
+<span class="pl-s">                font-size: 14px;</span>
+<span class="pl-s">                outline: none;</span>
+<span class="pl-s">            `</span><span class="pl-kos">;</span>
 
-            // 安全提示
-            const securityNote = this.ce('div', '此弹窗非官方弹出，请注意辨认 by慕然科技的社区弹窗', content, "security-note");
-            securityNote.style.cssText = `
-                margin-top: 15px;
-                font-size: 10px;
-                color: #888;
-                text-align: center;
-            `;
+            <span class="pl-c">// 安全提示</span>
+            <span class="pl-k">const</span> <span class="pl-s1">securityNote</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-s">'此弹窗非官方弹出，请注意辨认 by慕然科技的社区弹窗'</span><span class="pl-kos">,</span> <span class="pl-s1">content</span><span class="pl-kos">,</span> <span class="pl-s">"security-note"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">securityNote</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">cssText</span> <span class="pl-c1">=</span> <span class="pl-s">`</span>
+<span class="pl-s">                margin-top: 15px;</span>
+<span class="pl-s">                font-size: 10px;</span>
+<span class="pl-s">                color: #888;</span>
+<span class="pl-s">                text-align: center;</span>
+<span class="pl-s">            `</span><span class="pl-kos">;</span>
 
-            const footer = this.ce('div', 0, win, "c-modal-footer");
-            const cancelBtn = this.ce('button', args.CANCEL, footer, "btn-DxL3n btn-xmiddle-1XiJB btn-default-2wq9q c-modal-footer-button");
-            const confirmBtn = this.ce('button', args.CONFIRM, footer, "btn-DxL3n btn-xmiddle-1XiJB btn-primary-2CEZZ c-modal-footer-button");
+            <span class="pl-k">const</span> <span class="pl-s1">footer</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-s1">win</span><span class="pl-kos">,</span> <span class="pl-s">"c-modal-footer"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">cancelBtn</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'button'</span><span class="pl-kos">,</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">CANCEL</span><span class="pl-kos">,</span> <span class="pl-s1">footer</span><span class="pl-kos">,</span> <span class="pl-s">"btn-DxL3n btn-xmiddle-1XiJB btn-default-2wq9q c-modal-footer-button"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">confirmBtn</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'button'</span><span class="pl-kos">,</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">CONFIRM</span><span class="pl-kos">,</span> <span class="pl-s1">footer</span><span class="pl-kos">,</span> <span class="pl-s">"btn-DxL3n btn-xmiddle-1XiJB btn-primary-2CEZZ c-modal-footer-button"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
 
-            const showT = setTimeout(() =&gt; main.className = "c-modal-wrap c-modal-has-title c-modal-enter-done", 600);
+            <span class="pl-k">const</span> <span class="pl-s1">showT</span> <span class="pl-c1">=</span> <span class="pl-en">setTimeout</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">main</span><span class="pl-kos">.</span><span class="pl-c1">className</span> <span class="pl-c1">=</span> <span class="pl-s">"c-modal-wrap c-modal-has-title c-modal-enter-done"</span><span class="pl-kos">,</span> <span class="pl-c1">600</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
             
-            const exit = (re, value = '') =&gt; {
-                clearTimeout(showT);
-                mask.remove();
-                main.className = "c-modal-wrap c-modal-has-title c-modal-enter c-modal-exit";
-                setTimeout(() =&gt; main.remove(), 600);
-                this.lastResult = re;
-                this.inputValue = value;
-                resolve(re);
-            };
+            <span class="pl-k">const</span> <span class="pl-en">exit</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-s1">re</span><span class="pl-kos">,</span> <span class="pl-s1">value</span> <span class="pl-c1">=</span> <span class="pl-s">''</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-en">clearTimeout</span><span class="pl-kos">(</span><span class="pl-s1">showT</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-s1">mask</span><span class="pl-kos">.</span><span class="pl-en">remove</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-s1">main</span><span class="pl-kos">.</span><span class="pl-c1">className</span> <span class="pl-c1">=</span> <span class="pl-s">"c-modal-wrap c-modal-has-title c-modal-enter c-modal-exit"</span><span class="pl-kos">;</span>
+                <span class="pl-en">setTimeout</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">main</span><span class="pl-kos">.</span><span class="pl-en">remove</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">,</span> <span class="pl-c1">600</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastResult</span> <span class="pl-c1">=</span> <span class="pl-s1">re</span><span class="pl-kos">;</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">inputValue</span> <span class="pl-c1">=</span> <span class="pl-s1">value</span><span class="pl-kos">;</span>
+                <span class="pl-en">resolve</span><span class="pl-kos">(</span><span class="pl-s1">re</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">;</span>
 
-            close.addEventListener("click", () =&gt; exit('close'));
-            cancelBtn.addEventListener("click", e =&gt; {
-                if (e.isTrusted) exit('cancel');
-            });
-            confirmBtn.addEventListener("click", e =&gt; {
-                if (e.isTrusted) exit('confirm', inputField.value);
-            });
+            <span class="pl-s1">close</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">"click"</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-en">exit</span><span class="pl-kos">(</span><span class="pl-s">'close'</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">cancelBtn</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">"click"</span><span class="pl-kos">,</span> <span class="pl-s1">e</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-c1">isTrusted</span><span class="pl-kos">)</span> <span class="pl-en">exit</span><span class="pl-kos">(</span><span class="pl-s">'cancel'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">confirmBtn</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">"click"</span><span class="pl-kos">,</span> <span class="pl-s1">e</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-c1">isTrusted</span><span class="pl-kos">)</span> <span class="pl-en">exit</span><span class="pl-kos">(</span><span class="pl-s">'confirm'</span><span class="pl-kos">,</span> <span class="pl-s1">inputField</span><span class="pl-kos">.</span><span class="pl-c1">value</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
             
-            // 回车键确认
-            inputField.onkeypress = (e) =&gt; {
-                if (e.key === 'Enter') {
-                    exit('confirm', inputField.value);
-                }
-            };
+            <span class="pl-c">// 回车键确认</span>
+            <span class="pl-s1">inputField</span><span class="pl-kos">.</span><span class="pl-en">onkeypress</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-c1">key</span> <span class="pl-c1">===</span> <span class="pl-s">'Enter'</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                    <span class="pl-en">exit</span><span class="pl-kos">(</span><span class="pl-s">'confirm'</span><span class="pl-kos">,</span> <span class="pl-s1">inputField</span><span class="pl-kos">.</span><span class="pl-c1">value</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span>
+            <span class="pl-kos">}</span><span class="pl-kos">;</span>
             
-            // 自动聚焦输入框
-            inputField.focus();
-            inputField.select();
-        });
-    }
+            <span class="pl-c">// 自动聚焦输入框</span>
+            <span class="pl-s1">inputField</span><span class="pl-kos">.</span><span class="pl-en">focus</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">inputField</span><span class="pl-kos">.</span><span class="pl-en">select</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    showHighlightPopup(args) {
-        return new Promise(resolve =&gt; {
-            const mask = this.ce('div', 0, document.body, "c-mask-container c-modal-mask");
-            mask.style.zIndex = '100002';
+    <span class="pl-en">showHighlightPopup</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-v">Promise</span><span class="pl-kos">(</span><span class="pl-s1">resolve</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+            <span class="pl-k">const</span> <span class="pl-s1">mask</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-c1">body</span><span class="pl-kos">,</span> <span class="pl-s">"c-mask-container c-modal-mask"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">mask</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">zIndex</span> <span class="pl-c1">=</span> <span class="pl-s">'100002'</span><span class="pl-kos">;</span>
             
-            const main = this.ce('div', 0, document.body, "c-modal-wrap c-modal-has-title c-modal-enter c-modal-enter-active");
-            main.style.zIndex = '100002';
+            <span class="pl-k">const</span> <span class="pl-s1">main</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-c1">body</span><span class="pl-kos">,</span> <span class="pl-s">"c-modal-wrap c-modal-has-title c-modal-enter c-modal-enter-active"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">main</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">zIndex</span> <span class="pl-c1">=</span> <span class="pl-s">'100002'</span><span class="pl-kos">;</span>
             
-            const win = this.ce('div', 0, main, "c-modal-container c-modal-dark-container modal-container-S");
-            const title = this.ce('div', args.TITLE, win, "c-modal-title c-modal-dark-title");
-            const close = this.ce('div', '&lt;img src="https://m.ccw.site/creator-college/icons/darkClose.svg" alt="close"&gt;', win, "c-modal-close", "h");
+            <span class="pl-k">const</span> <span class="pl-s1">win</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-s1">main</span><span class="pl-kos">,</span> <span class="pl-s">"c-modal-container c-modal-dark-container modal-container-S"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">title</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">TITLE</span><span class="pl-kos">,</span> <span class="pl-s1">win</span><span class="pl-kos">,</span> <span class="pl-s">"c-modal-title c-modal-dark-title"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">close</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-s">'&lt;img src="https://m.ccw.site/creator-college/icons/darkClose.svg" alt="close"&gt;'</span><span class="pl-kos">,</span> <span class="pl-s1">win</span><span class="pl-kos">,</span> <span class="pl-s">"c-modal-close"</span><span class="pl-kos">,</span> <span class="pl-s">"h"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
             
-            const contentBody = this.ce('div', 0, win, "c-modal-body c-modal-dark-body");
-            const content = this.ce('div', 0, contentBody, "c-modal-content");
+            <span class="pl-k">const</span> <span class="pl-s1">contentBody</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-s1">win</span><span class="pl-kos">,</span> <span class="pl-s">"c-modal-body c-modal-dark-body"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">content</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-s1">contentBody</span><span class="pl-kos">,</span> <span class="pl-s">"c-modal-content"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
             
-            // 说明文字
-            const desc = this.ce('div', this.parseMarkdownLinks(args.DESC), content, "", "h");
-            desc.style.cssText = `
-                margin-bottom: 15px;
-                text-align: center;
-                color: #CCCCCC;
-            `;
+            <span class="pl-c">// 说明文字</span>
+            <span class="pl-k">const</span> <span class="pl-s1">desc</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">parseMarkdownLinks</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">DESC</span><span class="pl-kos">)</span><span class="pl-kos">,</span> <span class="pl-s1">content</span><span class="pl-kos">,</span> <span class="pl-s">""</span><span class="pl-kos">,</span> <span class="pl-s">"h"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">desc</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">cssText</span> <span class="pl-c1">=</span> <span class="pl-s">`</span>
+<span class="pl-s">                margin-bottom: 15px;</span>
+<span class="pl-s">                text-align: center;</span>
+<span class="pl-s">                color: #CCCCCC;</span>
+<span class="pl-s">            `</span><span class="pl-kos">;</span>
 
-            // 突出文本展示
-            const highlightText = this.ce('div', args.HIGHLIGHT, content);
-            highlightText.style.cssText = `
-                width: 80%;
-                height: 40px;
-                border: 1px solid #555;
-                border-radius: 10px;
-                background: #64748b;
-                color: #5cff6e;
-                line-height: 40px;
-                margin: 0 auto 20px;
-                font-family: monospace;
-                font-weight: bold;
-                font-size: 14px;
-                text-align: center;
-            `;
+            <span class="pl-c">// 突出文本展示</span>
+            <span class="pl-k">const</span> <span class="pl-s1">highlightText</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">HIGHLIGHT</span><span class="pl-kos">,</span> <span class="pl-s1">content</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">highlightText</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">cssText</span> <span class="pl-c1">=</span> <span class="pl-s">`</span>
+<span class="pl-s">                width: 80%;</span>
+<span class="pl-s">                height: 40px;</span>
+<span class="pl-s">                border: 1px solid #555;</span>
+<span class="pl-s">                border-radius: 10px;</span>
+<span class="pl-s">                background: #64748b;</span>
+<span class="pl-s">                color: #5cff6e;</span>
+<span class="pl-s">                line-height: 40px;</span>
+<span class="pl-s">                margin: 0 auto 20px;</span>
+<span class="pl-s">                font-family: monospace;</span>
+<span class="pl-s">                font-weight: bold;</span>
+<span class="pl-s">                font-size: 14px;</span>
+<span class="pl-s">                text-align: center;</span>
+<span class="pl-s">            `</span><span class="pl-kos">;</span>
 
-            // 安全提示
-            const securityNote = this.ce('div', '此弹窗非官方弹出，请注意辨认 by慕然科技的社区弹窗', content, "security-note");
-            securityNote.style.cssText = `
-                margin-top: 15px;
-                font-size: 10px;
-                color: #888;
-                text-align: center;
-            `;
+            <span class="pl-c">// 安全提示</span>
+            <span class="pl-k">const</span> <span class="pl-s1">securityNote</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-s">'此弹窗非官方弹出，请注意辨认 by慕然科技的社区弹窗'</span><span class="pl-kos">,</span> <span class="pl-s1">content</span><span class="pl-kos">,</span> <span class="pl-s">"security-note"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">securityNote</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">cssText</span> <span class="pl-c1">=</span> <span class="pl-s">`</span>
+<span class="pl-s">                margin-top: 15px;</span>
+<span class="pl-s">                font-size: 10px;</span>
+<span class="pl-s">                color: #888;</span>
+<span class="pl-s">                text-align: center;</span>
+<span class="pl-s">            `</span><span class="pl-kos">;</span>
 
-            const footer = this.ce('div', 0, win, "c-modal-footer");
-            const cancelBtn = this.ce('button', args.CANCEL, footer, "btn-DxL3n btn-xmiddle-1XiJB btn-default-2wq9q c-modal-footer-button");
-            const copyBtn = this.ce('button', args.COPY, footer, "btn-DxL3n btn-xmiddle-1XiJB btn-primary-2CEZZ c-modal-footer-button");
+            <span class="pl-k">const</span> <span class="pl-s1">footer</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">,</span> <span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-s1">win</span><span class="pl-kos">,</span> <span class="pl-s">"c-modal-footer"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">cancelBtn</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'button'</span><span class="pl-kos">,</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">CANCEL</span><span class="pl-kos">,</span> <span class="pl-s1">footer</span><span class="pl-kos">,</span> <span class="pl-s">"btn-DxL3n btn-xmiddle-1XiJB btn-default-2wq9q c-modal-footer-button"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">copyBtn</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">ce</span><span class="pl-kos">(</span><span class="pl-s">'button'</span><span class="pl-kos">,</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">COPY</span><span class="pl-kos">,</span> <span class="pl-s1">footer</span><span class="pl-kos">,</span> <span class="pl-s">"btn-DxL3n btn-xmiddle-1XiJB btn-primary-2CEZZ c-modal-footer-button"</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
 
-            const showT = setTimeout(() =&gt; main.className = "c-modal-wrap c-modal-has-title c-modal-enter-done", 600);
+            <span class="pl-k">const</span> <span class="pl-s1">showT</span> <span class="pl-c1">=</span> <span class="pl-en">setTimeout</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">main</span><span class="pl-kos">.</span><span class="pl-c1">className</span> <span class="pl-c1">=</span> <span class="pl-s">"c-modal-wrap c-modal-has-title c-modal-enter-done"</span><span class="pl-kos">,</span> <span class="pl-c1">600</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
             
-            const exit = (re) =&gt; {
-                clearTimeout(showT);
-                mask.remove();
-                main.className = "c-modal-wrap c-modal-has-title c-modal-enter c-modal-exit";
-                setTimeout(() =&gt; main.remove(), 600);
-                resolve(re);
-            };
+            <span class="pl-k">const</span> <span class="pl-en">exit</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-s1">re</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-en">clearTimeout</span><span class="pl-kos">(</span><span class="pl-s1">showT</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-s1">mask</span><span class="pl-kos">.</span><span class="pl-en">remove</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-s1">main</span><span class="pl-kos">.</span><span class="pl-c1">className</span> <span class="pl-c1">=</span> <span class="pl-s">"c-modal-wrap c-modal-has-title c-modal-enter c-modal-exit"</span><span class="pl-kos">;</span>
+                <span class="pl-en">setTimeout</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">main</span><span class="pl-kos">.</span><span class="pl-en">remove</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">,</span> <span class="pl-c1">600</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-en">resolve</span><span class="pl-kos">(</span><span class="pl-s1">re</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">;</span>
 
-            close.addEventListener("click", () =&gt; exit('close'));
-            cancelBtn.addEventListener("click", e =&gt; {
-                if (e.isTrusted) exit('cancel');
-            });
+            <span class="pl-s1">close</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">"click"</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-en">exit</span><span class="pl-kos">(</span><span class="pl-s">'close'</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">cancelBtn</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">"click"</span><span class="pl-kos">,</span> <span class="pl-s1">e</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-c1">isTrusted</span><span class="pl-kos">)</span> <span class="pl-en">exit</span><span class="pl-kos">(</span><span class="pl-s">'cancel'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
             
-            copyBtn.addEventListener("click", e =&gt; {
-                if (e.isTrusted) {
-                    navigator.clipboard.writeText(args.HIGHLIGHT)
-                        .then(() =&gt; {
-                            exit('复制成功');
-                        })
-                        .catch(() =&gt; {
-                            exit('复制失败，请手动选择并复制');
-                        });
-                }
-            });
-        });
-    }
+            <span class="pl-s1">copyBtn</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">"click"</span><span class="pl-kos">,</span> <span class="pl-s1">e</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-c1">isTrusted</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                    <span class="pl-s1">navigator</span><span class="pl-kos">.</span><span class="pl-c1">clipboard</span><span class="pl-kos">.</span><span class="pl-en">writeText</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">HIGHLIGHT</span><span class="pl-kos">)</span>
+                        <span class="pl-kos">.</span><span class="pl-en">then</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                            <span class="pl-en">exit</span><span class="pl-kos">(</span><span class="pl-s">'复制成功'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">)</span>
+                        <span class="pl-kos">.</span><span class="pl-en">catch</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                            <span class="pl-en">exit</span><span class="pl-kos">(</span><span class="pl-s">'复制失败，请手动选择并复制'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span>
+            <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    getLastResult() {
-        return this.lastResult || '';
-    }
+    <span class="pl-en">getLastResult</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastResult</span> <span class="pl-c1">||</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    getInputValue() {
-        return this.inputValue || '';
-    }
-}
+    <span class="pl-en">getInputValue</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">inputValue</span> <span class="pl-c1">||</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span>
 
-// 注册扩展
-Scratch.extensions.register(new CommunityPopupExtension());
-</code></pre></div>
+<span class="pl-c">// 注册扩展</span>
+<span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">extensions</span><span class="pl-kos">.</span><span class="pl-en">register</span><span class="pl-kos">(</span><span class="pl-k">new</span> <span class="pl-v">CommunityPopupExtension</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
