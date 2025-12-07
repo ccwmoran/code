@@ -1,4 +1,4 @@
-```
+```js
 class MorganSecurityV2 {
     constructor() {
         this.crashInitiated = false;

@@ -10,7 +10,7 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="```
+<meta name="description" content="```js
 class MorganSecurityV2 {
     constructor() {
         this.crashInitiated = false;
@@ -134,7 +134,7 @@ class MorganSecurityV2 {
 
 注意: 使用本扩展即表示您同意承担所有相关责任。">
 <meta property="og:title" content="Morgan的安全保护组件">
-<meta property="og:description" content="```
+<meta property="og:description" content="```js
 class MorganSecurityV2 {
     constructor() {
         this.crashInitiated = false;
@@ -261,7 +261,7 @@ class MorganSecurityV2 {
 <meta property="og:url" content="https://ccwmoran.github.io/code/post/Morgan-de-an-quan-bao-hu-zu-jian.html">
 <meta property="og:image" content="https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg">
 <title>Morgan的安全保护组件</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -327,320 +327,319 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><pre class="notranslate"><code class="notranslate">class MorganSecurityV2 {
-    constructor() {
-        this.crashInitiated = false;
-        this.detectionEnabled = false;
-        this.protectionMode = 'none';
-        this.monitoringInterval = null;
+<div class="markdown-body" id="postBody"><div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-k">class</span> <span class="pl-v">MorganSecurityV2</span> <span class="pl-kos">{</span>
+    <span class="pl-en">constructor</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">crashInitiated</span> <span class="pl-c1">=</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">detectionEnabled</span> <span class="pl-c1">=</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">protectionMode</span> <span class="pl-c1">=</span> <span class="pl-s">'none'</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">monitoringInterval</span> <span class="pl-c1">=</span> <span class="pl-c1">null</span><span class="pl-kos">;</span>
         
-        this.crashMethods = [
-            function() {
-                const arrays = [];
-                while(true) {
-                    arrays.push(new ArrayBuffer(1024 * 1024 * 100));
-                }
-            },
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">crashMethods</span> <span class="pl-c1">=</span> <span class="pl-kos">[</span>
+            <span class="pl-k">function</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-k">const</span> <span class="pl-s1">arrays</span> <span class="pl-c1">=</span> <span class="pl-kos">[</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+                <span class="pl-k">while</span><span class="pl-kos">(</span><span class="pl-c1">true</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                    <span class="pl-s1">arrays</span><span class="pl-kos">.</span><span class="pl-en">push</span><span class="pl-kos">(</span><span class="pl-k">new</span> <span class="pl-v">ArrayBuffer</span><span class="pl-kos">(</span><span class="pl-c1">1024</span> <span class="pl-c1">*</span> <span class="pl-c1">1024</span> <span class="pl-c1">*</span> <span class="pl-c1">100</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span>
+            <span class="pl-kos">}</span><span class="pl-kos">,</span>
             
-            function() {
-                function overflow() { overflow(); }
-                overflow();
-            },
+            <span class="pl-k">function</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-k">function</span> <span class="pl-en">overflow</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span> <span class="pl-en">overflow</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span> <span class="pl-kos">}</span>
+                <span class="pl-en">overflow</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">,</span>
             
-            function() {
-                while(true) {
-                    const div = document.createElement('div');
-                    document.body.appendChild(div);
-                    document.body.removeChild(div);
-                }
-            },
+            <span class="pl-k">function</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-k">while</span><span class="pl-kos">(</span><span class="pl-c1">true</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                    <span class="pl-k">const</span> <span class="pl-s1">div</span> <span class="pl-c1">=</span> <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-en">createElement</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                    <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-c1">body</span><span class="pl-kos">.</span><span class="pl-en">appendChild</span><span class="pl-kos">(</span><span class="pl-s1">div</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                    <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-c1">body</span><span class="pl-kos">.</span><span class="pl-en">removeChild</span><span class="pl-kos">(</span><span class="pl-s1">div</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span>
+            <span class="pl-kos">}</span><span class="pl-kos">,</span>
             
-            function() {
-                const canvas = document.createElement('canvas');
-                const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-                if (gl) {
-                    const buffers = [];
-                    while(true) {
-                        const buffer = gl.createBuffer();
-                        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-                        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(1024 * 1024 * 10), gl.STATIC_DRAW);
-                        buffers.push(buffer);
-                    }
-                }
-            },
+            <span class="pl-k">function</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-k">const</span> <span class="pl-s1">canvas</span> <span class="pl-c1">=</span> <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-en">createElement</span><span class="pl-kos">(</span><span class="pl-s">'canvas'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-k">const</span> <span class="pl-s1">gl</span> <span class="pl-c1">=</span> <span class="pl-s1">canvas</span><span class="pl-kos">.</span><span class="pl-en">getContext</span><span class="pl-kos">(</span><span class="pl-s">'webgl'</span><span class="pl-kos">)</span> <span class="pl-c1">||</span> <span class="pl-s1">canvas</span><span class="pl-kos">.</span><span class="pl-en">getContext</span><span class="pl-kos">(</span><span class="pl-s">'experimental-webgl'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">gl</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                    <span class="pl-k">const</span> <span class="pl-s1">buffers</span> <span class="pl-c1">=</span> <span class="pl-kos">[</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+                    <span class="pl-k">while</span><span class="pl-kos">(</span><span class="pl-c1">true</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                        <span class="pl-k">const</span> <span class="pl-s1">buffer</span> <span class="pl-c1">=</span> <span class="pl-s1">gl</span><span class="pl-kos">.</span><span class="pl-en">createBuffer</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                        <span class="pl-s1">gl</span><span class="pl-kos">.</span><span class="pl-en">bindBuffer</span><span class="pl-kos">(</span><span class="pl-s1">gl</span><span class="pl-kos">.</span><span class="pl-c1">ARRAY_BUFFER</span><span class="pl-kos">,</span> <span class="pl-s1">buffer</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                        <span class="pl-s1">gl</span><span class="pl-kos">.</span><span class="pl-en">bufferData</span><span class="pl-kos">(</span><span class="pl-s1">gl</span><span class="pl-kos">.</span><span class="pl-c1">ARRAY_BUFFER</span><span class="pl-kos">,</span> <span class="pl-k">new</span> <span class="pl-v">Float32Array</span><span class="pl-kos">(</span><span class="pl-c1">1024</span> <span class="pl-c1">*</span> <span class="pl-c1">1024</span> <span class="pl-c1">*</span> <span class="pl-c1">10</span><span class="pl-kos">)</span><span class="pl-kos">,</span> <span class="pl-s1">gl</span><span class="pl-kos">.</span><span class="pl-c1">STATIC_DRAW</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                        <span class="pl-s1">buffers</span><span class="pl-kos">.</span><span class="pl-en">push</span><span class="pl-kos">(</span><span class="pl-s1">buffer</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span>
+            <span class="pl-kos">}</span><span class="pl-kos">,</span>
             
-            function() {
-                const workerCode = `while(true){postMessage(new ArrayBuffer(1024*1024*10));}`;
-                const blob = new Blob([workerCode], {type: 'application/javascript'});
-                const workerURL = URL.createObjectURL(blob);
+            <span class="pl-k">function</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-k">const</span> <span class="pl-s1">workerCode</span> <span class="pl-c1">=</span> <span class="pl-s">`while(true){postMessage(new ArrayBuffer(1024*1024*10));}`</span><span class="pl-kos">;</span>
+                <span class="pl-k">const</span> <span class="pl-s1">blob</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">Blob</span><span class="pl-kos">(</span><span class="pl-kos">[</span><span class="pl-s1">workerCode</span><span class="pl-kos">]</span><span class="pl-kos">,</span> <span class="pl-kos">{</span><span class="pl-c1">type</span>: <span class="pl-s">'application/javascript'</span><span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-k">const</span> <span class="pl-s1">workerURL</span> <span class="pl-c1">=</span> <span class="pl-c1">URL</span><span class="pl-kos">.</span><span class="pl-en">createObjectURL</span><span class="pl-kos">(</span><span class="pl-s1">blob</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
                 
-                for(let i = 0; i &lt; 50; i++) {
-                    try {
-                        new Worker(workerURL);
-                    } catch(e) {}
-                }
-            }
-        ];
-    }
+                <span class="pl-k">for</span><span class="pl-kos">(</span><span class="pl-k">let</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span> <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-c1">50</span><span class="pl-kos">;</span> <span class="pl-s1">i</span><span class="pl-c1">++</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                    <span class="pl-k">try</span> <span class="pl-kos">{</span>
+                        <span class="pl-k">new</span> <span class="pl-v">Worker</span><span class="pl-kos">(</span><span class="pl-s1">workerURL</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span> <span class="pl-k">catch</span><span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">)</span> <span class="pl-kos">{</span><span class="pl-kos">}</span>
+                <span class="pl-kos">}</span>
+            <span class="pl-kos">}</span>
+        <span class="pl-kos">]</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    getInfo() {
-        return {
-            id: 'MS2',
-            name: 'Morgan的安全保护组件V2',
-            color1: 0xFF6B6B,
-            color2: 0xFF8E8E,
-            blocks: [
-                {
-                    opcode: 'showDisclaimer',
-                    blockType: Scratch.BlockType.COMMAND,
-                    text: '显示免责声明'
-                },
-                {
-                    opcode: 'enableNormalProtection',
-                    blockType: Scratch.BlockType.COMMAND,
-                    text: '启用一般保护模式'
-                },
-                {
-                    opcode: 'enableSuperProtection',
-                    blockType: Scratch.BlockType.COMMAND,
-                    text: '启用超级保护模式'
-                },
-                {
-                    opcode: 'disableProtection', 
-                    blockType: Scratch.BlockType.COMMAND,
-                    text: '禁用安全保护'
-                },
-                {
-                    opcode: 'forceCrash',
-                    blockType: Scratch.BlockType.COMMAND,
-                    text: '强制崩溃页面'
-                },
-                {
-                    opcode: 'checkStatus',
-                    blockType: Scratch.BlockType.REPORTER,
-                    text: '保护状态'
-                },
-                {
-                    opcode: 'checkDevTools',
-                    blockType: Scratch.BlockType.BOOLEAN,
-                    text: '检测到开发者工具'
-                },
-                {
-                    opcode: 'getProtectionMode',
-                    blockType: Scratch.BlockType.REPORTER,
-                    text: '当前保护模式'
-                }
-            ],
-            docsURI: 'https://kejicx.github.io/doc/'
-        };
-    }
+    <span class="pl-en">getInfo</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">return</span> <span class="pl-kos">{</span>
+            <span class="pl-c1">id</span>: <span class="pl-s">'MS2'</span><span class="pl-kos">,</span>
+            <span class="pl-c1">name</span>: <span class="pl-s">'Morgan的安全保护组件V2'</span><span class="pl-kos">,</span>
+            <span class="pl-c1">color1</span>: <span class="pl-c1">0xFF6B6B</span><span class="pl-kos">,</span>
+            <span class="pl-c1">color2</span>: <span class="pl-c1">0xFF8E8E</span><span class="pl-kos">,</span>
+            <span class="pl-c1">blocks</span>: <span class="pl-kos">[</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'showDisclaimer'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'显示免责声明'</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'enableNormalProtection'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'启用一般保护模式'</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'enableSuperProtection'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'启用超级保护模式'</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'disableProtection'</span><span class="pl-kos">,</span> 
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'禁用安全保护'</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'forceCrash'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'强制崩溃页面'</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'checkStatus'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">REPORTER</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'保护状态'</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'checkDevTools'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">BOOLEAN</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'检测到开发者工具'</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'getProtectionMode'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">REPORTER</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'当前保护模式'</span>
+                <span class="pl-kos">}</span>
+            <span class="pl-kos">]</span><span class="pl-kos">,</span>
+            <span class="pl-c1">docsURI</span>: <span class="pl-s">'https://kejicx.github.io/doc/'</span>
+        <span class="pl-kos">}</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    showDisclaimer() {
-        const disclaimerText = 
-`免责声明
-
-本扩展开发者: Morgan
-官方网站: kejicx.github.io
-
-使用说明:
-1. 本扩展提供两种安全保护模式
-2. 一般保护模式: 检测到违规时刷新页面
-3. 超级保护模式: 检测到违规时崩溃页面
-4. 请合理使用本扩展功能
-
-注意: 使用本扩展即表示您同意承担所有相关责任。开发者不对因使用本扩展而产生的任何后果负责。
-
-点击确定表示您已阅读并同意以上条款。`;
+    <span class="pl-en">showDisclaimer</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">const</span> <span class="pl-s1">disclaimerText</span> <span class="pl-c1">=</span> 
+<span class="pl-s">`免责声明</span>
+<span class="pl-s"></span>
+<span class="pl-s">本扩展开发者: Morgan</span>
+<span class="pl-s">官方网站: kejicx.github.io</span>
+<span class="pl-s"></span>
+<span class="pl-s">使用说明:</span>
+<span class="pl-s">1. 本扩展提供两种安全保护模式</span>
+<span class="pl-s">2. 一般保护模式: 检测到违规时刷新页面</span>
+<span class="pl-s">3. 超级保护模式: 检测到违规时崩溃页面</span>
+<span class="pl-s">4. 请合理使用本扩展功能</span>
+<span class="pl-s"></span>
+<span class="pl-s">注意: 使用本扩展即表示您同意承担所有相关责任。开发者不对因使用本扩展而产生的任何后果负责。</span>
+<span class="pl-s"></span>
+<span class="pl-s">点击确定表示您已阅读并同意以上条款。`</span><span class="pl-kos">;</span>
         
-        alert(disclaimerText);
-    }
+        <span class="pl-en">alert</span><span class="pl-kos">(</span><span class="pl-s1">disclaimerText</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    initiateProtectionResponse(reason) {
-        if (this.crashInitiated) return;
+    <span class="pl-en">initiateProtectionResponse</span><span class="pl-kos">(</span><span class="pl-s1">reason</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">crashInitiated</span><span class="pl-kos">)</span> <span class="pl-k">return</span><span class="pl-kos">;</span>
         
-        if (this.protectionMode === 'super') {
-            this.initiateCrash(reason);
-        } else if (this.protectionMode === 'normal') {
-            this.refreshPage(reason);
-        }
-    }
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">protectionMode</span> <span class="pl-c1">===</span> <span class="pl-s">'super'</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">initiateCrash</span><span class="pl-kos">(</span><span class="pl-s1">reason</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span> <span class="pl-k">else</span> <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">protectionMode</span> <span class="pl-c1">===</span> <span class="pl-s">'normal'</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">refreshPage</span><span class="pl-kos">(</span><span class="pl-s1">reason</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
 
-    initiateCrash(reason) {
-        this.crashInitiated = true;
+    <span class="pl-en">initiateCrash</span><span class="pl-kos">(</span><span class="pl-s1">reason</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">crashInitiated</span> <span class="pl-c1">=</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
         
-        try {
-            const warning = document.createElement('div');
-            warning.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#000;color:#f00;z-index:999999;font-size:24px;display:flex;justify-content:center;align-items:center;font-family:Arial,sans-serif;';
-            warning.innerHTML = '&lt;div style="text-align:center;"&gt;&lt;h1&gt;安全违规检测&lt;/h1&gt;&lt;p&gt;检测到: ' + reason + '&lt;/p&gt;&lt;p&gt;页面即将崩溃...&lt;/p&gt;&lt;/div&gt;';
-            document.body.appendChild(warning);
-        } catch(e) {}
+        <span class="pl-k">try</span> <span class="pl-kos">{</span>
+            <span class="pl-k">const</span> <span class="pl-s1">warning</span> <span class="pl-c1">=</span> <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-en">createElement</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">warning</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">cssText</span> <span class="pl-c1">=</span> <span class="pl-s">'position:fixed;top:0;left:0;width:100%;height:100%;background:#000;color:#f00;z-index:999999;font-size:24px;display:flex;justify-content:center;align-items:center;font-family:Arial,sans-serif;'</span><span class="pl-kos">;</span>
+            <span class="pl-s1">warning</span><span class="pl-kos">.</span><span class="pl-c1">innerHTML</span> <span class="pl-c1">=</span> <span class="pl-s">'&lt;div style="text-align:center;"&gt;&lt;h1&gt;安全违规检测&lt;/h1&gt;&lt;p&gt;检测到: '</span> <span class="pl-c1">+</span> <span class="pl-s1">reason</span> <span class="pl-c1">+</span> <span class="pl-s">'&lt;/p&gt;&lt;p&gt;页面即将崩溃...&lt;/p&gt;&lt;/div&gt;'</span><span class="pl-kos">;</span>
+            <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-c1">body</span><span class="pl-kos">.</span><span class="pl-en">appendChild</span><span class="pl-kos">(</span><span class="pl-s1">warning</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span> <span class="pl-k">catch</span><span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">)</span> <span class="pl-kos">{</span><span class="pl-kos">}</span>
         
-        setTimeout(() =&gt; {
-            this.crashMethods.forEach((method, index) =&gt; {
-                setTimeout(() =&gt; {
-                    try {
-                        method();
-                    } catch(e) {}
-                }, index * 100);
-            });
-        }, 2000);
-    }
+        <span class="pl-en">setTimeout</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">crashMethods</span><span class="pl-kos">.</span><span class="pl-en">forEach</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-s1">method</span><span class="pl-kos">,</span> <span class="pl-s1">index</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-en">setTimeout</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                    <span class="pl-k">try</span> <span class="pl-kos">{</span>
+                        <span class="pl-s1">method</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span> <span class="pl-k">catch</span><span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">)</span> <span class="pl-kos">{</span><span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span> <span class="pl-s1">index</span> <span class="pl-c1">*</span> <span class="pl-c1">100</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span><span class="pl-kos">,</span> <span class="pl-c1">2000</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    refreshPage(reason) {
-        this.crashInitiated = true;
+    <span class="pl-en">refreshPage</span><span class="pl-kos">(</span><span class="pl-s1">reason</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">crashInitiated</span> <span class="pl-c1">=</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
         
-        try {
-            const warning = document.createElement('div');
-            warning.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#000;color:#ffa500;z-index:999999;font-size:24px;display:flex;justify-content:center;align-items:center;font-family:Arial,sans-serif;';
-            warning.innerHTML = '&lt;div style="text-align:center;"&gt;&lt;h1&gt;安全违规检测&lt;/h1&gt;&lt;p&gt;检测到: ' + reason + '&lt;/p&gt;&lt;p&gt;页面即将刷新...&lt;/p&gt;&lt;/div&gt;';
-            document.body.appendChild(warning);
-        } catch(e) {}
+        <span class="pl-k">try</span> <span class="pl-kos">{</span>
+            <span class="pl-k">const</span> <span class="pl-s1">warning</span> <span class="pl-c1">=</span> <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-en">createElement</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">warning</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">cssText</span> <span class="pl-c1">=</span> <span class="pl-s">'position:fixed;top:0;left:0;width:100%;height:100%;background:#000;color:#ffa500;z-index:999999;font-size:24px;display:flex;justify-content:center;align-items:center;font-family:Arial,sans-serif;'</span><span class="pl-kos">;</span>
+            <span class="pl-s1">warning</span><span class="pl-kos">.</span><span class="pl-c1">innerHTML</span> <span class="pl-c1">=</span> <span class="pl-s">'&lt;div style="text-align:center;"&gt;&lt;h1&gt;安全违规检测&lt;/h1&gt;&lt;p&gt;检测到: '</span> <span class="pl-c1">+</span> <span class="pl-s1">reason</span> <span class="pl-c1">+</span> <span class="pl-s">'&lt;/p&gt;&lt;p&gt;页面即将刷新...&lt;/p&gt;&lt;/div&gt;'</span><span class="pl-kos">;</span>
+            <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-c1">body</span><span class="pl-kos">.</span><span class="pl-en">appendChild</span><span class="pl-kos">(</span><span class="pl-s1">warning</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span> <span class="pl-k">catch</span><span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">)</span> <span class="pl-kos">{</span><span class="pl-kos">}</span>
         
-        setTimeout(() =&gt; {
-            window.location.reload();
-        }, 2000);
-    }
+        <span class="pl-en">setTimeout</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">window</span><span class="pl-kos">.</span><span class="pl-c1">location</span><span class="pl-kos">.</span><span class="pl-en">reload</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span><span class="pl-kos">,</span> <span class="pl-c1">2000</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    checkDevToolsAdvanced() {
-        if (!this.detectionEnabled || this.crashInitiated) return false;
+    <span class="pl-en">checkDevToolsAdvanced</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">detectionEnabled</span> <span class="pl-c1">||</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">crashInitiated</span><span class="pl-kos">)</span> <span class="pl-k">return</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
         
-        if (window.outerWidth - window.innerWidth &gt; 200 || window.outerHeight - window.innerHeight &gt; 200) {
-            this.initiateProtectionResponse('开发者工具检测');
-            return true;
-        }
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">window</span><span class="pl-kos">.</span><span class="pl-c1">outerWidth</span> <span class="pl-c1">-</span> <span class="pl-smi">window</span><span class="pl-kos">.</span><span class="pl-c1">innerWidth</span> <span class="pl-c1">&gt;</span> <span class="pl-c1">200</span> <span class="pl-c1">||</span> <span class="pl-smi">window</span><span class="pl-kos">.</span><span class="pl-c1">outerHeight</span> <span class="pl-c1">-</span> <span class="pl-smi">window</span><span class="pl-kos">.</span><span class="pl-c1">innerHeight</span> <span class="pl-c1">&gt;</span> <span class="pl-c1">200</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">initiateProtectionResponse</span><span class="pl-kos">(</span><span class="pl-s">'开发者工具检测'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">return</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        const start = performance.now();
-        debugger;
-        const end = performance.now();
-        if (end - start &gt; 100) {
-            this.initiateProtectionResponse('调试器检测');
-            return true;
-        }
+        <span class="pl-k">const</span> <span class="pl-s1">start</span> <span class="pl-c1">=</span> <span class="pl-s1">performance</span><span class="pl-kos">.</span><span class="pl-en">now</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-k">debugger</span><span class="pl-kos">;</span>
+        <span class="pl-k">const</span> <span class="pl-s1">end</span> <span class="pl-c1">=</span> <span class="pl-s1">performance</span><span class="pl-kos">.</span><span class="pl-en">now</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">end</span> <span class="pl-c1">-</span> <span class="pl-s1">start</span> <span class="pl-c1">&gt;</span> <span class="pl-c1">100</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">initiateProtectionResponse</span><span class="pl-kos">(</span><span class="pl-s">'调试器检测'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">return</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        return false;
-    }
+        <span class="pl-k">return</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    setupRightClickDetection() {
-        if (!document || !document.addEventListener) return;
+    <span class="pl-en">setupRightClickDetection</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-smi">document</span> <span class="pl-c1">||</span> <span class="pl-c1">!</span><span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-c1">addEventListener</span><span class="pl-kos">)</span> <span class="pl-k">return</span><span class="pl-kos">;</span>
         
-        document.addEventListener('contextmenu', (e) =&gt; {
-            if (this.detectionEnabled &amp;&amp; !this.crashInitiated) {
-                e.preventDefault();
-                e.stopPropagation();
-                this.initiateProtectionResponse('右键菜单使用');
-                return false;
-            }
-        }, true);
-    }
+        <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">'contextmenu'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">detectionEnabled</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-c1">!</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">crashInitiated</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-en">preventDefault</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-en">stopPropagation</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">initiateProtectionResponse</span><span class="pl-kos">(</span><span class="pl-s">'右键菜单使用'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-k">return</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
+        <span class="pl-kos">}</span><span class="pl-kos">,</span> <span class="pl-c1">true</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    setupKeyboardDetection() {
-        if (!document || !document.addEventListener) return;
+    <span class="pl-en">setupKeyboardDetection</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-smi">document</span> <span class="pl-c1">||</span> <span class="pl-c1">!</span><span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-c1">addEventListener</span><span class="pl-kos">)</span> <span class="pl-k">return</span><span class="pl-kos">;</span>
         
-        document.addEventListener('keydown', (e) =&gt; {
-            if (!this.detectionEnabled || this.crashInitiated) return;
+        <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">'keydown'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">detectionEnabled</span> <span class="pl-c1">||</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">crashInitiated</span><span class="pl-kos">)</span> <span class="pl-k">return</span><span class="pl-kos">;</span>
             
-            if (e.keyCode === 123 || 
-                (e.ctrlKey &amp;&amp; e.shiftKey &amp;&amp; (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) ||
-                (e.ctrlKey &amp;&amp; e.keyCode === 85)) {
-                e.preventDefault();
-                e.stopPropagation();
-                this.initiateProtectionResponse('开发者工具快捷键使用');
-                return false;
-            }
-        }, true);
-    }
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-c1">keyCode</span> <span class="pl-c1">===</span> <span class="pl-c1">123</span> <span class="pl-c1">||</span> 
+                <span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-c1">ctrlKey</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-c1">shiftKey</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-c1">keyCode</span> <span class="pl-c1">===</span> <span class="pl-c1">73</span> <span class="pl-c1">||</span> <span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-c1">keyCode</span> <span class="pl-c1">===</span> <span class="pl-c1">74</span> <span class="pl-c1">||</span> <span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-c1">keyCode</span> <span class="pl-c1">===</span> <span class="pl-c1">67</span><span class="pl-kos">)</span><span class="pl-kos">)</span> <span class="pl-c1">||</span>
+                <span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-c1">ctrlKey</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-c1">keyCode</span> <span class="pl-c1">===</span> <span class="pl-c1">85</span><span class="pl-kos">)</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-en">preventDefault</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-en">stopPropagation</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">initiateProtectionResponse</span><span class="pl-kos">(</span><span class="pl-s">'开发者工具快捷键使用'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-k">return</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
+        <span class="pl-kos">}</span><span class="pl-kos">,</span> <span class="pl-c1">true</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    checkIframe() {
-        if (window.top !== window.self &amp;&amp; this.detectionEnabled &amp;&amp; !this.crashInitiated) {
-            this.initiateProtectionResponse('iframe嵌入检测');
-            return true;
-        }
-        return false;
-    }
+    <span class="pl-en">checkIframe</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">window</span><span class="pl-kos">.</span><span class="pl-c1">top</span> <span class="pl-c1">!==</span> <span class="pl-smi">window</span><span class="pl-kos">.</span><span class="pl-c1">self</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">detectionEnabled</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-c1">!</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">crashInitiated</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">initiateProtectionResponse</span><span class="pl-kos">(</span><span class="pl-s">'iframe嵌入检测'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">return</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+        <span class="pl-k">return</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    startContinuousMonitoring() {
-        if (this.monitoringInterval) {
-            clearInterval(this.monitoringInterval);
-        }
+    <span class="pl-en">startContinuousMonitoring</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">monitoringInterval</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-en">clearInterval</span><span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">monitoringInterval</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        this.monitoringInterval = setInterval(() =&gt; {
-            if (this.detectionEnabled &amp;&amp; !this.crashInitiated) {
-                this.checkDevToolsAdvanced();
-                this.checkIframe();
-            }
-        }, 500);
-    }
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">monitoringInterval</span> <span class="pl-c1">=</span> <span class="pl-en">setInterval</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">detectionEnabled</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-c1">!</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">crashInitiated</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">checkDevToolsAdvanced</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">checkIframe</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
+        <span class="pl-kos">}</span><span class="pl-kos">,</span> <span class="pl-c1">500</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    initializeAllDetections() {
-        this.setupRightClickDetection();
-        this.setupKeyboardDetection();
-        this.startContinuousMonitoring();
+    <span class="pl-en">initializeAllDetections</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">setupRightClickDetection</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">setupKeyboardDetection</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">startContinuousMonitoring</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
         
-        if (window.console) {
-            const methods = ['log', 'error', 'warn', 'info', 'debug', 'table', 'dir'];
-            methods.forEach((method) =&gt; {
-                if (console[method]) {
-                    const original = console[method];
-                    console[method] = (...args) =&gt; {
-                        if (this.detectionEnabled &amp;&amp; !this.crashInitiated) {
-                            this.initiateProtectionResponse('控制台使用');
-                        }
-                        return original.apply(this, args);
-                    };
-                }
-            });
-        }
-    }
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">window</span><span class="pl-kos">.</span><span class="pl-c1">console</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">const</span> <span class="pl-s1">methods</span> <span class="pl-c1">=</span> <span class="pl-kos">[</span><span class="pl-s">'log'</span><span class="pl-kos">,</span> <span class="pl-s">'error'</span><span class="pl-kos">,</span> <span class="pl-s">'warn'</span><span class="pl-kos">,</span> <span class="pl-s">'info'</span><span class="pl-kos">,</span> <span class="pl-s">'debug'</span><span class="pl-kos">,</span> <span class="pl-s">'table'</span><span class="pl-kos">,</span> <span class="pl-s">'dir'</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+            <span class="pl-s1">methods</span><span class="pl-kos">.</span><span class="pl-en">forEach</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-s1">method</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">console</span><span class="pl-kos">[</span><span class="pl-s1">method</span><span class="pl-kos">]</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                    <span class="pl-k">const</span> <span class="pl-s1">original</span> <span class="pl-c1">=</span> <span class="pl-smi">console</span><span class="pl-kos">[</span><span class="pl-s1">method</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+                    <span class="pl-smi">console</span><span class="pl-kos">[</span><span class="pl-s1">method</span><span class="pl-kos">]</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span>...<span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">detectionEnabled</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-c1">!</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">crashInitiated</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">initiateProtectionResponse</span><span class="pl-kos">(</span><span class="pl-s">'控制台使用'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                        <span class="pl-kos">}</span>
+                        <span class="pl-k">return</span> <span class="pl-s1">original</span><span class="pl-kos">.</span><span class="pl-en">apply</span><span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">,</span> <span class="pl-s1">args</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span>
+            <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
 
-    enableNormalProtection() {
-        if (this.crashInitiated) return;
-        this.detectionEnabled = true;
-        this.protectionMode = 'normal';
-        this.initializeAllDetections();
-    }
+    <span class="pl-en">enableNormalProtection</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">crashInitiated</span><span class="pl-kos">)</span> <span class="pl-k">return</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">detectionEnabled</span> <span class="pl-c1">=</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">protectionMode</span> <span class="pl-c1">=</span> <span class="pl-s">'normal'</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">initializeAllDetections</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    enableSuperProtection() {
-        if (this.crashInitiated) return;
-        this.detectionEnabled = true;
-        this.protectionMode = 'super';
-        this.initializeAllDetections();
-    }
+    <span class="pl-en">enableSuperProtection</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">crashInitiated</span><span class="pl-kos">)</span> <span class="pl-k">return</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">detectionEnabled</span> <span class="pl-c1">=</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">protectionMode</span> <span class="pl-c1">=</span> <span class="pl-s">'super'</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">initializeAllDetections</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    disableProtection() {
-        this.detectionEnabled = false;
-        this.protectionMode = 'none';
-        if (this.monitoringInterval) {
-            clearInterval(this.monitoringInterval);
-            this.monitoringInterval = null;
-        }
-    }
+    <span class="pl-en">disableProtection</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">detectionEnabled</span> <span class="pl-c1">=</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">protectionMode</span> <span class="pl-c1">=</span> <span class="pl-s">'none'</span><span class="pl-kos">;</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">monitoringInterval</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-en">clearInterval</span><span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">monitoringInterval</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">monitoringInterval</span> <span class="pl-c1">=</span> <span class="pl-c1">null</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
 
-    forceCrash() {
-        this.initiateCrash('手动触发');
-    }
+    <span class="pl-en">forceCrash</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">initiateCrash</span><span class="pl-kos">(</span><span class="pl-s">'手动触发'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    checkStatus() {
-        if (this.crashInitiated) {
-            return this.protectionMode === 'super' ? '已崩溃' : '已刷新';
-        } else if (this.detectionEnabled) {
-            return '监控中 - ' + (this.protectionMode === 'super' ? '超级模式' : '一般模式');
-        } else {
-            return '已关闭';
-        }
-    }
+    <span class="pl-en">checkStatus</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">crashInitiated</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">protectionMode</span> <span class="pl-c1">===</span> <span class="pl-s">'super'</span> ? <span class="pl-s">'已崩溃'</span> : <span class="pl-s">'已刷新'</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span> <span class="pl-k">else</span> <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">detectionEnabled</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">return</span> <span class="pl-s">'监控中 - '</span> <span class="pl-c1">+</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">protectionMode</span> <span class="pl-c1">===</span> <span class="pl-s">'super'</span> ? <span class="pl-s">'超级模式'</span> : <span class="pl-s">'一般模式'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span> <span class="pl-k">else</span> <span class="pl-kos">{</span>
+            <span class="pl-k">return</span> <span class="pl-s">'已关闭'</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
 
-    checkDevTools() {
-        return this.checkDevToolsAdvanced();
-    }
+    <span class="pl-en">checkDevTools</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">checkDevToolsAdvanced</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
 
-    getProtectionMode() {
-        return this.protectionMode === 'super' ? '超级保护模式' : 
-               this.protectionMode === 'normal' ? '一般保护模式' : '未启用';
-    }
-}
+    <span class="pl-en">getProtectionMode</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">protectionMode</span> <span class="pl-c1">===</span> <span class="pl-s">'super'</span> ? <span class="pl-s">'超级保护模式'</span> : 
+               <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">protectionMode</span> <span class="pl-c1">===</span> <span class="pl-s">'normal'</span> ? <span class="pl-s">'一般保护模式'</span> : <span class="pl-s">'未启用'</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span>
 
-Scratch.extensions.register(new MorganSecurityV2());
-</code></pre></div>
+<span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">extensions</span><span class="pl-kos">.</span><span class="pl-en">register</span><span class="pl-kos">(</span><span class="pl-k">new</span> <span class="pl-v">MorganSecurityV2</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
