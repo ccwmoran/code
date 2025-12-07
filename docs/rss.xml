@@ -1,5 +1,741 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>慕然科技Scratch积木扩展库</title><link>https://ccwmoran.github.io/code</link><description>慕然科技官网https://ccwmoran.github.io</description><copyright>慕然科技Scratch积木扩展库</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg</url><title>avatar</title><link>https://ccwmoran.github.io/code</link></image><lastBuildDate>Mon, 01 Dec 2025 14:45:09 +0000</lastBuildDate><managingEditor>慕然科技Scratch积木扩展库</managingEditor><ttl>60</ttl><webMaster>慕然科技Scratch积木扩展库</webMaster><item><title>慕然科技的积木隐藏</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-ji-mu-yin-cang.html</link><description>&gt; 隐藏编辑器中所有积木
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>慕然科技Scratch积木扩展库</title><link>https://ccwmoran.github.io/code</link><description>慕然科技官网https://ccwmoran.github.io</description><copyright>慕然科技Scratch积木扩展库</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg</url><title>avatar</title><link>https://ccwmoran.github.io/code</link></image><lastBuildDate>Sun, 07 Dec 2025 13:09:31 +0000</lastBuildDate><managingEditor>慕然科技Scratch积木扩展库</managingEditor><ttl>60</ttl><webMaster>慕然科技Scratch积木扩展库</webMaster><item><title>慕然科技的灵动岛</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-ling-dong-dao.html</link><description>```js
+// 慕然科技的灵动岛 - Scratch 3.0扩展
+// 扩展ID: moranldd
+// 扩展名称: 慕然科技的灵动岛
+// 文档: https://ccwmoran.github.io/code/
+
+class MoranDynamicIslandExtension {
+    constructor() {
+        this.islandElement = null;
+        this.islandVisible = true;
+        this.currentState = 'compact'; // minimized, compact, expanded
+        this.activities = [];
+        this.currentActivityIndex = 0;
+        
+        // 默认样式配置 - 精确匹配iPhone灵动岛
+        this.config = {
+            position: { top: '15px', left: '50%' },
+            colors: {
+                background: 'rgba(28, 28, 30, 0.95)', // iOS深色背景
+                text: '#FFFFFF',
+                accent: '#0A84FF', // iOS系统蓝色
+                progress: '#32D74B' // iOS绿色
+            },
+            dimensions: {
+                minimized: { width: '40px', height: '40px', borderRadius: '20px' },
+                compact: { width: '158px', height: '37px', borderRadius: '18.5px' },
+                expanded: { width: '320px', minHeight: '180px', borderRadius: '22px' }
+            },
+            typography: {
+                fontFamily: '-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif',
+                fontSize: { small: '13px', medium: '15px', large: '17px' },
+                fontWeight: { regular: '400', semibold: '600', bold: '700' }
+            }
+        };
+        
+        // 圆形进度条配置
+        this.circularProgress = {
+            value: 0,
+            size: 36,
+            strokeWidth: 3,
+            radius: 16
+        };
+        
+        this.init();
+    }
+
+    getInfo() {
+        return {
+            id: 'moranldd',
+            name: '慕然科技的灵动岛',
+            color: '#1C1C1E',
+            docsURI: 'https://ccwmoran.github.io/code/',
+            blocks: [
+                // 基础控制
+                {
+                    opcode: 'showIsland',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '显示灵动岛'
+                },
+                {
+                    opcode: 'hideIsland',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '隐藏灵动岛'
+                },
+                {
+                    opcode: 'setState',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '设置为[STATE]状态',
+                    arguments: {
+                        STATE: {
+                            type: Scratch.ArgumentType.STRING,
+                            menu: 'stateMenu',
+                            defaultValue: 'compact'
+                        }
+                    }
+                },
+                
+                // 内容管理
+                {
+                    opcode: 'setContent',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '设置内容 标题:[TITLE] 副标题:[SUBTITLE]',
+                    arguments: {
+                        TITLE: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '灵动岛'
+                        },
+                        SUBTITLE: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '慕然科技'
+                        }
+                    }
+                },
+                {
+                    opcode: 'setIcon',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '设置图标[ICON]',
+                    arguments: {
+                        ICON: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '●'
+                        }
+                    }
+                },
+                {
+                    opcode: 'setProgress',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '设置圆形进度[PERCENT]%',
+                    arguments: {
+                        PERCENT: {
+                            type: Scratch.ArgumentType.NUMBER,
+                            defaultValue: 50
+                        }
+                    }
+                },
+                
+                // 活动管理
+                {
+                    opcode: 'addActivity',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '添加活动 标题:[TITLE]',
+                    arguments: {
+                        TITLE: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '新活动'
+                        }
+                    }
+                },
+                {
+                    opcode: 'nextActivity',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '切换到下一个活动'
+                },
+                {
+                    opcode: 'clearActivities',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '清空所有活动'
+                },
+                
+                // 样式定制
+                {
+                    opcode: 'setPosition',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '设置位置 X:[X]% Y:[Y]px',
+                    arguments: {
+                        X: {
+                            type: Scratch.ArgumentType.NUMBER,
+                            defaultValue: 50
+                        },
+                        Y: {
+                            type: Scratch.ArgumentType.NUMBER,
+                            defaultValue: 15
+                        }
+                    }
+                },
+                {
+                    opcode: 'setAccentColor',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '设置强调色[COLOR]',
+                    arguments: {
+                        COLOR: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '#0A84FF'
+                        }
+                    }
+                },
+                
+                // 重置功能
+                {
+                    opcode: 'resetAll',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '重置所有设置'
+                },
+                
+                // 事件与报告
+                {
+                    opcode: 'whenClicked',
+                    blockType: Scratch.BlockType.HAT,
+                    text: '当灵动岛被点击时',
+                    isEdgeActivated: false
+                },
+                {
+                    opcode: 'whenStateChanged',
+                    blockType: Scratch.BlockType.HAT,
+                    text: '当状态改变时',
+                    isEdgeActivated: true
+                },
+                {
+                    opcode: 'getCurrentState',
+                    blockType: Scratch.BlockType.REPORTER,
+                    text: '当前状态'
+                },
+                {
+                    opcode: 'getActivityCount',
+                    blockType: Scratch.BlockType.REPORTER,
+                    text: '活动数量'
+                },
+                {
+                    opcode: 'isVisible',
+                    blockType: Scratch.BlockType.BOOLEAN,
+                    text: '是否显示？'
+                }
+            ],
+            menus: {
+                stateMenu: {
+                    acceptReporters: true,
+                    items: [
+                        { text: '最小型', value: 'minimized' },
+                        { text: '紧凑型', value: 'compact' },
+                        { text: '扩展型', value: 'expanded' }
+                    ]
+                }
+            }
+        };
+    }
+
+    // 初始化灵动岛
+    init() {
+        if (typeof document === 'undefined') return;
+        
+        // 移除已存在的元素
+        const existing = document.getElementById('moran-dynamic-island');
+        if (existing) existing.remove();
+        
+        // 创建主容器
+        this.islandElement = document.createElement('div');
+        this.islandElement.id = 'moran-dynamic-island';
+        
+        // 应用基础样式
+        this.applyBaseStyles();
+        
+        // 添加事件监听
+        this.setupEventListeners();
+        
+        // 添加到页面
+        document.body.appendChild(this.islandElement);
+        
+        // 初始内容
+        this.activities = [{
+            id: 'default',
+            title: '灵动岛',
+            subtitle: '慕然科技',
+            icon: '●',
+            progress: 0
+        }];
+        
+        this.updateDisplay();
+    }
+
+    // 应用基础样式
+    applyBaseStyles() {
+        this.islandElement.style.cssText = `
+            position: fixed;
+            z-index: 10000;
+            transform: translateX(-50%);
+            top: ${this.config.position.top};
+            left: ${this.config.position.left};
+            user-select: none;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        `;
+    }
+
+    // 设置事件监听
+    setupEventListeners() {
+        let touchStartTime = 0;
+        let touchStartX = 0;
+        let isDragging = false;
+        
+        // 触摸事件
+        this.islandElement.addEventListener('touchstart', (e) =&gt; {
+            touchStartTime = Date.now();
+            touchStartX = e.touches[0].clientX;
+            isDragging = false;
+        });
+        
+        this.islandElement.addEventListener('touchmove', (e) =&gt; {
+            const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
+            if (deltaX &gt; 10) isDragging = true;
+        });
+        
+        this.islandElement.addEventListener('touchend', (e) =&gt; {
+            const touchDuration = Date.now() - touchStartTime;
+            const deltaX = e.changedTouches[0].clientX - touchStartX;
+            
+            if (isDragging &amp;&amp; Math.abs(deltaX) &gt; 30) {
+                // 滑动切换活动
+                this.nextActivity();
+            } else if (touchDuration &gt; 500) {
+                // 长按切换状态
+                this.toggleState();
+            } else if (!isDragging) {
+                // 点击事件
+                this.handleClick();
+            }
+        });
+        
+        // 鼠标事件
+        this.islandElement.addEventListener('mousedown', (e) =&gt; {
+            touchStartTime = Date.now();
+            touchStartX = e.clientX;
+            isDragging = false;
+        });
+        
+        this.islandElement.addEventListener('mousemove', (e) =&gt; {
+            if (!touchStartX) return;
+            const deltaX = Math.abs(e.clientX - touchStartX);
+            if (deltaX &gt; 10) isDragging = true;
+        });
+        
+        this.islandElement.addEventListener('mouseup', (e) =&gt; {
+            const clickDuration = Date.now() - touchStartTime;
+            const deltaX = e.clientX - touchStartX;
+            
+            if (isDragging &amp;&amp; Math.abs(deltaX) &gt; 30) {
+                this.nextActivity();
+            } else if (clickDuration &gt; 500) {
+                this.toggleState();
+            } else if (!isDragging) {
+                this.handleClick();
+            }
+            
+            touchStartX = 0;
+        });
+    }
+
+    // 切换状态
+    toggleState() {
+        const states = ['minimized', 'compact', 'expanded'];
+        const currentIndex = states.indexOf(this.currentState);
+        const nextIndex = (currentIndex + 1) % states.length;
+        
+        this.setState({ STATE: states[nextIndex] });
+        Scratch.vm.runtime.startHats('moranldd_whenStateChanged');
+    }
+
+    // 处理点击
+    handleClick() {
+        Scratch.vm.runtime.startHats('moranldd_whenClicked');
+    }
+
+    // 更新显示
+    updateDisplay() {
+        if (!this.islandElement || this.activities.length === 0) return;
+        
+        const activity = this.activities[this.currentActivityIndex];
+        
+        // 根据状态渲染
+        switch (this.currentState) {
+            case 'minimized':
+                this.renderMinimizedView(activity);
+                break;
+            case 'compact':
+                this.renderCompactView(activity);
+                break;
+            case 'expanded':
+                this.renderExpandedView(activity);
+                break;
+        }
+    }
+
+    // 渲染最小型视图
+    renderMinimizedView(activity) {
+        const dim = this.config.dimensions.minimized;
+        const progress = activity.progress || 0;
+        
+        // 创建圆形进度条SVG
+        const circumference = 2 * Math.PI * this.circularProgress.radius;
+        const offset = circumference - (progress / 100) * circumference;
+        
+        const progressSVG = progress &gt; 0 ? `
+            &lt;svg width='${this.circularProgress.size}' height='${this.circularProgress.size}' 
+                 style='position: absolute; top: 0; left: 0;'&gt;
+                &lt;circle cx='${this.circularProgress.size/2}' cy='${this.circularProgress.size/2}' 
+                        r='${this.circularProgress.radius}' 
+                        fill='none' 
+                        stroke='rgba(255,255,255,0.2)' 
+                        stroke-width='${this.circularProgress.strokeWidth}'/&gt;
+                &lt;circle cx='${this.circularProgress.size/2}' cy='${this.circularProgress.size/2}' 
+                        r='${this.circularProgress.radius}' 
+                        fill='none' 
+                        stroke='${this.config.colors.progress}' 
+                        stroke-width='${this.circularProgress.strokeWidth}'
+                        stroke-dasharray='${circumference}'
+                        stroke-dashoffset='${offset}'
+                        transform='rotate(-90 ${this.circularProgress.size/2} ${this.circularProgress.size/2})'
+                        stroke-linecap='round'/&gt;
+            &lt;/svg&gt;
+        ` : '';
+        
+        this.islandElement.innerHTML = `
+            &lt;div style='
+                width: ${dim.width};
+                height: ${dim.height};
+                border-radius: ${dim.borderRadius};
+                background: ${this.config.colors.background};
+                backdrop-filter: blur(20px) saturate(180%);
+                -webkit-backdrop-filter: blur(20px) saturate(180%);
+                border: 0.5px solid rgba(255, 255, 255, 0.08);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                overflow: hidden;
+                box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+            '&gt;
+                ${progressSVG}
+                &lt;span style='
+                    color: ${this.config.colors.text};
+                    font-size: 16px;
+                    font-weight: 600;
+                    z-index: 1;
+                '&gt;${activity.icon || '●'}&lt;/span&gt;
+            &lt;/div&gt;
+        `;
+    }
+
+    // 渲染紧凑型视图
+    renderCompactView(activity) {
+        const dim = this.config.dimensions.compact;
+        
+        this.islandElement.innerHTML = `
+            &lt;div style='
+                width: ${dim.width};
+                height: ${dim.height};
+                border-radius: ${dim.borderRadius};
+                background: ${this.config.colors.background};
+                backdrop-filter: blur(30px) saturate(180%);
+                -webkit-backdrop-filter: blur(30px) saturate(180%);
+                border: 0.5px solid rgba(255, 255, 255, 0.1);
+                display: flex;
+                align-items: center;
+                padding: 0 16px;
+                gap: 12px;
+                box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);
+                cursor: pointer;
+                transition: all 0.2s ease;
+            '&gt;
+                &lt;span style='
+                    color: ${this.config.colors.text};
+                    font-size: 16px;
+                    min-width: 16px;
+                '&gt;${activity.icon || '●'}&lt;/span&gt;
+                
+                &lt;div style='flex: 1; overflow: hidden;'&gt;
+                    &lt;div style='
+                        color: ${this.config.colors.text};
+                        font-size: 13px;
+                        font-weight: 600;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        font-family: ${this.config.typography.fontFamily};
+                    '&gt;${activity.title}&lt;/div&gt;
+                    
+                    ${activity.subtitle ? `
+                        &lt;div style='
+                            color: rgba(255, 255, 255, 0.7);
+                            font-size: 11px;
+                            font-weight: 400;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            margin-top: 2px;
+                            font-family: ${this.config.typography.fontFamily};
+                        '&gt;${activity.subtitle}&lt;/div&gt;
+                    ` : ''}
+                &lt;/div&gt;
+                
+                ${this.activities.length &gt; 1 ? `
+                    &lt;div style='
+                        display: flex;
+                        gap: 4px;
+                    '&gt;
+                        ${this.activities.map((_, i) =&gt; `
+                            &lt;div style='
+                                width: 4px;
+                                height: 4px;
+                                border-radius: 2px;
+                                background: ${i === this.currentActivityIndex ? this.config.colors.accent : 'rgba(255,255,255,0.2)'};
+                            '&gt;&lt;/div&gt;
+                        `).join('')}
+                    &lt;/div&gt;
+                ` : ''}
+            &lt;/div&gt;
+        `;
+        
+        // 添加悬停效果
+        const container = this.islandElement.firstChild;
+        container.onmouseenter = () =&gt; {
+            container.style.transform = 'scale(1.02)';
+            container.style.boxShadow = '0 8px 35px rgba(0, 0, 0, 0.35)';
+        };
+        container.onmouseleave = () =&gt; {
+            container.style.transform = 'scale(1)';
+            container.style.boxShadow = '0 6px 30px rgba(0, 0, 0, 0.3)';
+        };
+    }
+
+    // 渲染扩展型视图
+    renderExpandedView(activity) {
+        const dim = this.config.dimensions.expanded;
+        const progress = activity.progress || 0;
+        
+        this.islandElement.innerHTML = `
+            &lt;div style='
+                width: ${dim.width};
+                min-height: ${dim.minHeight};
+                border-radius: ${dim.borderRadius};
+                background: ${this.config.colors.background};
+                backdrop-filter: blur(40px) saturate(180%);
+                -webkit-backdrop-filter: blur(40px) saturate(180%);
+                border: 0.5px solid rgba(255, 255, 255, 0.15);
+                padding: 20px;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+                cursor: pointer;
+            '&gt;
+                &lt;div style='
+                    color: ${this.config.colors.text};
+                    text-align: center;
+                    font-family: ${this.config.typography.fontFamily};
+                '&gt;
+                    &lt;div style='font-size: 24px; margin-bottom: 12px;'&gt;
+                        ${activity.icon || '●'}
+                    &lt;/div&gt;
+                    
+                    &lt;div style='
+                        font-size: 17px;
+                        font-weight: 600;
+                        margin-bottom: 6px;
+                    '&gt;${activity.title}&lt;/div&gt;
+                    
+                    ${activity.subtitle ? `
+                        &lt;div style='
+                            font-size: 13px;
+                            color: rgba(255, 255, 255, 0.7);
+                            margin-bottom: 20px;
+                        '&gt;${activity.subtitle}&lt;/div&gt;
+                    ` : ''}
+                    
+                    ${progress &gt; 0 ? `
+                        &lt;div style='margin: 25px 0;'&gt;
+                            &lt;div style='
+                                font-size: 21px;
+                                font-weight: 700;
+                                color: ${this.config.colors.progress};
+                                margin-bottom: 8px;
+                            '&gt;${progress}%&lt;/div&gt;
+                            
+                            &lt;div style='
+                                width: 100px;
+                                height: 100px;
+                                margin: 0 auto;
+                                position: relative;
+                            '&gt;
+                                &lt;svg width='100' height='100'&gt;
+                                    &lt;circle cx='50' cy='50' r='40' 
+                                            fill='none' 
+                                            stroke='rgba(255,255,255,0.1)' 
+                                            stroke-width='8'/&gt;
+                                    &lt;circle cx='50' cy='50' r='40' 
+                                            fill='none' 
+                                            stroke='${this.config.colors.progress}' 
+                                            stroke-width='8'
+                                            stroke-dasharray='251.2'
+                                            stroke-dashoffset='${251.2 - (progress * 2.512)}'
+                                            transform='rotate(-90 50 50)'
+                                            stroke-linecap='round'/&gt;
+                                &lt;/svg&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                    ` : ''}
+                    
+                    &lt;div style='
+                        font-size: 11px;
+                        color: rgba(255, 255, 255, 0.5);
+                        margin-top: 20px;
+                        padding-top: 15px;
+                        border-top: 0.5px solid rgba(255, 255, 255, 0.1);
+                    '&gt;长按返回 • 滑动切换&lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        `;
+    }
+
+    // ========== 积木实现 ==========
+    
+    showIsland() {
+        if (this.islandElement) {
+            this.islandElement.style.display = 'block';
+            this.islandVisible = true;
+        }
+    }
+
+    hideIsland() {
+        if (this.islandElement) {
+            this.islandElement.style.display = 'none';
+            this.islandVisible = false;
+        }
+    }
+
+    setState(args) {
+        this.currentState = args.STATE;
+        this.updateDisplay();
+        return Scratch.vm.runtime.startHats('moranldd_whenStateChanged');
+    }
+
+    setContent(args) {
+        if (this.activities.length &gt; 0) {
+            this.activities[this.currentActivityIndex].title = args.TITLE;
+            this.activities[this.currentActivityIndex].subtitle = args.SUBTITLE;
+            this.updateDisplay();
+        }
+    }
+
+    setIcon(args) {
+        if (this.activities.length &gt; 0) {
+            this.activities[this.currentActivityIndex].icon = args.ICON;
+            this.updateDisplay();
+        }
+    }
+
+    setProgress(args) {
+        const percent = Math.max(0, Math.min(100, args.PERCENT));
+        if (this.activities.length &gt; 0) {
+            this.activities[this.currentActivityIndex].progress = percent;
+            this.circularProgress.value = percent;
+            this.updateDisplay();
+        }
+    }
+
+    addActivity(args) {
+        const newActivity = {
+            id: `activity_${Date.now()}`,
+            title: args.TITLE,
+            subtitle: '',
+            icon: '●',
+            progress: 0
+        };
+        
+        this.activities.push(newActivity);
+        if (this.activities.length &gt; 3) this.activities.shift();
+        this.updateDisplay();
+    }
+
+    nextActivity() {
+        if (this.activities.length &lt;= 1) return;
+        
+        this.currentActivityIndex = (this.currentActivityIndex + 1) % this.activities.length;
+        this.updateDisplay();
+    }
+
+    clearActivities() {
+        this.activities = [{
+            id: 'default',
+            title: '灵动岛',
+            subtitle: '慕然科技',
+            icon: '●',
+            progress: 0
+        }];
+        this.currentActivityIndex = 0;
+        this.updateDisplay();
+    }
+
+    setPosition(args) {
+        if (this.islandElement) {
+            this.config.position.left = `${args.X}%`;
+            this.config.position.top = `${args.Y}px`;
+            this.applyBaseStyles();
+        }
+    }
+
+    setAccentColor(args) {
+        this.config.colors.accent = args.COLOR;
+        this.updateDisplay();
+    }
+
+    resetAll() {
+        // 重置所有配置
+        this.config = {
+            position: { top: '15px', left: '50%' },
+            colors: {
+                background: 'rgba(28, 28, 30, 0.95)',
+                text: '#FFFFFF',
+                accent: '#0A84FF',
+                progress: '#32D74B'
+            },
+            dimensions: {
+                minimized: { width: '40px', height: '40px', borderRadius: '20px' },
+                compact: { width: '158px', height: '37px', borderRadius: '18.5px' },
+                expanded: { width: '320px', minHeight: '180px', borderRadius: '22px' }
+            },
+            typography: {
+                fontFamily: '-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif',
+                fontSize: { small: '13px', medium: '15px', large: '17px' },
+                fontWeight: { regular: '400', semibold: '600', bold: '700' }
+            }
+        };
+        
+        this.circularProgress = {
+            value: 0,
+            size: 36,
+            strokeWidth: 3,
+            radius: 16
+        };
+        
+        this.currentState = 'compact';
+        this.clearActivities();
+        this.applyBaseStyles();
+        this.updateDisplay();
+    }
+
+    whenClicked() {
+        return false; // Hat积木，由事件触发
+    }
+
+    whenStateChanged() {
+        return false; // Hat积木，由事件触发
+    }
+
+    getCurrentState() {
+        return this.currentState;
+    }
+
+    getActivityCount() {
+        return this.activities.length;
+    }
+
+    isVisible() {
+        return this.islandVisible;
+    }
+}
+
+// 注册扩展
+if (typeof Scratch !== 'undefined' &amp;&amp; Scratch.extensions) {
+    Scratch.extensions.register(new MoranDynamicIslandExtension());
+}
+```。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-ling-dong-dao.html</guid><pubDate>Sun, 07 Dec 2025 13:09:01 +0000</pubDate></item><item><title>慕然科技的积木隐藏</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-ji-mu-yin-cang.html</link><description>&gt; 隐藏编辑器中所有积木
 `慕然科技官网ccwmoran.github.io`
 ```
 (function(Scratch) {

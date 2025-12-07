@@ -1,0 +1,2458 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script src='https://blog.meekdai.com/Gmeek/plugins/GmeekBSZ.js'></script>
+    <link rel="icon" href="https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="```js
+// 慕然科技的灵动岛 - Scratch 3.0扩展
+// 扩展ID: moranldd
+// 扩展名称: 慕然科技的灵动岛
+// 文档: https://ccwmoran.github.io/code/
+
+class MoranDynamicIslandExtension {
+    constructor() {
+        this.islandElement = null;
+        this.islandVisible = true;
+        this.currentState = 'compact'; // minimized, compact, expanded
+        this.activities = [];
+        this.currentActivityIndex = 0;
+        
+        // 默认样式配置 - 精确匹配iPhone灵动岛
+        this.config = {
+            position: { top: '15px', left: '50%' },
+            colors: {
+                background: 'rgba(28, 28, 30, 0.95)', // iOS深色背景
+                text: '#FFFFFF',
+                accent: '#0A84FF', // iOS系统蓝色
+                progress: '#32D74B' // iOS绿色
+            },
+            dimensions: {
+                minimized: { width: '40px', height: '40px', borderRadius: '20px' },
+                compact: { width: '158px', height: '37px', borderRadius: '18.5px' },
+                expanded: { width: '320px', minHeight: '180px', borderRadius: '22px' }
+            },
+            typography: {
+                fontFamily: '-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif',
+                fontSize: { small: '13px', medium: '15px', large: '17px' },
+                fontWeight: { regular: '400', semibold: '600', bold: '700' }
+            }
+        };
+        
+        // 圆形进度条配置
+        this.circularProgress = {
+            value: 0,
+            size: 36,
+            strokeWidth: 3,
+            radius: 16
+        };
+        
+        this.init();
+    }
+
+    getInfo() {
+        return {
+            id: 'moranldd',
+            name: '慕然科技的灵动岛',
+            color: '#1C1C1E',
+            docsURI: 'https://ccwmoran.github.io/code/',
+            blocks: [
+                // 基础控制
+                {
+                    opcode: 'showIsland',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '显示灵动岛'
+                },
+                {
+                    opcode: 'hideIsland',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '隐藏灵动岛'
+                },
+                {
+                    opcode: 'setState',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '设置为[STATE]状态',
+                    arguments: {
+                        STATE: {
+                            type: Scratch.ArgumentType.STRING,
+                            menu: 'stateMenu',
+                            defaultValue: 'compact'
+                        }
+                    }
+                },
+                
+                // 内容管理
+                {
+                    opcode: 'setContent',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '设置内容 标题:[TITLE] 副标题:[SUBTITLE]',
+                    arguments: {
+                        TITLE: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '灵动岛'
+                        },
+                        SUBTITLE: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '慕然科技'
+                        }
+                    }
+                },
+                {
+                    opcode: 'setIcon',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '设置图标[ICON]',
+                    arguments: {
+                        ICON: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '●'
+                        }
+                    }
+                },
+                {
+                    opcode: 'setProgress',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '设置圆形进度[PERCENT]%',
+                    arguments: {
+                        PERCENT: {
+                            type: Scratch.ArgumentType.NUMBER,
+                            defaultValue: 50
+                        }
+                    }
+                },
+                
+                // 活动管理
+                {
+                    opcode: 'addActivity',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '添加活动 标题:[TITLE]',
+                    arguments: {
+                        TITLE: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '新活动'
+                        }
+                    }
+                },
+                {
+                    opcode: 'nextActivity',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '切换到下一个活动'
+                },
+                {
+                    opcode: 'clearActivities',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '清空所有活动'
+                },
+                
+                // 样式定制
+                {
+                    opcode: 'setPosition',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '设置位置 X:[X]% Y:[Y]px',
+                    arguments: {
+                        X: {
+                            type: Scratch.ArgumentType.NUMBER,
+                            defaultValue: 50
+                        },
+                        Y: {
+                            type: Scratch.ArgumentType.NUMBER,
+                            defaultValue: 15
+                        }
+                    }
+                },
+                {
+                    opcode: 'setAccentColor',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '设置强调色[COLOR]',
+                    arguments: {
+                        COLOR: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '#0A84FF'
+                        }
+                    }
+                },
+                
+                // 重置功能
+                {
+                    opcode: 'resetAll',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '重置所有设置'
+                },
+                
+                // 事件与报告
+                {
+                    opcode: 'whenClicked',
+                    blockType: Scratch.BlockType.HAT,
+                    text: '当灵动岛被点击时',
+                    isEdgeActivated: false
+                },
+                {
+                    opcode: 'whenStateChanged',
+                    blockType: Scratch.BlockType.HAT,
+                    text: '当状态改变时',
+                    isEdgeActivated: true
+                },
+                {
+                    opcode: 'getCurrentState',
+                    blockType: Scratch.BlockType.REPORTER,
+                    text: '当前状态'
+                },
+                {
+                    opcode: 'getActivityCount',
+                    blockType: Scratch.BlockType.REPORTER,
+                    text: '活动数量'
+                },
+                {
+                    opcode: 'isVisible',
+                    blockType: Scratch.BlockType.BOOLEAN,
+                    text: '是否显示？'
+                }
+            ],
+            menus: {
+                stateMenu: {
+                    acceptReporters: true,
+                    items: [
+                        { text: '最小型', value: 'minimized' },
+                        { text: '紧凑型', value: 'compact' },
+                        { text: '扩展型', value: 'expanded' }
+                    ]
+                }
+            }
+        };
+    }
+
+    // 初始化灵动岛
+    init() {
+        if (typeof document === 'undefined') return;
+        
+        // 移除已存在的元素
+        const existing = document.getElementById('moran-dynamic-island');
+        if (existing) existing.remove();
+        
+        // 创建主容器
+        this.islandElement = document.createElement('div');
+        this.islandElement.id = 'moran-dynamic-island';
+        
+        // 应用基础样式
+        this.applyBaseStyles();
+        
+        // 添加事件监听
+        this.setupEventListeners();
+        
+        // 添加到页面
+        document.body.appendChild(this.islandElement);
+        
+        // 初始内容
+        this.activities = [{
+            id: 'default',
+            title: '灵动岛',
+            subtitle: '慕然科技',
+            icon: '●',
+            progress: 0
+        }];
+        
+        this.updateDisplay();
+    }
+
+    // 应用基础样式
+    applyBaseStyles() {
+        this.islandElement.style.cssText = `
+            position: fixed;
+            z-index: 10000;
+            transform: translateX(-50%);
+            top: ${this.config.position.top};
+            left: ${this.config.position.left};
+            user-select: none;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        `;
+    }
+
+    // 设置事件监听
+    setupEventListeners() {
+        let touchStartTime = 0;
+        let touchStartX = 0;
+        let isDragging = false;
+        
+        // 触摸事件
+        this.islandElement.addEventListener('touchstart', (e) => {
+            touchStartTime = Date.now();
+            touchStartX = e.touches[0].clientX;
+            isDragging = false;
+        });
+        
+        this.islandElement.addEventListener('touchmove', (e) => {
+            const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
+            if (deltaX > 10) isDragging = true;
+        });
+        
+        this.islandElement.addEventListener('touchend', (e) => {
+            const touchDuration = Date.now() - touchStartTime;
+            const deltaX = e.changedTouches[0].clientX - touchStartX;
+            
+            if (isDragging && Math.abs(deltaX) > 30) {
+                // 滑动切换活动
+                this.nextActivity();
+            } else if (touchDuration > 500) {
+                // 长按切换状态
+                this.toggleState();
+            } else if (!isDragging) {
+                // 点击事件
+                this.handleClick();
+            }
+        });
+        
+        // 鼠标事件
+        this.islandElement.addEventListener('mousedown', (e) => {
+            touchStartTime = Date.now();
+            touchStartX = e.clientX;
+            isDragging = false;
+        });
+        
+        this.islandElement.addEventListener('mousemove', (e) => {
+            if (!touchStartX) return;
+            const deltaX = Math.abs(e.clientX - touchStartX);
+            if (deltaX > 10) isDragging = true;
+        });
+        
+        this.islandElement.addEventListener('mouseup', (e) => {
+            const clickDuration = Date.now() - touchStartTime;
+            const deltaX = e.clientX - touchStartX;
+            
+            if (isDragging && Math.abs(deltaX) > 30) {
+                this.nextActivity();
+            } else if (clickDuration > 500) {
+                this.toggleState();
+            } else if (!isDragging) {
+                this.handleClick();
+            }
+            
+            touchStartX = 0;
+        });
+    }
+
+    // 切换状态
+    toggleState() {
+        const states = ['minimized', 'compact', 'expanded'];
+        const currentIndex = states.indexOf(this.currentState);
+        const nextIndex = (currentIndex + 1) % states.length;
+        
+        this.setState({ STATE: states[nextIndex] });
+        Scratch.vm.runtime.startHats('moranldd_whenStateChanged');
+    }
+
+    // 处理点击
+    handleClick() {
+        Scratch.vm.runtime.startHats('moranldd_whenClicked');
+    }
+
+    // 更新显示
+    updateDisplay() {
+        if (!this.islandElement || this.activities.length === 0) return;
+        
+        const activity = this.activities[this.currentActivityIndex];
+        
+        // 根据状态渲染
+        switch (this.currentState) {
+            case 'minimized':
+                this.renderMinimizedView(activity);
+                break;
+            case 'compact':
+                this.renderCompactView(activity);
+                break;
+            case 'expanded':
+                this.renderExpandedView(activity);
+                break;
+        }
+    }
+
+    // 渲染最小型视图
+    renderMinimizedView(activity) {
+        const dim = this.config.dimensions.minimized;
+        const progress = activity.progress || 0;
+        
+        // 创建圆形进度条SVG
+        const circumference = 2 * Math.PI * this.circularProgress.radius;
+        const offset = circumference - (progress / 100) * circumference;
+        
+        const progressSVG = progress > 0 ? `
+            <svg width='${this.circularProgress.size}' height='${this.circularProgress.size}' 
+                 style='position: absolute; top: 0; left: 0;'>
+                <circle cx='${this.circularProgress.size/2}' cy='${this.circularProgress.size/2}' 
+                        r='${this.circularProgress.radius}' 
+                        fill='none' 
+                        stroke='rgba(255,255,255,0.2)' 
+                        stroke-width='${this.circularProgress.strokeWidth}'/>
+                <circle cx='${this.circularProgress.size/2}' cy='${this.circularProgress.size/2}' 
+                        r='${this.circularProgress.radius}' 
+                        fill='none' 
+                        stroke='${this.config.colors.progress}' 
+                        stroke-width='${this.circularProgress.strokeWidth}'
+                        stroke-dasharray='${circumference}'
+                        stroke-dashoffset='${offset}'
+                        transform='rotate(-90 ${this.circularProgress.size/2} ${this.circularProgress.size/2})'
+                        stroke-linecap='round'/>
+            </svg>
+        ` : '';
+        
+        this.islandElement.innerHTML = `
+            <div style='
+                width: ${dim.width};
+                height: ${dim.height};
+                border-radius: ${dim.borderRadius};
+                background: ${this.config.colors.background};
+                backdrop-filter: blur(20px) saturate(180%);
+                -webkit-backdrop-filter: blur(20px) saturate(180%);
+                border: 0.5px solid rgba(255, 255, 255, 0.08);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                overflow: hidden;
+                box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+            '>
+                ${progressSVG}
+                <span style='
+                    color: ${this.config.colors.text};
+                    font-size: 16px;
+                    font-weight: 600;
+                    z-index: 1;
+                '>${activity.icon || '●'}</span>
+            </div>
+        `;
+    }
+
+    // 渲染紧凑型视图
+    renderCompactView(activity) {
+        const dim = this.config.dimensions.compact;
+        
+        this.islandElement.innerHTML = `
+            <div style='
+                width: ${dim.width};
+                height: ${dim.height};
+                border-radius: ${dim.borderRadius};
+                background: ${this.config.colors.background};
+                backdrop-filter: blur(30px) saturate(180%);
+                -webkit-backdrop-filter: blur(30px) saturate(180%);
+                border: 0.5px solid rgba(255, 255, 255, 0.1);
+                display: flex;
+                align-items: center;
+                padding: 0 16px;
+                gap: 12px;
+                box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);
+                cursor: pointer;
+                transition: all 0.2s ease;
+            '>
+                <span style='
+                    color: ${this.config.colors.text};
+                    font-size: 16px;
+                    min-width: 16px;
+                '>${activity.icon || '●'}</span>
+                
+                <div style='flex: 1; overflow: hidden;'>
+                    <div style='
+                        color: ${this.config.colors.text};
+                        font-size: 13px;
+                        font-weight: 600;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        font-family: ${this.config.typography.fontFamily};
+                    '>${activity.title}</div>
+                    
+                    ${activity.subtitle ? `
+                        <div style='
+                            color: rgba(255, 255, 255, 0.7);
+                            font-size: 11px;
+                            font-weight: 400;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            margin-top: 2px;
+                            font-family: ${this.config.typography.fontFamily};
+                        '>${activity.subtitle}</div>
+                    ` : ''}
+                </div>
+                
+                ${this.activities.length > 1 ? `
+                    <div style='
+                        display: flex;
+                        gap: 4px;
+                    '>
+                        ${this.activities.map((_, i) => `
+                            <div style='
+                                width: 4px;
+                                height: 4px;
+                                border-radius: 2px;
+                                background: ${i === this.currentActivityIndex ? this.config.colors.accent : 'rgba(255,255,255,0.2)'};
+                            '></div>
+                        `).join('')}
+                    </div>
+                ` : ''}
+            </div>
+        `;
+        
+        // 添加悬停效果
+        const container = this.islandElement.firstChild;
+        container.onmouseenter = () => {
+            container.style.transform = 'scale(1.02)';
+            container.style.boxShadow = '0 8px 35px rgba(0, 0, 0, 0.35)';
+        };
+        container.onmouseleave = () => {
+            container.style.transform = 'scale(1)';
+            container.style.boxShadow = '0 6px 30px rgba(0, 0, 0, 0.3)';
+        };
+    }
+
+    // 渲染扩展型视图
+    renderExpandedView(activity) {
+        const dim = this.config.dimensions.expanded;
+        const progress = activity.progress || 0;
+        
+        this.islandElement.innerHTML = `
+            <div style='
+                width: ${dim.width};
+                min-height: ${dim.minHeight};
+                border-radius: ${dim.borderRadius};
+                background: ${this.config.colors.background};
+                backdrop-filter: blur(40px) saturate(180%);
+                -webkit-backdrop-filter: blur(40px) saturate(180%);
+                border: 0.5px solid rgba(255, 255, 255, 0.15);
+                padding: 20px;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+                cursor: pointer;
+            '>
+                <div style='
+                    color: ${this.config.colors.text};
+                    text-align: center;
+                    font-family: ${this.config.typography.fontFamily};
+                '>
+                    <div style='font-size: 24px; margin-bottom: 12px;'>
+                        ${activity.icon || '●'}
+                    </div>
+                    
+                    <div style='
+                        font-size: 17px;
+                        font-weight: 600;
+                        margin-bottom: 6px;
+                    '>${activity.title}</div>
+                    
+                    ${activity.subtitle ? `
+                        <div style='
+                            font-size: 13px;
+                            color: rgba(255, 255, 255, 0.7);
+                            margin-bottom: 20px;
+                        '>${activity.subtitle}</div>
+                    ` : ''}
+                    
+                    ${progress > 0 ? `
+                        <div style='margin: 25px 0;'>
+                            <div style='
+                                font-size: 21px;
+                                font-weight: 700;
+                                color: ${this.config.colors.progress};
+                                margin-bottom: 8px;
+                            '>${progress}%</div>
+                            
+                            <div style='
+                                width: 100px;
+                                height: 100px;
+                                margin: 0 auto;
+                                position: relative;
+                            '>
+                                <svg width='100' height='100'>
+                                    <circle cx='50' cy='50' r='40' 
+                                            fill='none' 
+                                            stroke='rgba(255,255,255,0.1)' 
+                                            stroke-width='8'/>
+                                    <circle cx='50' cy='50' r='40' 
+                                            fill='none' 
+                                            stroke='${this.config.colors.progress}' 
+                                            stroke-width='8'
+                                            stroke-dasharray='251.2'
+                                            stroke-dashoffset='${251.2 - (progress * 2.512)}'
+                                            transform='rotate(-90 50 50)'
+                                            stroke-linecap='round'/>
+                                </svg>
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    <div style='
+                        font-size: 11px;
+                        color: rgba(255, 255, 255, 0.5);
+                        margin-top: 20px;
+                        padding-top: 15px;
+                        border-top: 0.5px solid rgba(255, 255, 255, 0.1);
+                    '>长按返回 • 滑动切换</div>
+                </div>
+            </div>
+        `;
+    }
+
+    // ========== 积木实现 ==========
+    
+    showIsland() {
+        if (this.islandElement) {
+            this.islandElement.style.display = 'block';
+            this.islandVisible = true;
+        }
+    }
+
+    hideIsland() {
+        if (this.islandElement) {
+            this.islandElement.style.display = 'none';
+            this.islandVisible = false;
+        }
+    }
+
+    setState(args) {
+        this.currentState = args.STATE;
+        this.updateDisplay();
+        return Scratch.vm.runtime.startHats('moranldd_whenStateChanged');
+    }
+
+    setContent(args) {
+        if (this.activities.length > 0) {
+            this.activities[this.currentActivityIndex].title = args.TITLE;
+            this.activities[this.currentActivityIndex].subtitle = args.SUBTITLE;
+            this.updateDisplay();
+        }
+    }
+
+    setIcon(args) {
+        if (this.activities.length > 0) {
+            this.activities[this.currentActivityIndex].icon = args.ICON;
+            this.updateDisplay();
+        }
+    }
+
+    setProgress(args) {
+        const percent = Math.max(0, Math.min(100, args.PERCENT));
+        if (this.activities.length > 0) {
+            this.activities[this.currentActivityIndex].progress = percent;
+            this.circularProgress.value = percent;
+            this.updateDisplay();
+        }
+    }
+
+    addActivity(args) {
+        const newActivity = {
+            id: `activity_${Date.now()}`,
+            title: args.TITLE,
+            subtitle: '',
+            icon: '●',
+            progress: 0
+        };
+        
+        this.activities.push(newActivity);
+        if (this.activities.length > 3) this.activities.shift();
+        this.updateDisplay();
+    }
+
+    nextActivity() {
+        if (this.activities.length <= 1) return;
+        
+        this.currentActivityIndex = (this.currentActivityIndex + 1) % this.activities.length;
+        this.updateDisplay();
+    }
+
+    clearActivities() {
+        this.activities = [{
+            id: 'default',
+            title: '灵动岛',
+            subtitle: '慕然科技',
+            icon: '●',
+            progress: 0
+        }];
+        this.currentActivityIndex = 0;
+        this.updateDisplay();
+    }
+
+    setPosition(args) {
+        if (this.islandElement) {
+            this.config.position.left = `${args.X}%`;
+            this.config.position.top = `${args.Y}px`;
+            this.applyBaseStyles();
+        }
+    }
+
+    setAccentColor(args) {
+        this.config.colors.accent = args.COLOR;
+        this.updateDisplay();
+    }
+
+    resetAll() {
+        // 重置所有配置
+        this.config = {
+            position: { top: '15px', left: '50%' },
+            colors: {
+                background: 'rgba(28, 28, 30, 0.95)',
+                text: '#FFFFFF',
+                accent: '#0A84FF',
+                progress: '#32D74B'
+            },
+            dimensions: {
+                minimized: { width: '40px', height: '40px', borderRadius: '20px' },
+                compact: { width: '158px', height: '37px', borderRadius: '18.5px' },
+                expanded: { width: '320px', minHeight: '180px', borderRadius: '22px' }
+            },
+            typography: {
+                fontFamily: '-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif',
+                fontSize: { small: '13px', medium: '15px', large: '17px' },
+                fontWeight: { regular: '400', semibold: '600', bold: '700' }
+            }
+        };
+        
+        this.circularProgress = {
+            value: 0,
+            size: 36,
+            strokeWidth: 3,
+            radius: 16
+        };
+        
+        this.currentState = 'compact';
+        this.clearActivities();
+        this.applyBaseStyles();
+        this.updateDisplay();
+    }
+
+    whenClicked() {
+        return false; // Hat积木，由事件触发
+    }
+
+    whenStateChanged() {
+        return false; // Hat积木，由事件触发
+    }
+
+    getCurrentState() {
+        return this.currentState;
+    }
+
+    getActivityCount() {
+        return this.activities.length;
+    }
+
+    isVisible() {
+        return this.islandVisible;
+    }
+}
+
+// 注册扩展
+if (typeof Scratch !== 'undefined' && Scratch.extensions) {
+    Scratch.extensions.register(new MoranDynamicIslandExtension());
+}
+```。">
+<meta property="og:title" content="慕然科技的灵动岛">
+<meta property="og:description" content="```js
+// 慕然科技的灵动岛 - Scratch 3.0扩展
+// 扩展ID: moranldd
+// 扩展名称: 慕然科技的灵动岛
+// 文档: https://ccwmoran.github.io/code/
+
+class MoranDynamicIslandExtension {
+    constructor() {
+        this.islandElement = null;
+        this.islandVisible = true;
+        this.currentState = 'compact'; // minimized, compact, expanded
+        this.activities = [];
+        this.currentActivityIndex = 0;
+        
+        // 默认样式配置 - 精确匹配iPhone灵动岛
+        this.config = {
+            position: { top: '15px', left: '50%' },
+            colors: {
+                background: 'rgba(28, 28, 30, 0.95)', // iOS深色背景
+                text: '#FFFFFF',
+                accent: '#0A84FF', // iOS系统蓝色
+                progress: '#32D74B' // iOS绿色
+            },
+            dimensions: {
+                minimized: { width: '40px', height: '40px', borderRadius: '20px' },
+                compact: { width: '158px', height: '37px', borderRadius: '18.5px' },
+                expanded: { width: '320px', minHeight: '180px', borderRadius: '22px' }
+            },
+            typography: {
+                fontFamily: '-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif',
+                fontSize: { small: '13px', medium: '15px', large: '17px' },
+                fontWeight: { regular: '400', semibold: '600', bold: '700' }
+            }
+        };
+        
+        // 圆形进度条配置
+        this.circularProgress = {
+            value: 0,
+            size: 36,
+            strokeWidth: 3,
+            radius: 16
+        };
+        
+        this.init();
+    }
+
+    getInfo() {
+        return {
+            id: 'moranldd',
+            name: '慕然科技的灵动岛',
+            color: '#1C1C1E',
+            docsURI: 'https://ccwmoran.github.io/code/',
+            blocks: [
+                // 基础控制
+                {
+                    opcode: 'showIsland',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '显示灵动岛'
+                },
+                {
+                    opcode: 'hideIsland',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '隐藏灵动岛'
+                },
+                {
+                    opcode: 'setState',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '设置为[STATE]状态',
+                    arguments: {
+                        STATE: {
+                            type: Scratch.ArgumentType.STRING,
+                            menu: 'stateMenu',
+                            defaultValue: 'compact'
+                        }
+                    }
+                },
+                
+                // 内容管理
+                {
+                    opcode: 'setContent',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '设置内容 标题:[TITLE] 副标题:[SUBTITLE]',
+                    arguments: {
+                        TITLE: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '灵动岛'
+                        },
+                        SUBTITLE: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '慕然科技'
+                        }
+                    }
+                },
+                {
+                    opcode: 'setIcon',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '设置图标[ICON]',
+                    arguments: {
+                        ICON: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '●'
+                        }
+                    }
+                },
+                {
+                    opcode: 'setProgress',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '设置圆形进度[PERCENT]%',
+                    arguments: {
+                        PERCENT: {
+                            type: Scratch.ArgumentType.NUMBER,
+                            defaultValue: 50
+                        }
+                    }
+                },
+                
+                // 活动管理
+                {
+                    opcode: 'addActivity',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '添加活动 标题:[TITLE]',
+                    arguments: {
+                        TITLE: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '新活动'
+                        }
+                    }
+                },
+                {
+                    opcode: 'nextActivity',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '切换到下一个活动'
+                },
+                {
+                    opcode: 'clearActivities',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '清空所有活动'
+                },
+                
+                // 样式定制
+                {
+                    opcode: 'setPosition',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '设置位置 X:[X]% Y:[Y]px',
+                    arguments: {
+                        X: {
+                            type: Scratch.ArgumentType.NUMBER,
+                            defaultValue: 50
+                        },
+                        Y: {
+                            type: Scratch.ArgumentType.NUMBER,
+                            defaultValue: 15
+                        }
+                    }
+                },
+                {
+                    opcode: 'setAccentColor',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '设置强调色[COLOR]',
+                    arguments: {
+                        COLOR: {
+                            type: Scratch.ArgumentType.STRING,
+                            defaultValue: '#0A84FF'
+                        }
+                    }
+                },
+                
+                // 重置功能
+                {
+                    opcode: 'resetAll',
+                    blockType: Scratch.BlockType.COMMAND,
+                    text: '重置所有设置'
+                },
+                
+                // 事件与报告
+                {
+                    opcode: 'whenClicked',
+                    blockType: Scratch.BlockType.HAT,
+                    text: '当灵动岛被点击时',
+                    isEdgeActivated: false
+                },
+                {
+                    opcode: 'whenStateChanged',
+                    blockType: Scratch.BlockType.HAT,
+                    text: '当状态改变时',
+                    isEdgeActivated: true
+                },
+                {
+                    opcode: 'getCurrentState',
+                    blockType: Scratch.BlockType.REPORTER,
+                    text: '当前状态'
+                },
+                {
+                    opcode: 'getActivityCount',
+                    blockType: Scratch.BlockType.REPORTER,
+                    text: '活动数量'
+                },
+                {
+                    opcode: 'isVisible',
+                    blockType: Scratch.BlockType.BOOLEAN,
+                    text: '是否显示？'
+                }
+            ],
+            menus: {
+                stateMenu: {
+                    acceptReporters: true,
+                    items: [
+                        { text: '最小型', value: 'minimized' },
+                        { text: '紧凑型', value: 'compact' },
+                        { text: '扩展型', value: 'expanded' }
+                    ]
+                }
+            }
+        };
+    }
+
+    // 初始化灵动岛
+    init() {
+        if (typeof document === 'undefined') return;
+        
+        // 移除已存在的元素
+        const existing = document.getElementById('moran-dynamic-island');
+        if (existing) existing.remove();
+        
+        // 创建主容器
+        this.islandElement = document.createElement('div');
+        this.islandElement.id = 'moran-dynamic-island';
+        
+        // 应用基础样式
+        this.applyBaseStyles();
+        
+        // 添加事件监听
+        this.setupEventListeners();
+        
+        // 添加到页面
+        document.body.appendChild(this.islandElement);
+        
+        // 初始内容
+        this.activities = [{
+            id: 'default',
+            title: '灵动岛',
+            subtitle: '慕然科技',
+            icon: '●',
+            progress: 0
+        }];
+        
+        this.updateDisplay();
+    }
+
+    // 应用基础样式
+    applyBaseStyles() {
+        this.islandElement.style.cssText = `
+            position: fixed;
+            z-index: 10000;
+            transform: translateX(-50%);
+            top: ${this.config.position.top};
+            left: ${this.config.position.left};
+            user-select: none;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        `;
+    }
+
+    // 设置事件监听
+    setupEventListeners() {
+        let touchStartTime = 0;
+        let touchStartX = 0;
+        let isDragging = false;
+        
+        // 触摸事件
+        this.islandElement.addEventListener('touchstart', (e) => {
+            touchStartTime = Date.now();
+            touchStartX = e.touches[0].clientX;
+            isDragging = false;
+        });
+        
+        this.islandElement.addEventListener('touchmove', (e) => {
+            const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
+            if (deltaX > 10) isDragging = true;
+        });
+        
+        this.islandElement.addEventListener('touchend', (e) => {
+            const touchDuration = Date.now() - touchStartTime;
+            const deltaX = e.changedTouches[0].clientX - touchStartX;
+            
+            if (isDragging && Math.abs(deltaX) > 30) {
+                // 滑动切换活动
+                this.nextActivity();
+            } else if (touchDuration > 500) {
+                // 长按切换状态
+                this.toggleState();
+            } else if (!isDragging) {
+                // 点击事件
+                this.handleClick();
+            }
+        });
+        
+        // 鼠标事件
+        this.islandElement.addEventListener('mousedown', (e) => {
+            touchStartTime = Date.now();
+            touchStartX = e.clientX;
+            isDragging = false;
+        });
+        
+        this.islandElement.addEventListener('mousemove', (e) => {
+            if (!touchStartX) return;
+            const deltaX = Math.abs(e.clientX - touchStartX);
+            if (deltaX > 10) isDragging = true;
+        });
+        
+        this.islandElement.addEventListener('mouseup', (e) => {
+            const clickDuration = Date.now() - touchStartTime;
+            const deltaX = e.clientX - touchStartX;
+            
+            if (isDragging && Math.abs(deltaX) > 30) {
+                this.nextActivity();
+            } else if (clickDuration > 500) {
+                this.toggleState();
+            } else if (!isDragging) {
+                this.handleClick();
+            }
+            
+            touchStartX = 0;
+        });
+    }
+
+    // 切换状态
+    toggleState() {
+        const states = ['minimized', 'compact', 'expanded'];
+        const currentIndex = states.indexOf(this.currentState);
+        const nextIndex = (currentIndex + 1) % states.length;
+        
+        this.setState({ STATE: states[nextIndex] });
+        Scratch.vm.runtime.startHats('moranldd_whenStateChanged');
+    }
+
+    // 处理点击
+    handleClick() {
+        Scratch.vm.runtime.startHats('moranldd_whenClicked');
+    }
+
+    // 更新显示
+    updateDisplay() {
+        if (!this.islandElement || this.activities.length === 0) return;
+        
+        const activity = this.activities[this.currentActivityIndex];
+        
+        // 根据状态渲染
+        switch (this.currentState) {
+            case 'minimized':
+                this.renderMinimizedView(activity);
+                break;
+            case 'compact':
+                this.renderCompactView(activity);
+                break;
+            case 'expanded':
+                this.renderExpandedView(activity);
+                break;
+        }
+    }
+
+    // 渲染最小型视图
+    renderMinimizedView(activity) {
+        const dim = this.config.dimensions.minimized;
+        const progress = activity.progress || 0;
+        
+        // 创建圆形进度条SVG
+        const circumference = 2 * Math.PI * this.circularProgress.radius;
+        const offset = circumference - (progress / 100) * circumference;
+        
+        const progressSVG = progress > 0 ? `
+            <svg width='${this.circularProgress.size}' height='${this.circularProgress.size}' 
+                 style='position: absolute; top: 0; left: 0;'>
+                <circle cx='${this.circularProgress.size/2}' cy='${this.circularProgress.size/2}' 
+                        r='${this.circularProgress.radius}' 
+                        fill='none' 
+                        stroke='rgba(255,255,255,0.2)' 
+                        stroke-width='${this.circularProgress.strokeWidth}'/>
+                <circle cx='${this.circularProgress.size/2}' cy='${this.circularProgress.size/2}' 
+                        r='${this.circularProgress.radius}' 
+                        fill='none' 
+                        stroke='${this.config.colors.progress}' 
+                        stroke-width='${this.circularProgress.strokeWidth}'
+                        stroke-dasharray='${circumference}'
+                        stroke-dashoffset='${offset}'
+                        transform='rotate(-90 ${this.circularProgress.size/2} ${this.circularProgress.size/2})'
+                        stroke-linecap='round'/>
+            </svg>
+        ` : '';
+        
+        this.islandElement.innerHTML = `
+            <div style='
+                width: ${dim.width};
+                height: ${dim.height};
+                border-radius: ${dim.borderRadius};
+                background: ${this.config.colors.background};
+                backdrop-filter: blur(20px) saturate(180%);
+                -webkit-backdrop-filter: blur(20px) saturate(180%);
+                border: 0.5px solid rgba(255, 255, 255, 0.08);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                overflow: hidden;
+                box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+            '>
+                ${progressSVG}
+                <span style='
+                    color: ${this.config.colors.text};
+                    font-size: 16px;
+                    font-weight: 600;
+                    z-index: 1;
+                '>${activity.icon || '●'}</span>
+            </div>
+        `;
+    }
+
+    // 渲染紧凑型视图
+    renderCompactView(activity) {
+        const dim = this.config.dimensions.compact;
+        
+        this.islandElement.innerHTML = `
+            <div style='
+                width: ${dim.width};
+                height: ${dim.height};
+                border-radius: ${dim.borderRadius};
+                background: ${this.config.colors.background};
+                backdrop-filter: blur(30px) saturate(180%);
+                -webkit-backdrop-filter: blur(30px) saturate(180%);
+                border: 0.5px solid rgba(255, 255, 255, 0.1);
+                display: flex;
+                align-items: center;
+                padding: 0 16px;
+                gap: 12px;
+                box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);
+                cursor: pointer;
+                transition: all 0.2s ease;
+            '>
+                <span style='
+                    color: ${this.config.colors.text};
+                    font-size: 16px;
+                    min-width: 16px;
+                '>${activity.icon || '●'}</span>
+                
+                <div style='flex: 1; overflow: hidden;'>
+                    <div style='
+                        color: ${this.config.colors.text};
+                        font-size: 13px;
+                        font-weight: 600;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        font-family: ${this.config.typography.fontFamily};
+                    '>${activity.title}</div>
+                    
+                    ${activity.subtitle ? `
+                        <div style='
+                            color: rgba(255, 255, 255, 0.7);
+                            font-size: 11px;
+                            font-weight: 400;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            margin-top: 2px;
+                            font-family: ${this.config.typography.fontFamily};
+                        '>${activity.subtitle}</div>
+                    ` : ''}
+                </div>
+                
+                ${this.activities.length > 1 ? `
+                    <div style='
+                        display: flex;
+                        gap: 4px;
+                    '>
+                        ${this.activities.map((_, i) => `
+                            <div style='
+                                width: 4px;
+                                height: 4px;
+                                border-radius: 2px;
+                                background: ${i === this.currentActivityIndex ? this.config.colors.accent : 'rgba(255,255,255,0.2)'};
+                            '></div>
+                        `).join('')}
+                    </div>
+                ` : ''}
+            </div>
+        `;
+        
+        // 添加悬停效果
+        const container = this.islandElement.firstChild;
+        container.onmouseenter = () => {
+            container.style.transform = 'scale(1.02)';
+            container.style.boxShadow = '0 8px 35px rgba(0, 0, 0, 0.35)';
+        };
+        container.onmouseleave = () => {
+            container.style.transform = 'scale(1)';
+            container.style.boxShadow = '0 6px 30px rgba(0, 0, 0, 0.3)';
+        };
+    }
+
+    // 渲染扩展型视图
+    renderExpandedView(activity) {
+        const dim = this.config.dimensions.expanded;
+        const progress = activity.progress || 0;
+        
+        this.islandElement.innerHTML = `
+            <div style='
+                width: ${dim.width};
+                min-height: ${dim.minHeight};
+                border-radius: ${dim.borderRadius};
+                background: ${this.config.colors.background};
+                backdrop-filter: blur(40px) saturate(180%);
+                -webkit-backdrop-filter: blur(40px) saturate(180%);
+                border: 0.5px solid rgba(255, 255, 255, 0.15);
+                padding: 20px;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+                cursor: pointer;
+            '>
+                <div style='
+                    color: ${this.config.colors.text};
+                    text-align: center;
+                    font-family: ${this.config.typography.fontFamily};
+                '>
+                    <div style='font-size: 24px; margin-bottom: 12px;'>
+                        ${activity.icon || '●'}
+                    </div>
+                    
+                    <div style='
+                        font-size: 17px;
+                        font-weight: 600;
+                        margin-bottom: 6px;
+                    '>${activity.title}</div>
+                    
+                    ${activity.subtitle ? `
+                        <div style='
+                            font-size: 13px;
+                            color: rgba(255, 255, 255, 0.7);
+                            margin-bottom: 20px;
+                        '>${activity.subtitle}</div>
+                    ` : ''}
+                    
+                    ${progress > 0 ? `
+                        <div style='margin: 25px 0;'>
+                            <div style='
+                                font-size: 21px;
+                                font-weight: 700;
+                                color: ${this.config.colors.progress};
+                                margin-bottom: 8px;
+                            '>${progress}%</div>
+                            
+                            <div style='
+                                width: 100px;
+                                height: 100px;
+                                margin: 0 auto;
+                                position: relative;
+                            '>
+                                <svg width='100' height='100'>
+                                    <circle cx='50' cy='50' r='40' 
+                                            fill='none' 
+                                            stroke='rgba(255,255,255,0.1)' 
+                                            stroke-width='8'/>
+                                    <circle cx='50' cy='50' r='40' 
+                                            fill='none' 
+                                            stroke='${this.config.colors.progress}' 
+                                            stroke-width='8'
+                                            stroke-dasharray='251.2'
+                                            stroke-dashoffset='${251.2 - (progress * 2.512)}'
+                                            transform='rotate(-90 50 50)'
+                                            stroke-linecap='round'/>
+                                </svg>
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    <div style='
+                        font-size: 11px;
+                        color: rgba(255, 255, 255, 0.5);
+                        margin-top: 20px;
+                        padding-top: 15px;
+                        border-top: 0.5px solid rgba(255, 255, 255, 0.1);
+                    '>长按返回 • 滑动切换</div>
+                </div>
+            </div>
+        `;
+    }
+
+    // ========== 积木实现 ==========
+    
+    showIsland() {
+        if (this.islandElement) {
+            this.islandElement.style.display = 'block';
+            this.islandVisible = true;
+        }
+    }
+
+    hideIsland() {
+        if (this.islandElement) {
+            this.islandElement.style.display = 'none';
+            this.islandVisible = false;
+        }
+    }
+
+    setState(args) {
+        this.currentState = args.STATE;
+        this.updateDisplay();
+        return Scratch.vm.runtime.startHats('moranldd_whenStateChanged');
+    }
+
+    setContent(args) {
+        if (this.activities.length > 0) {
+            this.activities[this.currentActivityIndex].title = args.TITLE;
+            this.activities[this.currentActivityIndex].subtitle = args.SUBTITLE;
+            this.updateDisplay();
+        }
+    }
+
+    setIcon(args) {
+        if (this.activities.length > 0) {
+            this.activities[this.currentActivityIndex].icon = args.ICON;
+            this.updateDisplay();
+        }
+    }
+
+    setProgress(args) {
+        const percent = Math.max(0, Math.min(100, args.PERCENT));
+        if (this.activities.length > 0) {
+            this.activities[this.currentActivityIndex].progress = percent;
+            this.circularProgress.value = percent;
+            this.updateDisplay();
+        }
+    }
+
+    addActivity(args) {
+        const newActivity = {
+            id: `activity_${Date.now()}`,
+            title: args.TITLE,
+            subtitle: '',
+            icon: '●',
+            progress: 0
+        };
+        
+        this.activities.push(newActivity);
+        if (this.activities.length > 3) this.activities.shift();
+        this.updateDisplay();
+    }
+
+    nextActivity() {
+        if (this.activities.length <= 1) return;
+        
+        this.currentActivityIndex = (this.currentActivityIndex + 1) % this.activities.length;
+        this.updateDisplay();
+    }
+
+    clearActivities() {
+        this.activities = [{
+            id: 'default',
+            title: '灵动岛',
+            subtitle: '慕然科技',
+            icon: '●',
+            progress: 0
+        }];
+        this.currentActivityIndex = 0;
+        this.updateDisplay();
+    }
+
+    setPosition(args) {
+        if (this.islandElement) {
+            this.config.position.left = `${args.X}%`;
+            this.config.position.top = `${args.Y}px`;
+            this.applyBaseStyles();
+        }
+    }
+
+    setAccentColor(args) {
+        this.config.colors.accent = args.COLOR;
+        this.updateDisplay();
+    }
+
+    resetAll() {
+        // 重置所有配置
+        this.config = {
+            position: { top: '15px', left: '50%' },
+            colors: {
+                background: 'rgba(28, 28, 30, 0.95)',
+                text: '#FFFFFF',
+                accent: '#0A84FF',
+                progress: '#32D74B'
+            },
+            dimensions: {
+                minimized: { width: '40px', height: '40px', borderRadius: '20px' },
+                compact: { width: '158px', height: '37px', borderRadius: '18.5px' },
+                expanded: { width: '320px', minHeight: '180px', borderRadius: '22px' }
+            },
+            typography: {
+                fontFamily: '-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif',
+                fontSize: { small: '13px', medium: '15px', large: '17px' },
+                fontWeight: { regular: '400', semibold: '600', bold: '700' }
+            }
+        };
+        
+        this.circularProgress = {
+            value: 0,
+            size: 36,
+            strokeWidth: 3,
+            radius: 16
+        };
+        
+        this.currentState = 'compact';
+        this.clearActivities();
+        this.applyBaseStyles();
+        this.updateDisplay();
+    }
+
+    whenClicked() {
+        return false; // Hat积木，由事件触发
+    }
+
+    whenStateChanged() {
+        return false; // Hat积木，由事件触发
+    }
+
+    getCurrentState() {
+        return this.currentState;
+    }
+
+    getActivityCount() {
+        return this.activities.length;
+    }
+
+    isVisible() {
+        return this.islandVisible;
+    }
+}
+
+// 注册扩展
+if (typeof Scratch !== 'undefined' && Scratch.extensions) {
+    Scratch.extensions.register(new MoranDynamicIslandExtension());
+}
+```。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-ling-dong-dao.html">
+<meta property="og:image" content="https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg">
+<title>慕然科技的灵动岛</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">慕然科技的灵动岛</h1>
+<div class="title-right">
+    <a href="https://ccwmoran.github.io/code" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/ccwmoran/code/issues/17" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-c">// 慕然科技的灵动岛 - Scratch 3.0扩展</span>
+<span class="pl-c">// 扩展ID: moranldd</span>
+<span class="pl-c">// 扩展名称: 慕然科技的灵动岛</span>
+<span class="pl-c">// 文档: https://ccwmoran.github.io/code/</span>
+
+<span class="pl-k">class</span> <span class="pl-v">MoranDynamicIslandExtension</span> <span class="pl-kos">{</span>
+    <span class="pl-en">constructor</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">islandElement</span> <span class="pl-c1">=</span> <span class="pl-c1">null</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">islandVisible</span> <span class="pl-c1">=</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentState</span> <span class="pl-c1">=</span> <span class="pl-s">'compact'</span><span class="pl-kos">;</span> <span class="pl-c">// minimized, compact, expanded</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activities</span> <span class="pl-c1">=</span> <span class="pl-kos">[</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentActivityIndex</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+        
+        <span class="pl-c">// 默认样式配置 - 精确匹配iPhone灵动岛</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">config</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+            <span class="pl-c1">position</span>: <span class="pl-kos">{</span> <span class="pl-c1">top</span>: <span class="pl-s">'15px'</span><span class="pl-kos">,</span> <span class="pl-c1">left</span>: <span class="pl-s">'50%'</span> <span class="pl-kos">}</span><span class="pl-kos">,</span>
+            <span class="pl-c1">colors</span>: <span class="pl-kos">{</span>
+                <span class="pl-c1">background</span>: <span class="pl-s">'rgba(28, 28, 30, 0.95)'</span><span class="pl-kos">,</span> <span class="pl-c">// iOS深色背景</span>
+                <span class="pl-c1">text</span>: <span class="pl-s">'#FFFFFF'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">accent</span>: <span class="pl-s">'#0A84FF'</span><span class="pl-kos">,</span> <span class="pl-c">// iOS系统蓝色</span>
+                <span class="pl-c1">progress</span>: <span class="pl-s">'#32D74B'</span> <span class="pl-c">// iOS绿色</span>
+            <span class="pl-kos">}</span><span class="pl-kos">,</span>
+            <span class="pl-c1">dimensions</span>: <span class="pl-kos">{</span>
+                <span class="pl-c1">minimized</span>: <span class="pl-kos">{</span> <span class="pl-c1">width</span>: <span class="pl-s">'40px'</span><span class="pl-kos">,</span> <span class="pl-c1">height</span>: <span class="pl-s">'40px'</span><span class="pl-kos">,</span> <span class="pl-c1">borderRadius</span>: <span class="pl-s">'20px'</span> <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-c1">compact</span>: <span class="pl-kos">{</span> <span class="pl-c1">width</span>: <span class="pl-s">'158px'</span><span class="pl-kos">,</span> <span class="pl-c1">height</span>: <span class="pl-s">'37px'</span><span class="pl-kos">,</span> <span class="pl-c1">borderRadius</span>: <span class="pl-s">'18.5px'</span> <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-c1">expanded</span>: <span class="pl-kos">{</span> <span class="pl-c1">width</span>: <span class="pl-s">'320px'</span><span class="pl-kos">,</span> <span class="pl-c1">minHeight</span>: <span class="pl-s">'180px'</span><span class="pl-kos">,</span> <span class="pl-c1">borderRadius</span>: <span class="pl-s">'22px'</span> <span class="pl-kos">}</span>
+            <span class="pl-kos">}</span><span class="pl-kos">,</span>
+            <span class="pl-c1">typography</span>: <span class="pl-kos">{</span>
+                <span class="pl-c1">fontFamily</span>: <span class="pl-s">'-apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">fontSize</span>: <span class="pl-kos">{</span> <span class="pl-c1">small</span>: <span class="pl-s">'13px'</span><span class="pl-kos">,</span> <span class="pl-c1">medium</span>: <span class="pl-s">'15px'</span><span class="pl-kos">,</span> <span class="pl-c1">large</span>: <span class="pl-s">'17px'</span> <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-c1">fontWeight</span>: <span class="pl-kos">{</span> <span class="pl-c1">regular</span>: <span class="pl-s">'400'</span><span class="pl-kos">,</span> <span class="pl-c1">semibold</span>: <span class="pl-s">'600'</span><span class="pl-kos">,</span> <span class="pl-c1">bold</span>: <span class="pl-s">'700'</span> <span class="pl-kos">}</span>
+            <span class="pl-kos">}</span>
+        <span class="pl-kos">}</span><span class="pl-kos">;</span>
+        
+        <span class="pl-c">// 圆形进度条配置</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">circularProgress</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+            <span class="pl-c1">value</span>: <span class="pl-c1">0</span><span class="pl-kos">,</span>
+            <span class="pl-c1">size</span>: <span class="pl-c1">36</span><span class="pl-kos">,</span>
+            <span class="pl-c1">strokeWidth</span>: <span class="pl-c1">3</span><span class="pl-kos">,</span>
+            <span class="pl-c1">radius</span>: <span class="pl-c1">16</span>
+        <span class="pl-kos">}</span><span class="pl-kos">;</span>
+        
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">init</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-en">getInfo</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">return</span> <span class="pl-kos">{</span>
+            <span class="pl-c1">id</span>: <span class="pl-s">'moranldd'</span><span class="pl-kos">,</span>
+            <span class="pl-c1">name</span>: <span class="pl-s">'慕然科技的灵动岛'</span><span class="pl-kos">,</span>
+            <span class="pl-c1">color</span>: <span class="pl-s">'#1C1C1E'</span><span class="pl-kos">,</span>
+            <span class="pl-c1">docsURI</span>: <span class="pl-s">'https://ccwmoran.github.io/code/'</span><span class="pl-kos">,</span>
+            <span class="pl-c1">blocks</span>: <span class="pl-kos">[</span>
+                <span class="pl-c">// 基础控制</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'showIsland'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'显示灵动岛'</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'hideIsland'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'隐藏灵动岛'</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'setState'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'设置为[STATE]状态'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">STATE</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">menu</span>: <span class="pl-s">'stateMenu'</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'compact'</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                
+                <span class="pl-c">// 内容管理</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'setContent'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'设置内容 标题:[TITLE] 副标题:[SUBTITLE]'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">TITLE</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'灵动岛'</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">SUBTITLE</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'慕然科技'</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'setIcon'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'设置图标[ICON]'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">ICON</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'●'</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'setProgress'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'设置圆形进度[PERCENT]%'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">PERCENT</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">NUMBER</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-c1">50</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                
+                <span class="pl-c">// 活动管理</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'addActivity'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'添加活动 标题:[TITLE]'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">TITLE</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'新活动'</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'nextActivity'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'切换到下一个活动'</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'clearActivities'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'清空所有活动'</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                
+                <span class="pl-c">// 样式定制</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'setPosition'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'设置位置 X:[X]% Y:[Y]px'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">X</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">NUMBER</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-c1">50</span>
+                        <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">Y</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">NUMBER</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-c1">15</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'setAccentColor'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'设置强调色[COLOR]'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                        <span class="pl-c1">COLOR</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">defaultValue</span>: <span class="pl-s">'#0A84FF'</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                
+                <span class="pl-c">// 重置功能</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'resetAll'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'重置所有设置'</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                
+                <span class="pl-c">// 事件与报告</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'whenClicked'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">HAT</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'当灵动岛被点击时'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">isEdgeActivated</span>: <span class="pl-c1">false</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'whenStateChanged'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">HAT</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'当状态改变时'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">isEdgeActivated</span>: <span class="pl-c1">true</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'getCurrentState'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">REPORTER</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'当前状态'</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'getActivityCount'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">REPORTER</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'活动数量'</span>
+                <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-kos">{</span>
+                    <span class="pl-c1">opcode</span>: <span class="pl-s">'isVisible'</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">BOOLEAN</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">text</span>: <span class="pl-s">'是否显示？'</span>
+                <span class="pl-kos">}</span>
+            <span class="pl-kos">]</span><span class="pl-kos">,</span>
+            <span class="pl-c1">menus</span>: <span class="pl-kos">{</span>
+                <span class="pl-c1">stateMenu</span>: <span class="pl-kos">{</span>
+                    <span class="pl-c1">acceptReporters</span>: <span class="pl-c1">true</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">items</span>: <span class="pl-kos">[</span>
+                        <span class="pl-kos">{</span> <span class="pl-c1">text</span>: <span class="pl-s">'最小型'</span><span class="pl-kos">,</span> <span class="pl-c1">value</span>: <span class="pl-s">'minimized'</span> <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-kos">{</span> <span class="pl-c1">text</span>: <span class="pl-s">'紧凑型'</span><span class="pl-kos">,</span> <span class="pl-c1">value</span>: <span class="pl-s">'compact'</span> <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                        <span class="pl-kos">{</span> <span class="pl-c1">text</span>: <span class="pl-s">'扩展型'</span><span class="pl-kos">,</span> <span class="pl-c1">value</span>: <span class="pl-s">'expanded'</span> <span class="pl-kos">}</span>
+                    <span class="pl-kos">]</span>
+                <span class="pl-kos">}</span>
+            <span class="pl-kos">}</span>
+        <span class="pl-kos">}</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-c">// 初始化灵动岛</span>
+    <span class="pl-en">init</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-k">typeof</span> <span class="pl-smi">document</span> <span class="pl-c1">===</span> <span class="pl-s">'undefined'</span><span class="pl-kos">)</span> <span class="pl-k">return</span><span class="pl-kos">;</span>
+        
+        <span class="pl-c">// 移除已存在的元素</span>
+        <span class="pl-k">const</span> <span class="pl-s1">existing</span> <span class="pl-c1">=</span> <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-en">getElementById</span><span class="pl-kos">(</span><span class="pl-s">'moran-dynamic-island'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">existing</span><span class="pl-kos">)</span> <span class="pl-s1">existing</span><span class="pl-kos">.</span><span class="pl-en">remove</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        
+        <span class="pl-c">// 创建主容器</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">islandElement</span> <span class="pl-c1">=</span> <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-en">createElement</span><span class="pl-kos">(</span><span class="pl-s">'div'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">islandElement</span><span class="pl-kos">.</span><span class="pl-c1">id</span> <span class="pl-c1">=</span> <span class="pl-s">'moran-dynamic-island'</span><span class="pl-kos">;</span>
+        
+        <span class="pl-c">// 应用基础样式</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">applyBaseStyles</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        
+        <span class="pl-c">// 添加事件监听</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">setupEventListeners</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        
+        <span class="pl-c">// 添加到页面</span>
+        <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-c1">body</span><span class="pl-kos">.</span><span class="pl-en">appendChild</span><span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">islandElement</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        
+        <span class="pl-c">// 初始内容</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activities</span> <span class="pl-c1">=</span> <span class="pl-kos">[</span><span class="pl-kos">{</span>
+            <span class="pl-c1">id</span>: <span class="pl-s">'default'</span><span class="pl-kos">,</span>
+            <span class="pl-c1">title</span>: <span class="pl-s">'灵动岛'</span><span class="pl-kos">,</span>
+            <span class="pl-c1">subtitle</span>: <span class="pl-s">'慕然科技'</span><span class="pl-kos">,</span>
+            <span class="pl-c1">icon</span>: <span class="pl-s">'●'</span><span class="pl-kos">,</span>
+            <span class="pl-c1">progress</span>: <span class="pl-c1">0</span>
+        <span class="pl-kos">}</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+        
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">updateDisplay</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-c">// 应用基础样式</span>
+    <span class="pl-en">applyBaseStyles</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">islandElement</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">cssText</span> <span class="pl-c1">=</span> <span class="pl-s">`</span>
+<span class="pl-s">            position: fixed;</span>
+<span class="pl-s">            z-index: 10000;</span>
+<span class="pl-s">            transform: translateX(-50%);</span>
+<span class="pl-s">            top: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">position</span><span class="pl-kos">.</span><span class="pl-c1">top</span><span class="pl-kos">}</span></span>;</span>
+<span class="pl-s">            left: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">position</span><span class="pl-kos">.</span><span class="pl-c1">left</span><span class="pl-kos">}</span></span>;</span>
+<span class="pl-s">            user-select: none;</span>
+<span class="pl-s">            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);</span>
+<span class="pl-s">        `</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-c">// 设置事件监听</span>
+    <span class="pl-en">setupEventListeners</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">let</span> <span class="pl-s1">touchStartTime</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+        <span class="pl-k">let</span> <span class="pl-s1">touchStartX</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+        <span class="pl-k">let</span> <span class="pl-s1">isDragging</span> <span class="pl-c1">=</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
+        
+        <span class="pl-c">// 触摸事件</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">islandElement</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">'touchstart'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+            <span class="pl-s1">touchStartTime</span> <span class="pl-c1">=</span> <span class="pl-v">Date</span><span class="pl-kos">.</span><span class="pl-en">now</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">touchStartX</span> <span class="pl-c1">=</span> <span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-c1">touches</span><span class="pl-kos">[</span><span class="pl-c1">0</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">clientX</span><span class="pl-kos">;</span>
+            <span class="pl-s1">isDragging</span> <span class="pl-c1">=</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">islandElement</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">'touchmove'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+            <span class="pl-k">const</span> <span class="pl-s1">deltaX</span> <span class="pl-c1">=</span> <span class="pl-v">Math</span><span class="pl-kos">.</span><span class="pl-en">abs</span><span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-c1">touches</span><span class="pl-kos">[</span><span class="pl-c1">0</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">clientX</span> <span class="pl-c1">-</span> <span class="pl-s1">touchStartX</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">deltaX</span> <span class="pl-c1">&gt;</span> <span class="pl-c1">10</span><span class="pl-kos">)</span> <span class="pl-s1">isDragging</span> <span class="pl-c1">=</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">islandElement</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">'touchend'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+            <span class="pl-k">const</span> <span class="pl-s1">touchDuration</span> <span class="pl-c1">=</span> <span class="pl-v">Date</span><span class="pl-kos">.</span><span class="pl-en">now</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">-</span> <span class="pl-s1">touchStartTime</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">deltaX</span> <span class="pl-c1">=</span> <span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-c1">changedTouches</span><span class="pl-kos">[</span><span class="pl-c1">0</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">clientX</span> <span class="pl-c1">-</span> <span class="pl-s1">touchStartX</span><span class="pl-kos">;</span>
+            
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">isDragging</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-v">Math</span><span class="pl-kos">.</span><span class="pl-en">abs</span><span class="pl-kos">(</span><span class="pl-s1">deltaX</span><span class="pl-kos">)</span> <span class="pl-c1">&gt;</span> <span class="pl-c1">30</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-c">// 滑动切换活动</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">nextActivity</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span> <span class="pl-k">else</span> <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">touchDuration</span> <span class="pl-c1">&gt;</span> <span class="pl-c1">500</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-c">// 长按切换状态</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">toggleState</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span> <span class="pl-k">else</span> <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">isDragging</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-c">// 点击事件</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">handleClick</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
+        <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        
+        <span class="pl-c">// 鼠标事件</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">islandElement</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">'mousedown'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+            <span class="pl-s1">touchStartTime</span> <span class="pl-c1">=</span> <span class="pl-v">Date</span><span class="pl-kos">.</span><span class="pl-en">now</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-s1">touchStartX</span> <span class="pl-c1">=</span> <span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-c1">clientX</span><span class="pl-kos">;</span>
+            <span class="pl-s1">isDragging</span> <span class="pl-c1">=</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">islandElement</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">'mousemove'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">touchStartX</span><span class="pl-kos">)</span> <span class="pl-k">return</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">deltaX</span> <span class="pl-c1">=</span> <span class="pl-v">Math</span><span class="pl-kos">.</span><span class="pl-en">abs</span><span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-c1">clientX</span> <span class="pl-c1">-</span> <span class="pl-s1">touchStartX</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">deltaX</span> <span class="pl-c1">&gt;</span> <span class="pl-c1">10</span><span class="pl-kos">)</span> <span class="pl-s1">isDragging</span> <span class="pl-c1">=</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">islandElement</span><span class="pl-kos">.</span><span class="pl-en">addEventListener</span><span class="pl-kos">(</span><span class="pl-s">'mouseup'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-s1">e</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+            <span class="pl-k">const</span> <span class="pl-s1">clickDuration</span> <span class="pl-c1">=</span> <span class="pl-v">Date</span><span class="pl-kos">.</span><span class="pl-en">now</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">-</span> <span class="pl-s1">touchStartTime</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">deltaX</span> <span class="pl-c1">=</span> <span class="pl-s1">e</span><span class="pl-kos">.</span><span class="pl-c1">clientX</span> <span class="pl-c1">-</span> <span class="pl-s1">touchStartX</span><span class="pl-kos">;</span>
+            
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">isDragging</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-v">Math</span><span class="pl-kos">.</span><span class="pl-en">abs</span><span class="pl-kos">(</span><span class="pl-s1">deltaX</span><span class="pl-kos">)</span> <span class="pl-c1">&gt;</span> <span class="pl-c1">30</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">nextActivity</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span> <span class="pl-k">else</span> <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">clickDuration</span> <span class="pl-c1">&gt;</span> <span class="pl-c1">500</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">toggleState</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span> <span class="pl-k">else</span> <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-s1">isDragging</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">handleClick</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
+            
+            <span class="pl-s1">touchStartX</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-c">// 切换状态</span>
+    <span class="pl-en">toggleState</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">const</span> <span class="pl-s1">states</span> <span class="pl-c1">=</span> <span class="pl-kos">[</span><span class="pl-s">'minimized'</span><span class="pl-kos">,</span> <span class="pl-s">'compact'</span><span class="pl-kos">,</span> <span class="pl-s">'expanded'</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+        <span class="pl-k">const</span> <span class="pl-s1">currentIndex</span> <span class="pl-c1">=</span> <span class="pl-s1">states</span><span class="pl-kos">.</span><span class="pl-en">indexOf</span><span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentState</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-k">const</span> <span class="pl-s1">nextIndex</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-s1">currentIndex</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span><span class="pl-kos">)</span> <span class="pl-c1">%</span> <span class="pl-s1">states</span><span class="pl-kos">.</span><span class="pl-c1">length</span><span class="pl-kos">;</span>
+        
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">setState</span><span class="pl-kos">(</span><span class="pl-kos">{</span> <span class="pl-c1">STATE</span>: <span class="pl-s1">states</span><span class="pl-kos">[</span><span class="pl-s1">nextIndex</span><span class="pl-kos">]</span> <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">vm</span><span class="pl-kos">.</span><span class="pl-c1">runtime</span><span class="pl-kos">.</span><span class="pl-en">startHats</span><span class="pl-kos">(</span><span class="pl-s">'moranldd_whenStateChanged'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-c">// 处理点击</span>
+    <span class="pl-en">handleClick</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">vm</span><span class="pl-kos">.</span><span class="pl-c1">runtime</span><span class="pl-kos">.</span><span class="pl-en">startHats</span><span class="pl-kos">(</span><span class="pl-s">'moranldd_whenClicked'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-c">// 更新显示</span>
+    <span class="pl-en">updateDisplay</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">islandElement</span> <span class="pl-c1">||</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activities</span><span class="pl-kos">.</span><span class="pl-c1">length</span> <span class="pl-c1">===</span> <span class="pl-c1">0</span><span class="pl-kos">)</span> <span class="pl-k">return</span><span class="pl-kos">;</span>
+        
+        <span class="pl-k">const</span> <span class="pl-s1">activity</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activities</span><span class="pl-kos">[</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentActivityIndex</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+        
+        <span class="pl-c">// 根据状态渲染</span>
+        <span class="pl-k">switch</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentState</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">case</span> <span class="pl-s">'minimized'</span>:
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">renderMinimizedView</span><span class="pl-kos">(</span><span class="pl-s1">activity</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-k">break</span><span class="pl-kos">;</span>
+            <span class="pl-k">case</span> <span class="pl-s">'compact'</span>:
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">renderCompactView</span><span class="pl-kos">(</span><span class="pl-s1">activity</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-k">break</span><span class="pl-kos">;</span>
+            <span class="pl-k">case</span> <span class="pl-s">'expanded'</span>:
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">renderExpandedView</span><span class="pl-kos">(</span><span class="pl-s1">activity</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-k">break</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-c">// 渲染最小型视图</span>
+    <span class="pl-en">renderMinimizedView</span><span class="pl-kos">(</span><span class="pl-s1">activity</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">const</span> <span class="pl-s1">dim</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">dimensions</span><span class="pl-kos">.</span><span class="pl-c1">minimized</span><span class="pl-kos">;</span>
+        <span class="pl-k">const</span> <span class="pl-s1">progress</span> <span class="pl-c1">=</span> <span class="pl-s1">activity</span><span class="pl-kos">.</span><span class="pl-c1">progress</span> <span class="pl-c1">||</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+        
+        <span class="pl-c">// 创建圆形进度条SVG</span>
+        <span class="pl-k">const</span> <span class="pl-s1">circumference</span> <span class="pl-c1">=</span> <span class="pl-c1">2</span> <span class="pl-c1">*</span> <span class="pl-v">Math</span><span class="pl-kos">.</span><span class="pl-c1">PI</span> <span class="pl-c1">*</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">circularProgress</span><span class="pl-kos">.</span><span class="pl-c1">radius</span><span class="pl-kos">;</span>
+        <span class="pl-k">const</span> <span class="pl-s1">offset</span> <span class="pl-c1">=</span> <span class="pl-s1">circumference</span> <span class="pl-c1">-</span> <span class="pl-kos">(</span><span class="pl-s1">progress</span> <span class="pl-c1">/</span> <span class="pl-c1">100</span><span class="pl-kos">)</span> <span class="pl-c1">*</span> <span class="pl-s1">circumference</span><span class="pl-kos">;</span>
+        
+        <span class="pl-k">const</span> <span class="pl-s1">progressSVG</span> <span class="pl-c1">=</span> <span class="pl-s1">progress</span> <span class="pl-c1">&gt;</span> <span class="pl-c1">0</span> ? <span class="pl-s">`</span>
+<span class="pl-s">            &lt;svg width="<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">circularProgress</span><span class="pl-kos">.</span><span class="pl-c1">size</span><span class="pl-kos">}</span></span>" height="<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">circularProgress</span><span class="pl-kos">.</span><span class="pl-c1">size</span><span class="pl-kos">}</span></span>" </span>
+<span class="pl-s">                 style="position: absolute; top: 0; left: 0;"&gt;</span>
+<span class="pl-s">                &lt;circle cx="<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">circularProgress</span><span class="pl-kos">.</span><span class="pl-c1">size</span><span class="pl-c1">/</span><span class="pl-c1">2</span><span class="pl-kos">}</span></span>" cy="<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">circularProgress</span><span class="pl-kos">.</span><span class="pl-c1">size</span><span class="pl-c1">/</span><span class="pl-c1">2</span><span class="pl-kos">}</span></span>" </span>
+<span class="pl-s">                        r="<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">circularProgress</span><span class="pl-kos">.</span><span class="pl-c1">radius</span><span class="pl-kos">}</span></span>" </span>
+<span class="pl-s">                        fill="none" </span>
+<span class="pl-s">                        stroke="rgba(255,255,255,0.2)" </span>
+<span class="pl-s">                        stroke-width="<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">circularProgress</span><span class="pl-kos">.</span><span class="pl-c1">strokeWidth</span><span class="pl-kos">}</span></span>"/&gt;</span>
+<span class="pl-s">                &lt;circle cx="<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">circularProgress</span><span class="pl-kos">.</span><span class="pl-c1">size</span><span class="pl-c1">/</span><span class="pl-c1">2</span><span class="pl-kos">}</span></span>" cy="<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">circularProgress</span><span class="pl-kos">.</span><span class="pl-c1">size</span><span class="pl-c1">/</span><span class="pl-c1">2</span><span class="pl-kos">}</span></span>" </span>
+<span class="pl-s">                        r="<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">circularProgress</span><span class="pl-kos">.</span><span class="pl-c1">radius</span><span class="pl-kos">}</span></span>" </span>
+<span class="pl-s">                        fill="none" </span>
+<span class="pl-s">                        stroke="<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">colors</span><span class="pl-kos">.</span><span class="pl-c1">progress</span><span class="pl-kos">}</span></span>" </span>
+<span class="pl-s">                        stroke-width="<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">circularProgress</span><span class="pl-kos">.</span><span class="pl-c1">strokeWidth</span><span class="pl-kos">}</span></span>"</span>
+<span class="pl-s">                        stroke-dasharray="<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">circumference</span><span class="pl-kos">}</span></span>"</span>
+<span class="pl-s">                        stroke-dashoffset="<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">offset</span><span class="pl-kos">}</span></span>"</span>
+<span class="pl-s">                        transform="rotate(-90 <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">circularProgress</span><span class="pl-kos">.</span><span class="pl-c1">size</span><span class="pl-c1">/</span><span class="pl-c1">2</span><span class="pl-kos">}</span></span> <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">circularProgress</span><span class="pl-kos">.</span><span class="pl-c1">size</span><span class="pl-c1">/</span><span class="pl-c1">2</span><span class="pl-kos">}</span></span>)"</span>
+<span class="pl-s">                        stroke-linecap="round"/&gt;</span>
+<span class="pl-s">            &lt;/svg&gt;</span>
+<span class="pl-s">        `</span> : <span class="pl-s">''</span><span class="pl-kos">;</span>
+        
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">islandElement</span><span class="pl-kos">.</span><span class="pl-c1">innerHTML</span> <span class="pl-c1">=</span> <span class="pl-s">`</span>
+<span class="pl-s">            &lt;div style="</span>
+<span class="pl-s">                width: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">dim</span><span class="pl-kos">.</span><span class="pl-c1">width</span><span class="pl-kos">}</span></span>;</span>
+<span class="pl-s">                height: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">dim</span><span class="pl-kos">.</span><span class="pl-c1">height</span><span class="pl-kos">}</span></span>;</span>
+<span class="pl-s">                border-radius: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">dim</span><span class="pl-kos">.</span><span class="pl-c1">borderRadius</span><span class="pl-kos">}</span></span>;</span>
+<span class="pl-s">                background: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">colors</span><span class="pl-kos">.</span><span class="pl-c1">background</span><span class="pl-kos">}</span></span>;</span>
+<span class="pl-s">                backdrop-filter: blur(20px) saturate(180%);</span>
+<span class="pl-s">                -webkit-backdrop-filter: blur(20px) saturate(180%);</span>
+<span class="pl-s">                border: 0.5px solid rgba(255, 255, 255, 0.08);</span>
+<span class="pl-s">                display: flex;</span>
+<span class="pl-s">                align-items: center;</span>
+<span class="pl-s">                justify-content: center;</span>
+<span class="pl-s">                position: relative;</span>
+<span class="pl-s">                overflow: hidden;</span>
+<span class="pl-s">                box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);</span>
+<span class="pl-s">            "&gt;</span>
+<span class="pl-s">                <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">progressSVG</span><span class="pl-kos">}</span></span></span>
+<span class="pl-s">                &lt;span style="</span>
+<span class="pl-s">                    color: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">colors</span><span class="pl-kos">.</span><span class="pl-c1">text</span><span class="pl-kos">}</span></span>;</span>
+<span class="pl-s">                    font-size: 16px;</span>
+<span class="pl-s">                    font-weight: 600;</span>
+<span class="pl-s">                    z-index: 1;</span>
+<span class="pl-s">                "&gt;<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">activity</span><span class="pl-kos">.</span><span class="pl-c1">icon</span> <span class="pl-c1">||</span> <span class="pl-s">'●'</span><span class="pl-kos">}</span></span>&lt;/span&gt;</span>
+<span class="pl-s">            &lt;/div&gt;</span>
+<span class="pl-s">        `</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-c">// 渲染紧凑型视图</span>
+    <span class="pl-en">renderCompactView</span><span class="pl-kos">(</span><span class="pl-s1">activity</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">const</span> <span class="pl-s1">dim</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">dimensions</span><span class="pl-kos">.</span><span class="pl-c1">compact</span><span class="pl-kos">;</span>
+        
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">islandElement</span><span class="pl-kos">.</span><span class="pl-c1">innerHTML</span> <span class="pl-c1">=</span> <span class="pl-s">`</span>
+<span class="pl-s">            &lt;div style="</span>
+<span class="pl-s">                width: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">dim</span><span class="pl-kos">.</span><span class="pl-c1">width</span><span class="pl-kos">}</span></span>;</span>
+<span class="pl-s">                height: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">dim</span><span class="pl-kos">.</span><span class="pl-c1">height</span><span class="pl-kos">}</span></span>;</span>
+<span class="pl-s">                border-radius: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">dim</span><span class="pl-kos">.</span><span class="pl-c1">borderRadius</span><span class="pl-kos">}</span></span>;</span>
+<span class="pl-s">                background: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">colors</span><span class="pl-kos">.</span><span class="pl-c1">background</span><span class="pl-kos">}</span></span>;</span>
+<span class="pl-s">                backdrop-filter: blur(30px) saturate(180%);</span>
+<span class="pl-s">                -webkit-backdrop-filter: blur(30px) saturate(180%);</span>
+<span class="pl-s">                border: 0.5px solid rgba(255, 255, 255, 0.1);</span>
+<span class="pl-s">                display: flex;</span>
+<span class="pl-s">                align-items: center;</span>
+<span class="pl-s">                padding: 0 16px;</span>
+<span class="pl-s">                gap: 12px;</span>
+<span class="pl-s">                box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);</span>
+<span class="pl-s">                cursor: pointer;</span>
+<span class="pl-s">                transition: all 0.2s ease;</span>
+<span class="pl-s">            "&gt;</span>
+<span class="pl-s">                &lt;span style="</span>
+<span class="pl-s">                    color: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">colors</span><span class="pl-kos">.</span><span class="pl-c1">text</span><span class="pl-kos">}</span></span>;</span>
+<span class="pl-s">                    font-size: 16px;</span>
+<span class="pl-s">                    min-width: 16px;</span>
+<span class="pl-s">                "&gt;<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">activity</span><span class="pl-kos">.</span><span class="pl-c1">icon</span> <span class="pl-c1">||</span> <span class="pl-s">'●'</span><span class="pl-kos">}</span></span>&lt;/span&gt;</span>
+<span class="pl-s">                </span>
+<span class="pl-s">                &lt;div style="flex: 1; overflow: hidden;"&gt;</span>
+<span class="pl-s">                    &lt;div style="</span>
+<span class="pl-s">                        color: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">colors</span><span class="pl-kos">.</span><span class="pl-c1">text</span><span class="pl-kos">}</span></span>;</span>
+<span class="pl-s">                        font-size: 13px;</span>
+<span class="pl-s">                        font-weight: 600;</span>
+<span class="pl-s">                        white-space: nowrap;</span>
+<span class="pl-s">                        overflow: hidden;</span>
+<span class="pl-s">                        text-overflow: ellipsis;</span>
+<span class="pl-s">                        font-family: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">typography</span><span class="pl-kos">.</span><span class="pl-c1">fontFamily</span><span class="pl-kos">}</span></span>;</span>
+<span class="pl-s">                    "&gt;<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">activity</span><span class="pl-kos">.</span><span class="pl-c1">title</span><span class="pl-kos">}</span></span>&lt;/div&gt;</span>
+<span class="pl-s">                    </span>
+<span class="pl-s">                    <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">activity</span><span class="pl-kos">.</span><span class="pl-c1">subtitle</span> ? <span class="pl-s">`</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                        &lt;div style="</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                            color: rgba(255, 255, 255, 0.7);</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                            font-size: 11px;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                            font-weight: 400;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                            white-space: nowrap;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                            overflow: hidden;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                            text-overflow: ellipsis;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                            margin-top: 2px;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                            font-family: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">typography</span><span class="pl-kos">.</span><span class="pl-c1">fontFamily</span><span class="pl-kos">}</span></span>;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                        "&gt;<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">activity</span><span class="pl-kos">.</span><span class="pl-c1">subtitle</span><span class="pl-kos">}</span></span>&lt;/div&gt;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                    `</span> : <span class="pl-s">''</span><span class="pl-kos">}</span></span></span>
+<span class="pl-s">                &lt;/div&gt;</span>
+<span class="pl-s">                </span>
+<span class="pl-s">                <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activities</span><span class="pl-kos">.</span><span class="pl-c1">length</span> <span class="pl-c1">&gt;</span> <span class="pl-c1">1</span> ? <span class="pl-s">`</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                    &lt;div style="</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                        display: flex;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                        gap: 4px;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                    "&gt;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                        <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activities</span><span class="pl-kos">.</span><span class="pl-en">map</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-s1">_</span><span class="pl-kos">,</span> <span class="pl-s1">i</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-s">`</span></span></span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s"><span class="pl-s1"><span class="pl-s">                            &lt;div style="</span></span></span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s"><span class="pl-s1"><span class="pl-s">                                width: 4px;</span></span></span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s"><span class="pl-s1"><span class="pl-s">                                height: 4px;</span></span></span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s"><span class="pl-s1"><span class="pl-s">                                border-radius: 2px;</span></span></span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s"><span class="pl-s1"><span class="pl-s">                                background: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">i</span> <span class="pl-c1">===</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentActivityIndex</span> ? <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">colors</span><span class="pl-kos">.</span><span class="pl-c1">accent</span> : <span class="pl-s">'rgba(255,255,255,0.2)'</span><span class="pl-kos">}</span></span>;</span></span></span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s"><span class="pl-s1"><span class="pl-s">                            "&gt;&lt;/div&gt;</span></span></span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s"><span class="pl-s1"><span class="pl-s">                        `</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">join</span><span class="pl-kos">(</span><span class="pl-s">''</span><span class="pl-kos">)</span><span class="pl-kos">}</span></span></span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                    &lt;/div&gt;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                `</span> : <span class="pl-s">''</span><span class="pl-kos">}</span></span></span>
+<span class="pl-s">            &lt;/div&gt;</span>
+<span class="pl-s">        `</span><span class="pl-kos">;</span>
+        
+        <span class="pl-c">// 添加悬停效果</span>
+        <span class="pl-k">const</span> <span class="pl-s1">container</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">islandElement</span><span class="pl-kos">.</span><span class="pl-c1">firstChild</span><span class="pl-kos">;</span>
+        <span class="pl-s1">container</span><span class="pl-kos">.</span><span class="pl-en">onmouseenter</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+            <span class="pl-s1">container</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">transform</span> <span class="pl-c1">=</span> <span class="pl-s">'scale(1.02)'</span><span class="pl-kos">;</span>
+            <span class="pl-s1">container</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">boxShadow</span> <span class="pl-c1">=</span> <span class="pl-s">'0 8px 35px rgba(0, 0, 0, 0.35)'</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span><span class="pl-kos">;</span>
+        <span class="pl-s1">container</span><span class="pl-kos">.</span><span class="pl-en">onmouseleave</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+            <span class="pl-s1">container</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">transform</span> <span class="pl-c1">=</span> <span class="pl-s">'scale(1)'</span><span class="pl-kos">;</span>
+            <span class="pl-s1">container</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">boxShadow</span> <span class="pl-c1">=</span> <span class="pl-s">'0 6px 30px rgba(0, 0, 0, 0.3)'</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-c">// 渲染扩展型视图</span>
+    <span class="pl-en">renderExpandedView</span><span class="pl-kos">(</span><span class="pl-s1">activity</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">const</span> <span class="pl-s1">dim</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">dimensions</span><span class="pl-kos">.</span><span class="pl-c1">expanded</span><span class="pl-kos">;</span>
+        <span class="pl-k">const</span> <span class="pl-s1">progress</span> <span class="pl-c1">=</span> <span class="pl-s1">activity</span><span class="pl-kos">.</span><span class="pl-c1">progress</span> <span class="pl-c1">||</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+        
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">islandElement</span><span class="pl-kos">.</span><span class="pl-c1">innerHTML</span> <span class="pl-c1">=</span> <span class="pl-s">`</span>
+<span class="pl-s">            &lt;div style="</span>
+<span class="pl-s">                width: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">dim</span><span class="pl-kos">.</span><span class="pl-c1">width</span><span class="pl-kos">}</span></span>;</span>
+<span class="pl-s">                min-height: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">dim</span><span class="pl-kos">.</span><span class="pl-c1">minHeight</span><span class="pl-kos">}</span></span>;</span>
+<span class="pl-s">                border-radius: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">dim</span><span class="pl-kos">.</span><span class="pl-c1">borderRadius</span><span class="pl-kos">}</span></span>;</span>
+<span class="pl-s">                background: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">colors</span><span class="pl-kos">.</span><span class="pl-c1">background</span><span class="pl-kos">}</span></span>;</span>
+<span class="pl-s">                backdrop-filter: blur(40px) saturate(180%);</span>
+<span class="pl-s">                -webkit-backdrop-filter: blur(40px) saturate(180%);</span>
+<span class="pl-s">                border: 0.5px solid rgba(255, 255, 255, 0.15);</span>
+<span class="pl-s">                padding: 20px;</span>
+<span class="pl-s">                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);</span>
+<span class="pl-s">                cursor: pointer;</span>
+<span class="pl-s">            "&gt;</span>
+<span class="pl-s">                &lt;div style="</span>
+<span class="pl-s">                    color: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">colors</span><span class="pl-kos">.</span><span class="pl-c1">text</span><span class="pl-kos">}</span></span>;</span>
+<span class="pl-s">                    text-align: center;</span>
+<span class="pl-s">                    font-family: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">typography</span><span class="pl-kos">.</span><span class="pl-c1">fontFamily</span><span class="pl-kos">}</span></span>;</span>
+<span class="pl-s">                "&gt;</span>
+<span class="pl-s">                    &lt;div style="font-size: 24px; margin-bottom: 12px;"&gt;</span>
+<span class="pl-s">                        <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">activity</span><span class="pl-kos">.</span><span class="pl-c1">icon</span> <span class="pl-c1">||</span> <span class="pl-s">'●'</span><span class="pl-kos">}</span></span></span>
+<span class="pl-s">                    &lt;/div&gt;</span>
+<span class="pl-s">                    </span>
+<span class="pl-s">                    &lt;div style="</span>
+<span class="pl-s">                        font-size: 17px;</span>
+<span class="pl-s">                        font-weight: 600;</span>
+<span class="pl-s">                        margin-bottom: 6px;</span>
+<span class="pl-s">                    "&gt;<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">activity</span><span class="pl-kos">.</span><span class="pl-c1">title</span><span class="pl-kos">}</span></span>&lt;/div&gt;</span>
+<span class="pl-s">                    </span>
+<span class="pl-s">                    <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">activity</span><span class="pl-kos">.</span><span class="pl-c1">subtitle</span> ? <span class="pl-s">`</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                        &lt;div style="</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                            font-size: 13px;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                            color: rgba(255, 255, 255, 0.7);</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                            margin-bottom: 20px;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                        "&gt;<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">activity</span><span class="pl-kos">.</span><span class="pl-c1">subtitle</span><span class="pl-kos">}</span></span>&lt;/div&gt;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                    `</span> : <span class="pl-s">''</span><span class="pl-kos">}</span></span></span>
+<span class="pl-s">                    </span>
+<span class="pl-s">                    <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">progress</span> <span class="pl-c1">&gt;</span> <span class="pl-c1">0</span> ? <span class="pl-s">`</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                        &lt;div style="margin: 25px 0;"&gt;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                            &lt;div style="</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                                font-size: 21px;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                                font-weight: 700;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                                color: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">colors</span><span class="pl-kos">.</span><span class="pl-c1">progress</span><span class="pl-kos">}</span></span>;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                                margin-bottom: 8px;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                            "&gt;<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">progress</span><span class="pl-kos">}</span></span>%&lt;/div&gt;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                            </span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                            &lt;div style="</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                                width: 100px;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                                height: 100px;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                                margin: 0 auto;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                                position: relative;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                            "&gt;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                                &lt;svg width="100" height="100"&gt;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                                    &lt;circle cx="50" cy="50" r="40" </span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                                            fill="none" </span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                                            stroke="rgba(255,255,255,0.1)" </span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                                            stroke-width="8"/&gt;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                                    &lt;circle cx="50" cy="50" r="40" </span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                                            fill="none" </span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                                            stroke="<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">colors</span><span class="pl-kos">.</span><span class="pl-c1">progress</span><span class="pl-kos">}</span></span>" </span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                                            stroke-width="8"</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                                            stroke-dasharray="251.2"</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                                            stroke-dashoffset="<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-c1">251.2</span> <span class="pl-c1">-</span> <span class="pl-kos">(</span><span class="pl-s1">progress</span> <span class="pl-c1">*</span> <span class="pl-c1">2.512</span><span class="pl-kos">)</span><span class="pl-kos">}</span></span>"</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                                            transform="rotate(-90 50 50)"</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                                            stroke-linecap="round"/&gt;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                                &lt;/svg&gt;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                            &lt;/div&gt;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                        &lt;/div&gt;</span></span></span>
+<span class="pl-s"><span class="pl-s1"><span class="pl-s">                    `</span> : <span class="pl-s">''</span><span class="pl-kos">}</span></span></span>
+<span class="pl-s">                    </span>
+<span class="pl-s">                    &lt;div style="</span>
+<span class="pl-s">                        font-size: 11px;</span>
+<span class="pl-s">                        color: rgba(255, 255, 255, 0.5);</span>
+<span class="pl-s">                        margin-top: 20px;</span>
+<span class="pl-s">                        padding-top: 15px;</span>
+<span class="pl-s">                        border-top: 0.5px solid rgba(255, 255, 255, 0.1);</span>
+<span class="pl-s">                    "&gt;长按返回 • 滑动切换&lt;/div&gt;</span>
+<span class="pl-s">                &lt;/div&gt;</span>
+<span class="pl-s">            &lt;/div&gt;</span>
+<span class="pl-s">        `</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-c">// ========== 积木实现 ==========</span>
+    
+    <span class="pl-en">showIsland</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">islandElement</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">islandElement</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">display</span> <span class="pl-c1">=</span> <span class="pl-s">'block'</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">islandVisible</span> <span class="pl-c1">=</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-en">hideIsland</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">islandElement</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">islandElement</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">display</span> <span class="pl-c1">=</span> <span class="pl-s">'none'</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">islandVisible</span> <span class="pl-c1">=</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-en">setState</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentState</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">STATE</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">updateDisplay</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-k">return</span> <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">vm</span><span class="pl-kos">.</span><span class="pl-c1">runtime</span><span class="pl-kos">.</span><span class="pl-en">startHats</span><span class="pl-kos">(</span><span class="pl-s">'moranldd_whenStateChanged'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-en">setContent</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activities</span><span class="pl-kos">.</span><span class="pl-c1">length</span> <span class="pl-c1">&gt;</span> <span class="pl-c1">0</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activities</span><span class="pl-kos">[</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentActivityIndex</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">title</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">TITLE</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activities</span><span class="pl-kos">[</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentActivityIndex</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">subtitle</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">SUBTITLE</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">updateDisplay</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-en">setIcon</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activities</span><span class="pl-kos">.</span><span class="pl-c1">length</span> <span class="pl-c1">&gt;</span> <span class="pl-c1">0</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activities</span><span class="pl-kos">[</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentActivityIndex</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">icon</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">ICON</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">updateDisplay</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-en">setProgress</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">const</span> <span class="pl-s1">percent</span> <span class="pl-c1">=</span> <span class="pl-v">Math</span><span class="pl-kos">.</span><span class="pl-en">max</span><span class="pl-kos">(</span><span class="pl-c1">0</span><span class="pl-kos">,</span> <span class="pl-v">Math</span><span class="pl-kos">.</span><span class="pl-en">min</span><span class="pl-kos">(</span><span class="pl-c1">100</span><span class="pl-kos">,</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">PERCENT</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activities</span><span class="pl-kos">.</span><span class="pl-c1">length</span> <span class="pl-c1">&gt;</span> <span class="pl-c1">0</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activities</span><span class="pl-kos">[</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentActivityIndex</span><span class="pl-kos">]</span><span class="pl-kos">.</span><span class="pl-c1">progress</span> <span class="pl-c1">=</span> <span class="pl-s1">percent</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">circularProgress</span><span class="pl-kos">.</span><span class="pl-c1">value</span> <span class="pl-c1">=</span> <span class="pl-s1">percent</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">updateDisplay</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-en">addActivity</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">const</span> <span class="pl-s1">newActivity</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+            <span class="pl-c1">id</span>: <span class="pl-s">`activity_<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-v">Date</span><span class="pl-kos">.</span><span class="pl-en">now</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">,</span>
+            <span class="pl-c1">title</span>: <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">TITLE</span><span class="pl-kos">,</span>
+            <span class="pl-c1">subtitle</span>: <span class="pl-s">''</span><span class="pl-kos">,</span>
+            <span class="pl-c1">icon</span>: <span class="pl-s">'●'</span><span class="pl-kos">,</span>
+            <span class="pl-c1">progress</span>: <span class="pl-c1">0</span>
+        <span class="pl-kos">}</span><span class="pl-kos">;</span>
+        
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activities</span><span class="pl-kos">.</span><span class="pl-en">push</span><span class="pl-kos">(</span><span class="pl-s1">newActivity</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activities</span><span class="pl-kos">.</span><span class="pl-c1">length</span> <span class="pl-c1">&gt;</span> <span class="pl-c1">3</span><span class="pl-kos">)</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activities</span><span class="pl-kos">.</span><span class="pl-en">shift</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">updateDisplay</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-en">nextActivity</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activities</span><span class="pl-kos">.</span><span class="pl-c1">length</span> <span class="pl-c1">&lt;=</span> <span class="pl-c1">1</span><span class="pl-kos">)</span> <span class="pl-k">return</span><span class="pl-kos">;</span>
+        
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentActivityIndex</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentActivityIndex</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span><span class="pl-kos">)</span> <span class="pl-c1">%</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activities</span><span class="pl-kos">.</span><span class="pl-c1">length</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">updateDisplay</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-en">clearActivities</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activities</span> <span class="pl-c1">=</span> <span class="pl-kos">[</span><span class="pl-kos">{</span>
+            <span class="pl-c1">id</span>: <span class="pl-s">'default'</span><span class="pl-kos">,</span>
+            <span class="pl-c1">title</span>: <span class="pl-s">'灵动岛'</span><span class="pl-kos">,</span>
+            <span class="pl-c1">subtitle</span>: <span class="pl-s">'慕然科技'</span><span class="pl-kos">,</span>
+            <span class="pl-c1">icon</span>: <span class="pl-s">'●'</span><span class="pl-kos">,</span>
+            <span class="pl-c1">progress</span>: <span class="pl-c1">0</span>
+        <span class="pl-kos">}</span><span class="pl-kos">]</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentActivityIndex</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">updateDisplay</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-en">setPosition</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">islandElement</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">position</span><span class="pl-kos">.</span><span class="pl-c1">left</span> <span class="pl-c1">=</span> <span class="pl-s">`<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">X</span><span class="pl-kos">}</span></span>%`</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">position</span><span class="pl-kos">.</span><span class="pl-c1">top</span> <span class="pl-c1">=</span> <span class="pl-s">`<span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">Y</span><span class="pl-kos">}</span></span>px`</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">applyBaseStyles</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-en">setAccentColor</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">config</span><span class="pl-kos">.</span><span class="pl-c1">colors</span><span class="pl-kos">.</span><span class="pl-c1">accent</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">COLOR</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">updateDisplay</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-en">resetAll</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-c">// 重置所有配置</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">config</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+            <span class="pl-c1">position</span>: <span class="pl-kos">{</span> <span class="pl-c1">top</span>: <span class="pl-s">'15px'</span><span class="pl-kos">,</span> <span class="pl-c1">left</span>: <span class="pl-s">'50%'</span> <span class="pl-kos">}</span><span class="pl-kos">,</span>
+            <span class="pl-c1">colors</span>: <span class="pl-kos">{</span>
+                <span class="pl-c1">background</span>: <span class="pl-s">'rgba(28, 28, 30, 0.95)'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">text</span>: <span class="pl-s">'#FFFFFF'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">accent</span>: <span class="pl-s">'#0A84FF'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">progress</span>: <span class="pl-s">'#32D74B'</span>
+            <span class="pl-kos">}</span><span class="pl-kos">,</span>
+            <span class="pl-c1">dimensions</span>: <span class="pl-kos">{</span>
+                <span class="pl-c1">minimized</span>: <span class="pl-kos">{</span> <span class="pl-c1">width</span>: <span class="pl-s">'40px'</span><span class="pl-kos">,</span> <span class="pl-c1">height</span>: <span class="pl-s">'40px'</span><span class="pl-kos">,</span> <span class="pl-c1">borderRadius</span>: <span class="pl-s">'20px'</span> <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-c1">compact</span>: <span class="pl-kos">{</span> <span class="pl-c1">width</span>: <span class="pl-s">'158px'</span><span class="pl-kos">,</span> <span class="pl-c1">height</span>: <span class="pl-s">'37px'</span><span class="pl-kos">,</span> <span class="pl-c1">borderRadius</span>: <span class="pl-s">'18.5px'</span> <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-c1">expanded</span>: <span class="pl-kos">{</span> <span class="pl-c1">width</span>: <span class="pl-s">'320px'</span><span class="pl-kos">,</span> <span class="pl-c1">minHeight</span>: <span class="pl-s">'180px'</span><span class="pl-kos">,</span> <span class="pl-c1">borderRadius</span>: <span class="pl-s">'22px'</span> <span class="pl-kos">}</span>
+            <span class="pl-kos">}</span><span class="pl-kos">,</span>
+            <span class="pl-c1">typography</span>: <span class="pl-kos">{</span>
+                <span class="pl-c1">fontFamily</span>: <span class="pl-s">'-apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">fontSize</span>: <span class="pl-kos">{</span> <span class="pl-c1">small</span>: <span class="pl-s">'13px'</span><span class="pl-kos">,</span> <span class="pl-c1">medium</span>: <span class="pl-s">'15px'</span><span class="pl-kos">,</span> <span class="pl-c1">large</span>: <span class="pl-s">'17px'</span> <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                <span class="pl-c1">fontWeight</span>: <span class="pl-kos">{</span> <span class="pl-c1">regular</span>: <span class="pl-s">'400'</span><span class="pl-kos">,</span> <span class="pl-c1">semibold</span>: <span class="pl-s">'600'</span><span class="pl-kos">,</span> <span class="pl-c1">bold</span>: <span class="pl-s">'700'</span> <span class="pl-kos">}</span>
+            <span class="pl-kos">}</span>
+        <span class="pl-kos">}</span><span class="pl-kos">;</span>
+        
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">circularProgress</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+            <span class="pl-c1">value</span>: <span class="pl-c1">0</span><span class="pl-kos">,</span>
+            <span class="pl-c1">size</span>: <span class="pl-c1">36</span><span class="pl-kos">,</span>
+            <span class="pl-c1">strokeWidth</span>: <span class="pl-c1">3</span><span class="pl-kos">,</span>
+            <span class="pl-c1">radius</span>: <span class="pl-c1">16</span>
+        <span class="pl-kos">}</span><span class="pl-kos">;</span>
+        
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentState</span> <span class="pl-c1">=</span> <span class="pl-s">'compact'</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">clearActivities</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">applyBaseStyles</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">updateDisplay</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-en">whenClicked</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">return</span> <span class="pl-c1">false</span><span class="pl-kos">;</span> <span class="pl-c">// Hat积木，由事件触发</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-en">whenStateChanged</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">return</span> <span class="pl-c1">false</span><span class="pl-kos">;</span> <span class="pl-c">// Hat积木，由事件触发</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-en">getCurrentState</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">currentState</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-en">getActivityCount</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">activities</span><span class="pl-kos">.</span><span class="pl-c1">length</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+
+    <span class="pl-en">isVisible</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">islandVisible</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span>
+
+<span class="pl-c">// 注册扩展</span>
+<span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-k">typeof</span> <span class="pl-v">Scratch</span> <span class="pl-c1">!==</span> <span class="pl-s">'undefined'</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">extensions</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">extensions</span><span class="pl-kos">.</span><span class="pl-en">register</span><span class="pl-kos">(</span><span class="pl-k">new</span> <span class="pl-v">MoranDynamicIslandExtension</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span></pre></div></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://ccwmoran.github.io/code">慕然科技Scratch积木扩展库</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("12/1/2025"!=""){
+    var startSite=new Date("12/1/2025");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","ccwmoran/code");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/lightbox.js'></script>
+
+</html>
