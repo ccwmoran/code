@@ -1,5 +1,5 @@
 [`慕然科技官网`](https://ccwmoran.github.io)
-```
+```js
 (function(Scratch) {
     'use strict';
     

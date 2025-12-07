@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>慕然科技Scratch积木扩展库</title><link>https://ccwmoran.github.io/code</link><description>慕然科技官网https://ccwmoran.github.io</description><copyright>慕然科技Scratch积木扩展库</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg</url><title>avatar</title><link>https://ccwmoran.github.io/code</link></image><lastBuildDate>Sun, 07 Dec 2025 13:13:14 +0000</lastBuildDate><managingEditor>慕然科技Scratch积木扩展库</managingEditor><ttl>60</ttl><webMaster>慕然科技Scratch积木扩展库</webMaster><item><title>慕然科技的灵动岛</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-ling-dong-dao.html</link><description>```js
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>慕然科技Scratch积木扩展库</title><link>https://ccwmoran.github.io/code</link><description>慕然科技官网https://ccwmoran.github.io</description><copyright>慕然科技Scratch积木扩展库</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg</url><title>avatar</title><link>https://ccwmoran.github.io/code</link></image><lastBuildDate>Sun, 07 Dec 2025 13:13:55 +0000</lastBuildDate><managingEditor>慕然科技Scratch积木扩展库</managingEditor><ttl>60</ttl><webMaster>慕然科技Scratch积木扩展库</webMaster><item><title>慕然科技的灵动岛</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-ling-dong-dao.html</link><description>```js
 // 慕然科技的灵动岛 - Scratch 3.0扩展
 // 扩展ID: moranldd
 // 扩展名称: 慕然科技的灵动岛
@@ -2349,7 +2349,7 @@ if (typeof Scratch !== 'undefined' &amp;&amp; Scratch.extensions) {
     Scratch.extensions.register(new GLMChat());
 })(Scratch);
 ```。</description><guid isPermaLink="true">https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-zhi-pu-qing-yan-dui-hua.html</guid><pubDate>Sun, 30 Nov 2025 13:26:34 +0000</pubDate></item><item><title>慕然科技的DeepSeek对话</title><link>https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-DeepSeek-dui-hua.html</link><description>[`慕然科技官网`](https://ccwmoran.github.io)
-```
+```js
 (function(Scratch) {
     'use strict';
     
