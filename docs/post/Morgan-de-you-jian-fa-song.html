@@ -10,7 +10,7 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="```
+<meta name="description" content="```js
 (function(Scratch) {
     'use strict';
     
@@ -79,7 +79,7 @@
                                 type: Scratch.ArgumentType.STRING,
                                 defaultValue: '这是一封来自Scratch的测试邮件。">
 <meta property="og:title" content="Morgan的邮件发送">
-<meta property="og:description" content="```
+<meta property="og:description" content="```js
 (function(Scratch) {
     'use strict';
     
@@ -151,7 +151,7 @@
 <meta property="og:url" content="https://ccwmoran.github.io/code/post/Morgan-de-you-jian-fa-song.html">
 <meta property="og:image" content="https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg">
 <title>Morgan的邮件发送</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -217,291 +217,290 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><pre class="notranslate"><code class="notranslate">(function(Scratch) {
-    'use strict';
+<div class="markdown-body" id="postBody"><div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-kos">(</span><span class="pl-k">function</span><span class="pl-kos">(</span><span class="pl-v">Scratch</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-s">'use strict'</span><span class="pl-kos">;</span>
     
-    class MorganMailExtension {
-        constructor() {
-            // 使用EmailJS作为邮件发送服务
-            this.emailjsUserId = '';
-            this.emailjsServiceId = '';
-            this.emailjsTemplateId = '';
-            this.isInitialized = false;
+    <span class="pl-k">class</span> <span class="pl-v">MorganMailExtension</span> <span class="pl-kos">{</span>
+        <span class="pl-en">constructor</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-c">// 使用EmailJS作为邮件发送服务</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">emailjsUserId</span> <span class="pl-c1">=</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">emailjsServiceId</span> <span class="pl-c1">=</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">emailjsTemplateId</span> <span class="pl-c1">=</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">isInitialized</span> <span class="pl-c1">=</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
             
-            this.colors = {
-                primary: '#2E7D32',
-                secondary: '#1B5E20',
-                accent: '#4CAF50'
-            };
-        }
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">colors</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+                <span class="pl-c1">primary</span>: <span class="pl-s">'#2E7D32'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">secondary</span>: <span class="pl-s">'#1B5E20'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">accent</span>: <span class="pl-s">'#4CAF50'</span>
+            <span class="pl-kos">}</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        getInfo() {
-            return {
-                id: 'Mmail',
-                name: 'Morgan的邮件发送',
-                color1: this.colors.primary,
-                color2: this.colors.secondary,
-                color3: this.colors.accent,
-                docsURI: 'https://www.emailjs.com/docs/',
-                blocks: [
-                    {
-                        opcode: 'initializeEmailService',
-                        blockType: Scratch.BlockType.COMMAND,
-                        text: '初始化邮件服务 UserID:[USER_ID] ServiceID:[SERVICE_ID] TemplateID:[TEMPLATE_ID]',
-                        arguments: {
-                            USER_ID: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: 'your_user_id'
-                            },
-                            SERVICE_ID: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: 'your_service_id'
-                            },
-                            TEMPLATE_ID: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: 'your_template_id'
-                            }
-                        }
-                    },
-                    '---',
-                    {
-                        opcode: 'sendEmail',
-                        blockType: Scratch.BlockType.COMMAND,
-                        text: '发送邮件 发件人:[FROM_EMAIL] 收件人:[TO_EMAIL] 主题:[SUBJECT] 内容:[CONTENT]',
-                        arguments: {
-                            FROM_EMAIL: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: 'sender@example.com'
-                            },
-                            TO_EMAIL: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: 'receiver@example.com'
-                            },
-                            SUBJECT: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: 'Hello from Scratch!'
-                            },
-                            CONTENT: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: '这是一封来自Scratch的测试邮件。'
-                            }
-                        }
-                    },
-                    {
-                        opcode: 'sendEmailWithName',
-                        blockType: Scratch.BlockType.COMMAND,
-                        text: '发送邮件(带姓名) 发件人:[FROM_EMAIL] 发件人名:[FROM_NAME] 收件人:[TO_EMAIL] 收件人名:[TO_NAME] 主题:[SUBJECT] 内容:[CONTENT]',
-                        arguments: {
-                            FROM_EMAIL: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: 'sender@example.com'
-                            },
-                            FROM_NAME: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: '发件人'
-                            },
-                            TO_EMAIL: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: 'receiver@example.com'
-                            },
-                            TO_NAME: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: '收件人'
-                            },
-                            SUBJECT: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: 'Hello from Scratch!'
-                            },
-                            CONTENT: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: '这是一封来自Scratch的测试邮件。'
-                            }
-                        }
-                    },
-                    '---',
-                    {
-                        opcode: 'isServiceInitialized',
-                        blockType: Scratch.BlockType.BOOLEAN,
-                        text: '邮件服务已初始化?',
-                        disableMonitor: true
-                    },
-                    {
-                        opcode: 'getLastSendStatus',
-                        blockType: Scratch.BlockType.REPORTER,
-                        text: '上次发送状态',
-                        disableMonitor: true
-                    },
-                    {
-                        opcode: 'validateEmail',
-                        blockType: Scratch.BlockType.BOOLEAN,
-                        text: '邮箱地址 [EMAIL] 有效?',
-                        arguments: {
-                            EMAIL: {
-                                type: Scratch.ArgumentType.STRING,
-                                defaultValue: 'test@example.com'
-                            }
-                        }
-                    }
-                ]
-            };
-        }
+        <span class="pl-en">getInfo</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">return</span> <span class="pl-kos">{</span>
+                <span class="pl-c1">id</span>: <span class="pl-s">'Mmail'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">name</span>: <span class="pl-s">'Morgan的邮件发送'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">color1</span>: <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">colors</span><span class="pl-kos">.</span><span class="pl-c1">primary</span><span class="pl-kos">,</span>
+                <span class="pl-c1">color2</span>: <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">colors</span><span class="pl-kos">.</span><span class="pl-c1">secondary</span><span class="pl-kos">,</span>
+                <span class="pl-c1">color3</span>: <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">colors</span><span class="pl-kos">.</span><span class="pl-c1">accent</span><span class="pl-kos">,</span>
+                <span class="pl-c1">docsURI</span>: <span class="pl-s">'https://www.emailjs.com/docs/'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">blocks</span>: <span class="pl-kos">[</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'initializeEmailService'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'初始化邮件服务 UserID:[USER_ID] ServiceID:[SERVICE_ID] TemplateID:[TEMPLATE_ID]'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">USER_ID</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">'your_user_id'</span>
+                            <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">SERVICE_ID</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">'your_service_id'</span>
+                            <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">TEMPLATE_ID</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">'your_template_id'</span>
+                            <span class="pl-kos">}</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-s">'---'</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'sendEmail'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'发送邮件 发件人:[FROM_EMAIL] 收件人:[TO_EMAIL] 主题:[SUBJECT] 内容:[CONTENT]'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">FROM_EMAIL</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">'sender@example.com'</span>
+                            <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">TO_EMAIL</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">'receiver@example.com'</span>
+                            <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">SUBJECT</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">'Hello from Scratch!'</span>
+                            <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">CONTENT</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">'这是一封来自Scratch的测试邮件。'</span>
+                            <span class="pl-kos">}</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'sendEmailWithName'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">COMMAND</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'发送邮件(带姓名) 发件人:[FROM_EMAIL] 发件人名:[FROM_NAME] 收件人:[TO_EMAIL] 收件人名:[TO_NAME] 主题:[SUBJECT] 内容:[CONTENT]'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">FROM_EMAIL</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">'sender@example.com'</span>
+                            <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">FROM_NAME</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">'发件人'</span>
+                            <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">TO_EMAIL</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">'receiver@example.com'</span>
+                            <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">TO_NAME</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">'收件人'</span>
+                            <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">SUBJECT</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">'Hello from Scratch!'</span>
+                            <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                            <span class="pl-c1">CONTENT</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">'这是一封来自Scratch的测试邮件。'</span>
+                            <span class="pl-kos">}</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-s">'---'</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'isServiceInitialized'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">BOOLEAN</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'邮件服务已初始化?'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">disableMonitor</span>: <span class="pl-c1">true</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'getLastSendStatus'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">REPORTER</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'上次发送状态'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">disableMonitor</span>: <span class="pl-c1">true</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">{</span>
+                        <span class="pl-c1">opcode</span>: <span class="pl-s">'validateEmail'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">blockType</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">BlockType</span><span class="pl-kos">.</span><span class="pl-c1">BOOLEAN</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">text</span>: <span class="pl-s">'邮箱地址 [EMAIL] 有效?'</span><span class="pl-kos">,</span>
+                        <span class="pl-c1">arguments</span>: <span class="pl-kos">{</span>
+                            <span class="pl-c1">EMAIL</span>: <span class="pl-kos">{</span>
+                                <span class="pl-c1">type</span>: <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">ArgumentType</span><span class="pl-kos">.</span><span class="pl-c1">STRING</span><span class="pl-kos">,</span>
+                                <span class="pl-c1">defaultValue</span>: <span class="pl-s">'test@example.com'</span>
+                            <span class="pl-kos">}</span>
+                        <span class="pl-kos">}</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">]</span>
+            <span class="pl-kos">}</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        initializeEmailService(args) {
-            this.emailjsUserId = args.USER_ID.trim();
-            this.emailjsServiceId = args.SERVICE_ID.trim();
-            this.emailjsTemplateId = args.TEMPLATE_ID.trim();
+        <span class="pl-en">initializeEmailService</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">emailjsUserId</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">USER_ID</span><span class="pl-kos">.</span><span class="pl-en">trim</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">emailjsServiceId</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">SERVICE_ID</span><span class="pl-kos">.</span><span class="pl-en">trim</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">emailjsTemplateId</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">TEMPLATE_ID</span><span class="pl-kos">.</span><span class="pl-en">trim</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
             
-            if (this.emailjsUserId &amp;&amp; this.emailjsServiceId &amp;&amp; this.emailjsTemplateId) {
-                this.isInitialized = true;
-                console.log('邮件服务初始化成功');
-                return '邮件服务初始化成功';
-            } else {
-                this.isInitialized = false;
-                console.log('邮件服务初始化失败：参数不完整');
-                return '初始化失败：请检查所有参数';
-            }
-        }
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">emailjsUserId</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">emailjsServiceId</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">emailjsTemplateId</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">isInitialized</span> <span class="pl-c1">=</span> <span class="pl-c1">true</span><span class="pl-kos">;</span>
+                <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s">'邮件服务初始化成功'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-k">return</span> <span class="pl-s">'邮件服务初始化成功'</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span> <span class="pl-k">else</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">isInitialized</span> <span class="pl-c1">=</span> <span class="pl-c1">false</span><span class="pl-kos">;</span>
+                <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s">'邮件服务初始化失败：参数不完整'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-k">return</span> <span class="pl-s">'初始化失败：请检查所有参数'</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
+        <span class="pl-kos">}</span>
         
-        isServiceInitialized() {
-            return this.isInitialized;
-        }
+        <span class="pl-en">isServiceInitialized</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">isInitialized</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        getLastSendStatus() {
-            return this.lastSendStatus || '尚未发送邮件';
-        }
+        <span class="pl-en">getLastSendStatus</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastSendStatus</span> <span class="pl-c1">||</span> <span class="pl-s">'尚未发送邮件'</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        validateEmail(args) {
-            const email = args.EMAIL.trim();
-            // 简单的邮箱格式验证
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-        }
+        <span class="pl-en">validateEmail</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">const</span> <span class="pl-s1">email</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">EMAIL</span><span class="pl-kos">.</span><span class="pl-en">trim</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-c">// 简单的邮箱格式验证</span>
+            <span class="pl-k">const</span> <span class="pl-s1">emailRegex</span> <span class="pl-c1">=</span> <span class="pl-pds"><span class="pl-c1">/</span><span class="pl-cce">^</span><span class="pl-kos">[</span><span class="pl-c1">^</span><span class="pl-cce">\s</span><span class="pl-c1">@</span><span class="pl-kos">]</span><span class="pl-c1">+</span><span class="pl-s">@</span><span class="pl-kos">[</span><span class="pl-c1">^</span><span class="pl-cce">\s</span><span class="pl-c1">@</span><span class="pl-kos">]</span><span class="pl-c1">+</span><span class="pl-cce">\.</span><span class="pl-kos">[</span><span class="pl-c1">^</span><span class="pl-cce">\s</span><span class="pl-c1">@</span><span class="pl-kos">]</span><span class="pl-c1">+</span><span class="pl-cce">$</span><span class="pl-c1">/</span></span><span class="pl-kos">;</span>
+            <span class="pl-k">return</span> <span class="pl-s1">emailRegex</span><span class="pl-kos">.</span><span class="pl-en">test</span><span class="pl-kos">(</span><span class="pl-s1">email</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        sendEmail(args) {
-            if (!this.isInitialized) {
-                this.lastSendStatus = '错误：请先初始化邮件服务';
-                console.error(this.lastSendStatus);
-                return this.lastSendStatus;
-            }
+        <span class="pl-en">sendEmail</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">isInitialized</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastSendStatus</span> <span class="pl-c1">=</span> <span class="pl-s">'错误：请先初始化邮件服务'</span><span class="pl-kos">;</span>
+                <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">error</span><span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastSendStatus</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastSendStatus</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
             
-            const fromEmail = args.FROM_EMAIL.trim();
-            const toEmail = args.TO_EMAIL.trim();
-            const subject = args.SUBJECT.trim();
-            const content = args.CONTENT.trim();
+            <span class="pl-k">const</span> <span class="pl-s1">fromEmail</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">FROM_EMAIL</span><span class="pl-kos">.</span><span class="pl-en">trim</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">toEmail</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">TO_EMAIL</span><span class="pl-kos">.</span><span class="pl-en">trim</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">subject</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">SUBJECT</span><span class="pl-kos">.</span><span class="pl-en">trim</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">content</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">CONTENT</span><span class="pl-kos">.</span><span class="pl-en">trim</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
             
-            // 验证邮箱格式
-            if (!this.validateEmail({EMAIL: fromEmail})) {
-                this.lastSendStatus = '错误：发件人邮箱格式无效';
-                return this.lastSendStatus;
-            }
+            <span class="pl-c">// 验证邮箱格式</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">validateEmail</span><span class="pl-kos">(</span><span class="pl-kos">{</span><span class="pl-c1">EMAIL</span>: <span class="pl-s1">fromEmail</span><span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastSendStatus</span> <span class="pl-c1">=</span> <span class="pl-s">'错误：发件人邮箱格式无效'</span><span class="pl-kos">;</span>
+                <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastSendStatus</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
             
-            if (!this.validateEmail({EMAIL: toEmail})) {
-                this.lastSendStatus = '错误：收件人邮箱格式无效';
-                return this.lastSendStatus;
-            }
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">validateEmail</span><span class="pl-kos">(</span><span class="pl-kos">{</span><span class="pl-c1">EMAIL</span>: <span class="pl-s1">toEmail</span><span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastSendStatus</span> <span class="pl-c1">=</span> <span class="pl-s">'错误：收件人邮箱格式无效'</span><span class="pl-kos">;</span>
+                <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastSendStatus</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
             
-            // 使用EmailJS发送邮件
-            const templateParams = {
-                from_email: fromEmail,
-                to_email: toEmail,
-                subject: subject,
-                message: content,
-                from_name: 'Scratch用户',
-                to_name: '收件人'
-            };
+            <span class="pl-c">// 使用EmailJS发送邮件</span>
+            <span class="pl-k">const</span> <span class="pl-s1">templateParams</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+                <span class="pl-c1">from_email</span>: <span class="pl-s1">fromEmail</span><span class="pl-kos">,</span>
+                <span class="pl-c1">to_email</span>: <span class="pl-s1">toEmail</span><span class="pl-kos">,</span>
+                <span class="pl-c1">subject</span>: <span class="pl-s1">subject</span><span class="pl-kos">,</span>
+                <span class="pl-c1">message</span>: <span class="pl-s1">content</span><span class="pl-kos">,</span>
+                <span class="pl-c1">from_name</span>: <span class="pl-s">'Scratch用户'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">to_name</span>: <span class="pl-s">'收件人'</span>
+            <span class="pl-kos">}</span><span class="pl-kos">;</span>
             
-            return this.sendEmailJS(templateParams);
-        }
+            <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">sendEmailJS</span><span class="pl-kos">(</span><span class="pl-s1">templateParams</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        sendEmailWithName(args) {
-            if (!this.isInitialized) {
-                this.lastSendStatus = '错误：请先初始化邮件服务';
-                console.error(this.lastSendStatus);
-                return this.lastSendStatus;
-            }
+        <span class="pl-en">sendEmailWithName</span><span class="pl-kos">(</span><span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">isInitialized</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastSendStatus</span> <span class="pl-c1">=</span> <span class="pl-s">'错误：请先初始化邮件服务'</span><span class="pl-kos">;</span>
+                <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">error</span><span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastSendStatus</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastSendStatus</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
             
-            const fromEmail = args.FROM_EMAIL.trim();
-            const fromName = args.FROM_NAME.trim();
-            const toEmail = args.TO_EMAIL.trim();
-            const toName = args.TO_NAME.trim();
-            const subject = args.SUBJECT.trim();
-            const content = args.CONTENT.trim();
+            <span class="pl-k">const</span> <span class="pl-s1">fromEmail</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">FROM_EMAIL</span><span class="pl-kos">.</span><span class="pl-en">trim</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">fromName</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">FROM_NAME</span><span class="pl-kos">.</span><span class="pl-en">trim</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">toEmail</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">TO_EMAIL</span><span class="pl-kos">.</span><span class="pl-en">trim</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">toName</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">TO_NAME</span><span class="pl-kos">.</span><span class="pl-en">trim</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">subject</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">SUBJECT</span><span class="pl-kos">.</span><span class="pl-en">trim</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">content</span> <span class="pl-c1">=</span> <span class="pl-s1">args</span><span class="pl-kos">.</span><span class="pl-c1">CONTENT</span><span class="pl-kos">.</span><span class="pl-en">trim</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
             
-            // 验证邮箱格式
-            if (!this.validateEmail({EMAIL: fromEmail})) {
-                this.lastSendStatus = '错误：发件人邮箱格式无效';
-                return this.lastSendStatus;
-            }
+            <span class="pl-c">// 验证邮箱格式</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">validateEmail</span><span class="pl-kos">(</span><span class="pl-kos">{</span><span class="pl-c1">EMAIL</span>: <span class="pl-s1">fromEmail</span><span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastSendStatus</span> <span class="pl-c1">=</span> <span class="pl-s">'错误：发件人邮箱格式无效'</span><span class="pl-kos">;</span>
+                <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastSendStatus</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
             
-            if (!this.validateEmail({EMAIL: toEmail})) {
-                this.lastSendStatus = '错误：收件人邮箱格式无效';
-                return this.lastSendStatus;
-            }
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-c1">!</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">validateEmail</span><span class="pl-kos">(</span><span class="pl-kos">{</span><span class="pl-c1">EMAIL</span>: <span class="pl-s1">toEmail</span><span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastSendStatus</span> <span class="pl-c1">=</span> <span class="pl-s">'错误：收件人邮箱格式无效'</span><span class="pl-kos">;</span>
+                <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastSendStatus</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
             
-            // 使用EmailJS发送邮件
-            const templateParams = {
-                from_email: fromEmail,
-                from_name: fromName,
-                to_email: toEmail,
-                to_name: toName,
-                subject: subject,
-                message: content
-            };
+            <span class="pl-c">// 使用EmailJS发送邮件</span>
+            <span class="pl-k">const</span> <span class="pl-s1">templateParams</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+                <span class="pl-c1">from_email</span>: <span class="pl-s1">fromEmail</span><span class="pl-kos">,</span>
+                <span class="pl-c1">from_name</span>: <span class="pl-s1">fromName</span><span class="pl-kos">,</span>
+                <span class="pl-c1">to_email</span>: <span class="pl-s1">toEmail</span><span class="pl-kos">,</span>
+                <span class="pl-c1">to_name</span>: <span class="pl-s1">toName</span><span class="pl-kos">,</span>
+                <span class="pl-c1">subject</span>: <span class="pl-s1">subject</span><span class="pl-kos">,</span>
+                <span class="pl-c1">message</span>: <span class="pl-s1">content</span>
+            <span class="pl-kos">}</span><span class="pl-kos">;</span>
             
-            return this.sendEmailJS(templateParams);
-        }
+            <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">sendEmailJS</span><span class="pl-kos">(</span><span class="pl-s1">templateParams</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        sendEmailJS(templateParams) {
-            // 动态加载EmailJS库
-            return new Promise((resolve) =&gt; {
-                // 检查是否已加载EmailJS
-                if (typeof emailjs === 'undefined') {
-                    // 动态加载EmailJS SDK
-                    const script = document.createElement('script');
-                    script.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js';
-                    script.onload = () =&gt; {
-                        this.initializeAndSendEmail(templateParams, resolve);
-                    };
-                    script.onerror = () =&gt; {
-                        this.lastSendStatus = '错误：加载邮件服务失败';
-                        resolve(this.lastSendStatus);
-                    };
-                    document.head.appendChild(script);
-                } else {
-                    this.initializeAndSendEmail(templateParams, resolve);
-                }
-            });
-        }
+        <span class="pl-en">sendEmailJS</span><span class="pl-kos">(</span><span class="pl-s1">templateParams</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-c">// 动态加载EmailJS库</span>
+            <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-v">Promise</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-s1">resolve</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-c">// 检查是否已加载EmailJS</span>
+                <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-k">typeof</span> <span class="pl-s1">emailjs</span> <span class="pl-c1">===</span> <span class="pl-s">'undefined'</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                    <span class="pl-c">// 动态加载EmailJS SDK</span>
+                    <span class="pl-k">const</span> <span class="pl-s1">script</span> <span class="pl-c1">=</span> <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-en">createElement</span><span class="pl-kos">(</span><span class="pl-s">'script'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                    <span class="pl-s1">script</span><span class="pl-kos">.</span><span class="pl-c1">src</span> <span class="pl-c1">=</span> <span class="pl-s">'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js'</span><span class="pl-kos">;</span>
+                    <span class="pl-s1">script</span><span class="pl-kos">.</span><span class="pl-en">onload</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">initializeAndSendEmail</span><span class="pl-kos">(</span><span class="pl-s1">templateParams</span><span class="pl-kos">,</span> <span class="pl-s1">resolve</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">;</span>
+                    <span class="pl-s1">script</span><span class="pl-kos">.</span><span class="pl-en">onerror</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastSendStatus</span> <span class="pl-c1">=</span> <span class="pl-s">'错误：加载邮件服务失败'</span><span class="pl-kos">;</span>
+                        <span class="pl-s1">resolve</span><span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastSendStatus</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">;</span>
+                    <span class="pl-smi">document</span><span class="pl-kos">.</span><span class="pl-c1">head</span><span class="pl-kos">.</span><span class="pl-en">appendChild</span><span class="pl-kos">(</span><span class="pl-s1">script</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span> <span class="pl-k">else</span> <span class="pl-kos">{</span>
+                    <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">initializeAndSendEmail</span><span class="pl-kos">(</span><span class="pl-s1">templateParams</span><span class="pl-kos">,</span> <span class="pl-s1">resolve</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span>
+            <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
         
-        initializeAndSendEmail(templateParams, resolve) {
-            try {
-                // 初始化EmailJS
-                emailjs.init(this.emailjsUserId);
+        <span class="pl-en">initializeAndSendEmail</span><span class="pl-kos">(</span><span class="pl-s1">templateParams</span><span class="pl-kos">,</span> <span class="pl-s1">resolve</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">try</span> <span class="pl-kos">{</span>
+                <span class="pl-c">// 初始化EmailJS</span>
+                <span class="pl-s1">emailjs</span><span class="pl-kos">.</span><span class="pl-en">init</span><span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">emailjsUserId</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
                 
-                // 发送邮件
-                emailjs.send(this.emailjsServiceId, this.emailjsTemplateId, templateParams)
-                    .then((response) =&gt; {
-                        this.lastSendStatus = `成功：邮件已发送 (状态: ${response.status})`;
-                        console.log('邮件发送成功:', response);
-                        resolve(this.lastSendStatus);
-                    })
-                    .catch((error) =&gt; {
-                        this.lastSendStatus = `错误：发送失败 - ${error.text || error.message}`;
-                        console.error('邮件发送失败:', error);
-                        resolve(this.lastSendStatus);
-                    });
-            } catch (error) {
-                this.lastSendStatus = `错误：发送过程异常 - ${error.message}`;
-                console.error('邮件发送异常:', error);
-                resolve(this.lastSendStatus);
-            }
-        }
-    }
+                <span class="pl-c">// 发送邮件</span>
+                <span class="pl-s1">emailjs</span><span class="pl-kos">.</span><span class="pl-en">send</span><span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">emailjsServiceId</span><span class="pl-kos">,</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">emailjsTemplateId</span><span class="pl-kos">,</span> <span class="pl-s1">templateParams</span><span class="pl-kos">)</span>
+                    <span class="pl-kos">.</span><span class="pl-en">then</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-s1">response</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastSendStatus</span> <span class="pl-c1">=</span> <span class="pl-s">`成功：邮件已发送 (状态: <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">response</span><span class="pl-kos">.</span><span class="pl-c1">status</span><span class="pl-kos">}</span></span>)`</span><span class="pl-kos">;</span>
+                        <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">log</span><span class="pl-kos">(</span><span class="pl-s">'邮件发送成功:'</span><span class="pl-kos">,</span> <span class="pl-s1">response</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                        <span class="pl-s1">resolve</span><span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastSendStatus</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">)</span>
+                    <span class="pl-kos">.</span><span class="pl-en">catch</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-s1">error</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastSendStatus</span> <span class="pl-c1">=</span> <span class="pl-s">`错误：发送失败 - <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">error</span><span class="pl-kos">.</span><span class="pl-c1">text</span> <span class="pl-c1">||</span> <span class="pl-s1">error</span><span class="pl-kos">.</span><span class="pl-c1">message</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">;</span>
+                        <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">error</span><span class="pl-kos">(</span><span class="pl-s">'邮件发送失败:'</span><span class="pl-kos">,</span> <span class="pl-s1">error</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                        <span class="pl-s1">resolve</span><span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastSendStatus</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span> <span class="pl-k">catch</span> <span class="pl-kos">(</span><span class="pl-s1">error</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastSendStatus</span> <span class="pl-c1">=</span> <span class="pl-s">`错误：发送过程异常 - <span class="pl-s1"><span class="pl-kos">${</span><span class="pl-s1">error</span><span class="pl-kos">.</span><span class="pl-c1">message</span><span class="pl-kos">}</span></span>`</span><span class="pl-kos">;</span>
+                <span class="pl-smi">console</span><span class="pl-kos">.</span><span class="pl-en">error</span><span class="pl-kos">(</span><span class="pl-s">'邮件发送异常:'</span><span class="pl-kos">,</span> <span class="pl-s1">error</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-s1">resolve</span><span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">lastSendStatus</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
     
-    // 注册扩展
-    Scratch.extensions.register(new MorganMailExtension());
-})(Scratch);
-</code></pre></div>
+    <span class="pl-c">// 注册扩展</span>
+    <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">extensions</span><span class="pl-kos">.</span><span class="pl-en">register</span><span class="pl-kos">(</span><span class="pl-k">new</span> <span class="pl-v">MorganMailExtension</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">(</span><span class="pl-v">Scratch</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
