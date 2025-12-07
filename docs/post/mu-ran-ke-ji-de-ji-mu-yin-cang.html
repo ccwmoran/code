@@ -12,7 +12,7 @@
     </script>
 <meta name="description" content="> 隐藏编辑器中所有积木
 `慕然科技官网ccwmoran.github.io`
-```
+```js
 (function(Scratch) {
     'use strict';
     const Blockly = Scratch.Blockly;
@@ -147,7 +147,7 @@
 <meta property="og:title" content="慕然科技的积木隐藏">
 <meta property="og:description" content="> 隐藏编辑器中所有积木
 `慕然科技官网ccwmoran.github.io`
-```
+```js
 (function(Scratch) {
     'use strict';
     const Blockly = Scratch.Blockly;
@@ -283,7 +283,7 @@
 <meta property="og:url" content="https://ccwmoran.github.io/code/post/mu-ran-ke-ji-de-ji-mu-yin-cang.html">
 <meta property="og:image" content="https://gpo.saobby.com/i/BA9EN3Rw3fzRUJmu.jpg">
 <title>慕然科技的积木隐藏</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -353,137 +353,136 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>隐藏编辑器中所有积木<br>
 <code class="notranslate">慕然科技官网ccwmoran.github.io</code></p>
 </blockquote>
-<pre class="notranslate"><code class="notranslate">(function(Scratch) {
-    'use strict';
-    const Blockly = Scratch.Blockly;
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-kos">(</span><span class="pl-k">function</span><span class="pl-kos">(</span><span class="pl-v">Scratch</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+    <span class="pl-s">'use strict'</span><span class="pl-kos">;</span>
+    <span class="pl-k">const</span> <span class="pl-v">Blockly</span> <span class="pl-c1">=</span> <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">Blockly</span><span class="pl-kos">;</span>
 
-    class BiyuanExtension {
-        constructor() {
-            this.workspace = null;
-            this.original = {
-                domToBlock: null,
-                setVisible: null,
-                contextMenu: null
-            };
-            this.observer = null;
-            this.checkInterval = null;
-        }
+    <span class="pl-k">class</span> <span class="pl-v">BiyuanExtension</span> <span class="pl-kos">{</span>
+        <span class="pl-en">constructor</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">workspace</span> <span class="pl-c1">=</span> <span class="pl-c1">null</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">original</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+                <span class="pl-c1">domToBlock</span>: <span class="pl-c1">null</span><span class="pl-kos">,</span>
+                <span class="pl-c1">setVisible</span>: <span class="pl-c1">null</span><span class="pl-kos">,</span>
+                <span class="pl-c1">contextMenu</span>: <span class="pl-c1">null</span>
+            <span class="pl-kos">}</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">observer</span> <span class="pl-c1">=</span> <span class="pl-c1">null</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">checkInterval</span> <span class="pl-c1">=</span> <span class="pl-c1">null</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
 
-        getInfo() {
-            return {
-                id: 'hide',
-                name: '慕然科技的积木隐藏',
-                color: '#00704A',
-                blocks: []
-            };
-        }
+        <span class="pl-en">getInfo</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-k">return</span> <span class="pl-kos">{</span>
+                <span class="pl-c1">id</span>: <span class="pl-s">'hide'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">name</span>: <span class="pl-s">'慕然科技的积木隐藏'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">color</span>: <span class="pl-s">'#00704A'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">blocks</span>: <span class="pl-kos">[</span><span class="pl-kos">]</span>
+            <span class="pl-kos">}</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
 
-        applyProtection() {
-            // 保存原始引用
-            const originalContextMenu = Blockly.ContextMenu;
+        <span class="pl-en">applyProtection</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-c">// 保存原始引用</span>
+            <span class="pl-k">const</span> <span class="pl-s1">originalContextMenu</span> <span class="pl-c1">=</span> <span class="pl-v">Blockly</span><span class="pl-kos">.</span><span class="pl-c1">ContextMenu</span><span class="pl-kos">;</span>
             
-            // 劫持积木创建
-            this.original.domToBlock = Blockly.Xml.domToBlock;
-            Blockly.Xml.domToBlock = (xml, ws) =&gt; {
-                const block = this.original.domToBlock(xml, ws);
-                this.superHide(block);
-                return block;
-            };
+            <span class="pl-c">// 劫持积木创建</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">original</span><span class="pl-kos">.</span><span class="pl-c1">domToBlock</span> <span class="pl-c1">=</span> <span class="pl-v">Blockly</span><span class="pl-kos">.</span><span class="pl-c1">Xml</span><span class="pl-kos">.</span><span class="pl-c1">domToBlock</span><span class="pl-kos">;</span>
+            <span class="pl-v">Blockly</span><span class="pl-kos">.</span><span class="pl-c1">Xml</span><span class="pl-kos">.</span><span class="pl-en">domToBlock</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-s1">xml</span><span class="pl-kos">,</span> <span class="pl-s1">ws</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-k">const</span> <span class="pl-s1">block</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">original</span><span class="pl-kos">.</span><span class="pl-en">domToBlock</span><span class="pl-kos">(</span><span class="pl-s1">xml</span><span class="pl-kos">,</span> <span class="pl-s1">ws</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">superHide</span><span class="pl-kos">(</span><span class="pl-s1">block</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-k">return</span> <span class="pl-s1">block</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">;</span>
 
-            // 重写可见性设置
-            this.original.setVisible = Blockly.Block.prototype.setVisible;
-            Blockly.Block.prototype.setVisible = function(visible) {
-                return this.original.setVisible.call(this, visible &amp;&amp; false);
-            };
+            <span class="pl-c">// 重写可见性设置</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">original</span><span class="pl-kos">.</span><span class="pl-c1">setVisible</span> <span class="pl-c1">=</span> <span class="pl-v">Blockly</span><span class="pl-kos">.</span><span class="pl-c1">Block</span><span class="pl-kos">.</span><span class="pl-c1">prototype</span><span class="pl-kos">.</span><span class="pl-c1">setVisible</span><span class="pl-kos">;</span>
+            <span class="pl-v">Blockly</span><span class="pl-kos">.</span><span class="pl-c1">Block</span><span class="pl-kos">.</span><span class="pl-c1">prototype</span><span class="pl-kos">.</span><span class="pl-en">setVisible</span> <span class="pl-c1">=</span> <span class="pl-k">function</span><span class="pl-kos">(</span><span class="pl-s1">visible</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-k">return</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">original</span><span class="pl-kos">.</span><span class="pl-c1">setVisible</span><span class="pl-kos">.</span><span class="pl-en">call</span><span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">,</span> <span class="pl-s1">visible</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-c1">false</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">;</span>
 
-            // 监控DOM变化
-            this.observer = new MutationObserver(mutations =&gt; {
-                mutations.forEach(mutation =&gt; {
-                    const element = mutation.target;
-                    if (element.classList?.contains('blocklyBlockCanvas') &amp;&amp; 
-                        element.style.display !== 'none') {
-                        element.style.display = 'none';
-                    }
-                });
-            });
+            <span class="pl-c">// 监控DOM变化</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">observer</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">MutationObserver</span><span class="pl-kos">(</span><span class="pl-s1">mutations</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-s1">mutations</span><span class="pl-kos">.</span><span class="pl-en">forEach</span><span class="pl-kos">(</span><span class="pl-s1">mutation</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                    <span class="pl-k">const</span> <span class="pl-s1">element</span> <span class="pl-c1">=</span> <span class="pl-s1">mutation</span><span class="pl-kos">.</span><span class="pl-c1">target</span><span class="pl-kos">;</span>
+                    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">element</span><span class="pl-kos">.</span><span class="pl-c1">classList</span><span class="pl-kos">?.</span><span class="pl-en">contains</span><span class="pl-kos">(</span><span class="pl-s">'blocklyBlockCanvas'</span><span class="pl-kos">)</span> <span class="pl-c1">&amp;&amp;</span> 
+                        <span class="pl-s1">element</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">display</span> <span class="pl-c1">!==</span> <span class="pl-s">'none'</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                        <span class="pl-s1">element</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">display</span> <span class="pl-c1">=</span> <span class="pl-s">'none'</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
 
-            // 修复this指向问题
-            const self = this;
-            this.original.contextMenu = originalContextMenu;
-            Blockly.ContextMenu = function(...args) {
-                const instance = new originalContextMenu(...args);
-                instance.show = () =&gt; {};
-                return instance;
-            };
-        }
+            <span class="pl-c">// 修复this指向问题</span>
+            <span class="pl-k">const</span> <span class="pl-s1">self</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">original</span><span class="pl-kos">.</span><span class="pl-c1">contextMenu</span> <span class="pl-c1">=</span> <span class="pl-s1">originalContextMenu</span><span class="pl-kos">;</span>
+            <span class="pl-v">Blockly</span><span class="pl-kos">.</span><span class="pl-en">ContextMenu</span> <span class="pl-c1">=</span> <span class="pl-k">function</span><span class="pl-kos">(</span>...<span class="pl-s1">args</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-k">const</span> <span class="pl-s1">instance</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-s1">originalContextMenu</span><span class="pl-kos">(</span>...<span class="pl-s1">args</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-s1">instance</span><span class="pl-kos">.</span><span class="pl-en">show</span> <span class="pl-c1">=</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span><span class="pl-kos">}</span><span class="pl-kos">;</span>
+                <span class="pl-k">return</span> <span class="pl-s1">instance</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
 
-        superHide(block) {
-            // 多层隐藏技术
-            block.setVisible(false);
-            const svgRoot = block.getSvgRoot();
-            if (svgRoot) {
-                svgRoot.style.display = 'none';
-                svgRoot.setAttribute('visibility', 'hidden');
+        <span class="pl-en">superHide</span><span class="pl-kos">(</span><span class="pl-s1">block</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-c">// 多层隐藏技术</span>
+            <span class="pl-s1">block</span><span class="pl-kos">.</span><span class="pl-en">setVisible</span><span class="pl-kos">(</span><span class="pl-c1">false</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">const</span> <span class="pl-s1">svgRoot</span> <span class="pl-c1">=</span> <span class="pl-s1">block</span><span class="pl-kos">.</span><span class="pl-en">getSvgRoot</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">svgRoot</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-s1">svgRoot</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">display</span> <span class="pl-c1">=</span> <span class="pl-s">'none'</span><span class="pl-kos">;</span>
+                <span class="pl-s1">svgRoot</span><span class="pl-kos">.</span><span class="pl-en">setAttribute</span><span class="pl-kos">(</span><span class="pl-s">'visibility'</span><span class="pl-kos">,</span> <span class="pl-s">'hidden'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
                 
-                // 添加DOM监控
-                this.observer.observe(svgRoot, {
-                    attributes: true,
-                    attributeFilter: ['style', 'visibility']
-                });
-            }
-        }
+                <span class="pl-c">// 添加DOM监控</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">observer</span><span class="pl-kos">.</span><span class="pl-en">observe</span><span class="pl-kos">(</span><span class="pl-s1">svgRoot</span><span class="pl-kos">,</span> <span class="pl-kos">{</span>
+                    <span class="pl-c1">attributes</span>: <span class="pl-c1">true</span><span class="pl-kos">,</span>
+                    <span class="pl-c1">attributeFilter</span>: <span class="pl-kos">[</span><span class="pl-s">'style'</span><span class="pl-kos">,</span> <span class="pl-s">'visibility'</span><span class="pl-kos">]</span>
+                <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
+        <span class="pl-kos">}</span>
 
-        onInit() {
-            this.workspace = Scratch.vm.runtime.work  space;
-            this.applyProtection();
+        <span class="pl-en">onInit</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">workspace</span> <span class="pl-c1">=</span> <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">vm</span><span class="pl-kos">.</span><span class="pl-c1">runtime</span><span class="pl-kos">.</span><span class="pl-c1">work</span>  <span class="pl-s1">space</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">applyProtection</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
             
-            // 初始隐藏
-            this.workspace.getAllBlocks().forEach(block =&gt; {
-                this.superHide(block);
-            });
+            <span class="pl-c">// 初始隐藏</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">workspace</span><span class="pl-kos">.</span><span class="pl-en">getAllBlocks</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">forEach</span><span class="pl-kos">(</span><span class="pl-s1">block</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">superHide</span><span class="pl-kos">(</span><span class="pl-s1">block</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
             
-            // 定时检查
-            this.checkInterval = setInterval(() =&gt; {
-                this.workspace.getAllBlocks().forEach(block =&gt; {
-                    if (block.isVisible() || 
-                        (block.getSvgRoot()?.style.display !== 'none') ||
-                        (block.getSvgRoot()?.getAttribute('visibility') === 'visible')) {
-                        this.superHide(block);
-                    }
-                });
-            }, 50);
-        }
+            <span class="pl-c">// 定时检查</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">checkInterval</span> <span class="pl-c1">=</span> <span class="pl-en">setInterval</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">workspace</span><span class="pl-kos">.</span><span class="pl-en">getAllBlocks</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">forEach</span><span class="pl-kos">(</span><span class="pl-s1">block</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                    <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">block</span><span class="pl-kos">.</span><span class="pl-en">isVisible</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">||</span> 
+                        <span class="pl-kos">(</span><span class="pl-s1">block</span><span class="pl-kos">.</span><span class="pl-en">getSvgRoot</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">?.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">display</span> <span class="pl-c1">!==</span> <span class="pl-s">'none'</span><span class="pl-kos">)</span> <span class="pl-c1">||</span>
+                        <span class="pl-kos">(</span><span class="pl-s1">block</span><span class="pl-kos">.</span><span class="pl-en">getSvgRoot</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">?.</span><span class="pl-en">getAttribute</span><span class="pl-kos">(</span><span class="pl-s">'visibility'</span><span class="pl-kos">)</span> <span class="pl-c1">===</span> <span class="pl-s">'visible'</span><span class="pl-kos">)</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                        <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-en">superHide</span><span class="pl-kos">(</span><span class="pl-s1">block</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                    <span class="pl-kos">}</span>
+                <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">,</span> <span class="pl-c1">50</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
 
-        onUnload() {
-            // 恢复原始环境
-            Blockly.Xml.domToBlock = this.original.domToBlock;
-            if (Blockly.Block.prototype.setVisible) {
-                Blockly.Block.prototype.setVisible = this.original.setVisible;
-            }
-            Blockly.ContextMenu = this.original.contextMenu;
+        <span class="pl-en">onUnload</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+            <span class="pl-c">// 恢复原始环境</span>
+            <span class="pl-v">Blockly</span><span class="pl-kos">.</span><span class="pl-c1">Xml</span><span class="pl-kos">.</span><span class="pl-c1">domToBlock</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">original</span><span class="pl-kos">.</span><span class="pl-c1">domToBlock</span><span class="pl-kos">;</span>
+            <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-v">Blockly</span><span class="pl-kos">.</span><span class="pl-c1">Block</span><span class="pl-kos">.</span><span class="pl-c1">prototype</span><span class="pl-kos">.</span><span class="pl-c1">setVisible</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                <span class="pl-v">Blockly</span><span class="pl-kos">.</span><span class="pl-c1">Block</span><span class="pl-kos">.</span><span class="pl-c1">prototype</span><span class="pl-kos">.</span><span class="pl-c1">setVisible</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">original</span><span class="pl-kos">.</span><span class="pl-c1">setVisible</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span>
+            <span class="pl-v">Blockly</span><span class="pl-kos">.</span><span class="pl-c1">ContextMenu</span> <span class="pl-c1">=</span> <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">original</span><span class="pl-kos">.</span><span class="pl-c1">contextMenu</span><span class="pl-kos">;</span>
             
-            clearInterval(this.checkInterval);
-            this.observer?.disconnect();
+            <span class="pl-en">clearInterval</span><span class="pl-kos">(</span><span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">checkInterval</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">observer</span><span class="pl-kos">?.</span><span class="pl-en">disconnect</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
             
-            // 恢复所有元素
-            this.workspace.getAllBlocks().forEach(block =&gt; {
-                const svgRoot = block.getSvgRoot();
-                if (svgRoot) {
-                    svgRoot.style.display = '';
-                    svgRoot.removeAttribute('visibility');
-                }
-                block.setVisible(true);
-            });
-            this.workspace.resize();
-        }
-    }
+            <span class="pl-c">// 恢复所有元素</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">workspace</span><span class="pl-kos">.</span><span class="pl-en">getAllBlocks</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">forEach</span><span class="pl-kos">(</span><span class="pl-s1">block</span> <span class="pl-c1">=&gt;</span> <span class="pl-kos">{</span>
+                <span class="pl-k">const</span> <span class="pl-s1">svgRoot</span> <span class="pl-c1">=</span> <span class="pl-s1">block</span><span class="pl-kos">.</span><span class="pl-en">getSvgRoot</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-k">if</span> <span class="pl-kos">(</span><span class="pl-s1">svgRoot</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+                    <span class="pl-s1">svgRoot</span><span class="pl-kos">.</span><span class="pl-c1">style</span><span class="pl-kos">.</span><span class="pl-c1">display</span> <span class="pl-c1">=</span> <span class="pl-s">''</span><span class="pl-kos">;</span>
+                    <span class="pl-s1">svgRoot</span><span class="pl-kos">.</span><span class="pl-en">removeAttribute</span><span class="pl-kos">(</span><span class="pl-s">'visibility'</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+                <span class="pl-kos">}</span>
+                <span class="pl-s1">block</span><span class="pl-kos">.</span><span class="pl-en">setVisible</span><span class="pl-kos">(</span><span class="pl-c1">true</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+            <span class="pl-smi">this</span><span class="pl-kos">.</span><span class="pl-c1">workspace</span><span class="pl-kos">.</span><span class="pl-en">resize</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-kos">}</span>
+    <span class="pl-kos">}</span>
 
-    const ext = new BiyuanExtension();
-    Scratch.extensions.register(ext);
-    ext.runtime.once('PROJECT_LOADED', () =&gt; ext.onInit());
-    ext.runtime.once('EXTENSION_UNLOADED', () =&gt; ext.onUnload());
-})(Scratch);
-</code></pre></div>
+    <span class="pl-k">const</span> <span class="pl-s1">ext</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">BiyuanExtension</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-v">Scratch</span><span class="pl-kos">.</span><span class="pl-c1">extensions</span><span class="pl-kos">.</span><span class="pl-en">register</span><span class="pl-kos">(</span><span class="pl-s1">ext</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-s1">ext</span><span class="pl-kos">.</span><span class="pl-c1">runtime</span><span class="pl-kos">.</span><span class="pl-en">once</span><span class="pl-kos">(</span><span class="pl-s">'PROJECT_LOADED'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">ext</span><span class="pl-kos">.</span><span class="pl-en">onInit</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-s1">ext</span><span class="pl-kos">.</span><span class="pl-c1">runtime</span><span class="pl-kos">.</span><span class="pl-en">once</span><span class="pl-kos">(</span><span class="pl-s">'EXTENSION_UNLOADED'</span><span class="pl-kos">,</span> <span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-c1">=&gt;</span> <span class="pl-s1">ext</span><span class="pl-kos">.</span><span class="pl-en">onUnload</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">(</span><span class="pl-v">Scratch</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
