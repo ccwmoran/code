@@ -1,4 +1,4 @@
-```
+```js
 //慕然科技官网ccwmoran.github.io
 class MoranKimiExtension {
     constructor() {
